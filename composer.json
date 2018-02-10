@@ -1,0 +1,32 @@
+{
+	"name" : "az2009/cielo",
+	"description" : "Module to integrating with gateway of payment Cielo",
+	"version" : "1.0.0",
+	"type" : "magento2-module",
+	"license" : "OSL-3.0",
+	"authors" : [{
+			"name" : "Jefferson Porto",
+			"email" : "jefferson.porto@ymail.com",
+			"homepage" : "https://www.linkedin.com/in/jeffersonbatistaporto/"
+		}
+	],
+	"support" : {
+		"email" : "jefferson.b.porto@gmail.com"
+	},
+	"autoload" : {
+		"files" : [
+			"registration.php"
+		],
+		"psr-4" : {
+			"Az2009\\Cielo\\" : ""
+		}
+	},
+	"keywords" : [
+		"magento2",
+		"cielo",
+		"jbp",
+		"az2009",
+		"Jefferson Porto",
+		"magento 2 payment"
+	]
+}

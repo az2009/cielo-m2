@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <az2009_cielo>
+                <active>1</active>
+                <model>Az2009\Cielo\Model\Method\Cc</model>
+                <order_status>pending</order_status>
+                <title>Credit Card Cielo</title>
+                <allowspecific>0</allowspecific>
+                <sort_order>1</sort_order>
+            </az2009_cielo>
+        </payment>
+    </default>
+</config>
