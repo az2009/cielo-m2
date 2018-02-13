@@ -10,7 +10,7 @@
         <payment>
             <az2009_cielo>
                 <active>1</active>
-                <model>Az2009\Cielo\Model\Method\Cc</model>
+                <model>Az2009\Cielo\Model\Method\Cc\Cc</model>
                 <order_status>pending</order_status>
                 <title>Credit Card Cielo</title>
                 <allowspecific>0</allowspecific>

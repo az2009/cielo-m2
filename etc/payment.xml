@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <credit_cards>
+        <type id="ELO" order="61">
+            <label>Elo</label>
+        </type>
+        <type id="AUR" order="62">
+            <label>Aura</label>
+        </type>
+        <type id="HYC" order="62">
+            <label>Hypercard</label>
+        </type>
+
+    </credit_cards>
+</payment>
+

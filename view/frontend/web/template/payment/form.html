@@ -1,0 +1,69 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}, visible: isAvailable()">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
+    </div>
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+
+        <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+            <!-- ko if: (isShowLegend())-->
+            <legend class="legend">
+                <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
+            </legend><br />
+            <!-- /ko -->
+            <div class="field type">
+                <div class="control">
+                    <ul class="credit-card-types">
+                        <li class="item">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="field number required">
+                <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
+                    <span>Credit Card Number</span>
+                </label>
+                <div class="control">
+                    <input type="number" name="payment[cc_number]" class="input-text" value=""/>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="checkout-agreements-block">
+        <!-- ko foreach: $parent.getRegion('before-place-order') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+    </div>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button class="action primary checkout"
+                    type="submit"
+                    data-bind="
+                    click: placeOrder,
+                    attr: {title: $t('Place Order')},
+                    css: {disabled: !isPlaceOrderActionAllowed()}
+                    ">
+                <span data-bind="i18n: 'Place Order'"></span>
+            </button>
+        </div>
+    </div>
+    </div>
+</div>
