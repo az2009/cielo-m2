@@ -11,6 +11,6 @@ class Cctype extends PaymentCctype
      */
     public function getAllowedTypes()
     {
-        return ['VI', 'MC', 'AE', 'DI', 'JCB', 'DN', 'ELO', 'HYC'];
+        return ['VI', 'MC', 'AE', 'DI', 'JCB', 'DN', 'AUR', 'ELO', 'HIC'];
     }
 }

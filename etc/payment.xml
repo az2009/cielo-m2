@@ -14,10 +14,9 @@
         <type id="AUR" order="62">
             <label>Aura</label>
         </type>
-        <type id="HYC" order="62">
-            <label>Hypercard</label>
+        <type id="HIC" order="62">
+            <label>Hipercard</label>
         </type>
-
     </credit_cards>
 </payment>
 
