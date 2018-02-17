@@ -23,8 +23,8 @@
                                                         <item name="renders" xsi:type="array">
                                                             <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
-                                                                <item name="cielo" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Az2009_Cielo/js/view/payment/cielo</item>
+                                                                <item name="az2009_cielo" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Az2009_Cielo/js/view/payment/az2009_cielo</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="az2009_cielo" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>

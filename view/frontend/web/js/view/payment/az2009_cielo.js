@@ -11,7 +11,7 @@ define([
         'use strict';
         rendererList.push({
             type: 'az2009_cielo',
-            component: 'Az2009_Cielo/js/view/payment/method-renderer/cielo-method'
+            component: 'Az2009_Cielo/js/view/payment/method-renderer/az2009_cielo-method'
         });
 
         /** Add view logic here if needed */
