@@ -57,7 +57,7 @@
         </label>
         <div class="control">
             <input type="text" name="payment[cc_name]" class="input-text" value=""
-                   data-bind="attr: {'data-validate': JSON.stringify({required:true})}"
+                   data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardName, valueUpdate: 'keyup'"
             />
         </div>
     </div>
@@ -66,7 +66,7 @@
             <span><!-- ko i18n: 'CPF/CNPJ do Titular'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="number" name="payment[cc_doc]" class="input-text" value=""
+            <input type="number" name="payment[cc_doc]" class="input-text" max="15" value=""
                    data-bind="
                     value: docNumber,
                     valueUpdate: 'keyup',
@@ -85,21 +85,16 @@
                     <div class="control">
                         <input type="number"
                                name="payment[cc_exp_month]"
-                               data-bind="attr: {
-                                    autocomplete: off,
-                                    id: getCode() + '_cc_number',
-                                    title: $t('Credit Card Number'),
-                                    'data-container': getCode() + '-cc-number',
-                                    'data-validate': JSON.stringify({required:true})
-                                    value: creditCardNumber,
-                                    valueUpdate: 'keyup' "
+                               max="2"
+                               data-bind="attr: {autocomplete: off, 'data-validate': JSON.stringify({required:true})},
+                                          value: creditCardExpMonth, valueUpdate: 'keyup'"
                                class="select select-month">
                     </div>
                 </div>
                 <div class="field no-label year">
                     <div class="control">
-                        <input type="number" name="payment[cc_exp_year]" class="select select-year"
-                               data-bind="attr: {'data-validate': JSON.stringify({required:true})}"
+                        <input type="number" name="payment[cc_exp_year]" class="select select-year" max="4"
+                               data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardExpYear, valueUpdate: 'keyup'"
                         >
                     </div>
                 </div>
@@ -116,8 +111,9 @@
                    autocomplete="off"
                    class="input-text cvv required-entry"
                    name="payment[cc_cid]"
+                   max="5"
                    value=""
-                   data-bind="attr: {'data-validate': JSON.stringify({required:true})}"
+                   data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
                    />
             <div class="field-tooltip toggle">
                 <span class="field-tooltip-action action-cvv"

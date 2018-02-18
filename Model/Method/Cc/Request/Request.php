@@ -3,6 +3,7 @@
 namespace Az2009\Cielo\Model\Method\Cc\Request;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Event\ManagerInterface;
 
 class Request extends \Magento\Framework\DataObject
 {
@@ -17,14 +18,23 @@ class Request extends \Magento\Framework\DataObject
      */
     protected $payment;
 
+    /**
+     * Event manager
+     *
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $_eventManager;
+
 
     public function __construct(
-        array $data = [],
         Customer $customer,
-        Payment $payment
+        Payment $payment,
+        ManagerInterface $eventManager,
+        array $data = []
     ) {
         $this->customer = $customer;
         $this->payment = $payment;
+        $this->_eventManager = $eventManager;
         parent::__construct($data);
     }
 
@@ -35,21 +45,36 @@ class Request extends \Magento\Framework\DataObject
     public function buildRequest()
     {
         /** @var \Magento\Sales\Model\Order $order */
-        $order = $this->getPayment()->getOrder();
+        $order = $this->getPaymentData()->getOrder();
 
-        if (!($this->getPayment() instanceof \Magento\Sales\Model\Order\Payment)
-                || !(($order = $this->getPayment()->getOrder())
+        if (!($this->getPaymentData() instanceof \Magento\Sales\Model\Order\Payment)
+                || !(($order = $this->getPaymentData()->getOrder())
                         instanceof \Magento\Sales\Model\Order)) {
             throw new LocalizedException(__('Instance Invalid'));
         }
 
         $this->setOrder($order);
-        $extra = array('MerchantOrderId' => $this->getOrder()->getIncrementId());
+
+        $request = $this->setData($this->merge());
+
+        $this->_eventManager->dispatch(
+            'after_prepare_request_params_cielo_cc',
+            ['data_object' => $this]
+        );
+
+        return $request->toJson();
+    }
+
+    /**
+     * merge all params
+     * @return array
+     */
+    public function merge()
+    {
+        $merchantOrderId = $this->getMerchantOrderId();
         $customer = $this->getCustomer();
         $payment = $this->getPayment();
-
-        return $this->setData(array_merge($extra,$customer,$payment))
-                    ->toArray();
+        return array_merge($merchantOrderId, $customer, $payment);
     }
 
     /**
@@ -70,5 +95,15 @@ class Request extends \Magento\Framework\DataObject
         return $this->payment
                     ->setOrder($this->getOrder())
                     ->getRequest();
+    }
+
+    /**
+     * @return array
+     */
+    public function getMerchantOrderId()
+    {
+        return  [
+            'MerchantOrderId' => $this->getOrder()->getIncrementId()
+        ];
     }
 }

@@ -84,7 +84,7 @@ define([], function () {
     }
     
     return function (value) {
-        value = value.replace(/[^\d]+/g,'');
+
         var response;
 
         if (value.length > 11) {

@@ -15,6 +15,7 @@
                 <title>Credit Card Cielo</title>
                 <allowspecific>0</allowspecific>
                 <sort_order>1</sort_order>
+                <uri_request_stage>https://apisandbox.cieloecommerce.cielo.com.br/1/sales/</uri_request_stage>
             </az2009_cielo>
         </payment>
     </default>

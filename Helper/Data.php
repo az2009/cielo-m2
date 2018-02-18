@@ -20,7 +20,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getMerchantId()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/general/merchant_id',
+            'payment/az2009_cielo/merchant_id',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
@@ -30,22 +30,26 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getMerchantKey()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/general/merchant_key',
+            'payment/az2009_cielo/merchant_key',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
         return $config;
     }
 
-    public function getImgUrlCard($code)
+    public function getRequestUriStage()
     {
-        return $this->_asset->getUrl('Az2009_Cielo::images/');
+        $config = $this->scopeConfig->getValue(
+            'payment/az2009_cielo/uri_request_stage'
+        );
+
+        return $config;
     }
 
     public function getCardTypesAvailable()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/general/cctypes',
+            'payment/az2009_cielo/cctypes',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 

@@ -3,6 +3,7 @@
 namespace Az2009\Cielo\Model\Method;
 
 use \Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
 
 abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -84,6 +85,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     }
 
     /**
+     * get instance client
      * @return \Magento\Framework\HTTP\ZendClient
      */
     public function getClient()
@@ -91,46 +93,88 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->keyRequest = $this->helper->getKeyRequest();
 
         return $this->httpClientFactory
+                    ->setUri($this->helper->getRequestUriStage())
                     ->setHeaders(
-                        array(
+                        [
                             'Content-Type' => 'application/json',
                             'MerchantId' => $this->helper->getMerchantId(),
                             'MerchantKey' => $this->helper->getMerchantKey(),
                             'RequestId' => $this->keyRequest,
-                        )
+                        ]
                     );
     }
 
+    /**
+     * send request of type POST
+     * @param DataObject $data
+     * @return $this
+     */
     public function post(\Magento\Framework\DataObject $data)
     {
-        $this->getClient()->setParameterPost($this->getParams($data));
+        $params = $this->getParams($data);
+        $this->getClient()
+             ->setMethod($this->httpClientFactory::POST)
+             ->setRawData($params);
 
         return $this;
     }
 
+    /**
+     * send request of type GET
+     * @param DataObject $data
+     * @return $this
+     */
     public function get(\Magento\Framework\DataObject $data)
     {
-        $this->getClient()->setParameterGet($this->getParams($data));
+        $params = $this->getParams($data);
+        $this->getClient()
+             ->setMethod($this->httpClientFactory::GET)
+             ->setRawData($params);
 
         return $this;
     }
 
+    /**
+     * get params of request
+     * @param DataObject $payment
+     * @return mixed
+     */
     public function getParams(\Magento\Framework\DataObject $payment)
     {
-        return $this->getRequest()
-                    ->setPayment($payment)
-                    ->buildRequest();
+        $request = $this->getRequest()
+                        ->setPaymentData($payment)
+                        ->buildRequest();
+
+        return $request;
     }
 
+    /**
+     * execute the request
+     * @throws \Exception
+     */
     public function request()
     {
+        $r = '';
         try {
-            $request = $this->getClient()->request();
+
+            $this->_eventManager->dispatch(
+                'before_send_request_cielo',
+                ['client' => $this->getClient()]
+            );
+
+            $response = $this->getClient()->request();
+            $this->getResponse()->setResponseOfRequest($response);
+
+            $this->_eventManager->dispatch(
+                'after_send_request_cielo',
+                ['response' => $this->getResponse()]
+            );
+
         } catch(\Exception $e) {
             $this->_logger->error($e->getMessage());
         }
 
-        return $request;
+        throw new \Exception('fbf');
     }
 
 }

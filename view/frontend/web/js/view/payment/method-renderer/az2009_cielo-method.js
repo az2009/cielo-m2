@@ -21,7 +21,11 @@ define([
                 creditCardType: '',
                 selectedCardType: '',
                 docNumber : '',
-                messageValidateDoc: ''
+                messageValidateDoc: '',
+                creditCardName: '',
+                creditCardExpMonth: '',
+                creditCardExpYear: '',
+                creditCardCid: ''
             },
 
             initObservable: function () {
@@ -31,7 +35,11 @@ define([
                     'creditCardType',
                     'selectedCardType',
                     'docNumber',
-                    'messageValidateDoc'
+                    'messageValidateDoc',
+                    'creditCardName',
+                    'creditCardExpMonth',
+                    'creditCardExpYear',
+                    'creditCardCid'
                 ]);
 
                 return this;
@@ -57,6 +65,7 @@ define([
 
                     result = cardNumberValidator(value);
                     if (!result.isPotentiallyValid && !result.isValid) {
+                        self.creditCardType(null);
                         return false;
                     }
 
@@ -68,6 +77,8 @@ define([
                     if (result.isValid) {
                         creditCardData.creditCardNumber = value;
                         self.creditCardType(result.card.type);
+                    } else {
+                        self.creditCardType(null);
                     }
                 });
 
@@ -75,6 +86,11 @@ define([
                     var response;
                     if (response = validateCpfCnpj(value)) {
                         self.messageValidateDoc(response.message);
+                    }
+
+                    if (value.length > 15) {
+                        value = value.substr(0, 15);
+                        self.docNumber(value);
                     }
                 });
             },
@@ -87,8 +103,13 @@ define([
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'cc_number': this.creditCardNumber,
+                        'doc_number': this.docNumber(),
                         'cc_type': this.creditCardType(),
+                        'cc_number_enc' : this.creditCardNumber(),
+                        'cc_owner' : this.creditCardName(),
+                        'cc_exp_month' : this.creditCardExpMonth(),
+                        'cc_exp_year' : this.creditCardExpYear(),
+                        'cc_cid_enc' : this.creditCardCid(),
                     }
                 };
             },
@@ -134,6 +155,19 @@ define([
             },
 
             isPlaceOrderActionAllowed: function(value) {
+                var validateCard = cardNumberValidator(this.creditCardNumber());
+                var validateDoc = validateCpfCnpj(this.docNumber());
+
+                if (validateCard.isValid
+                    && validateDoc.isValid
+                    && this.creditCardName().length > 3
+                    && this.creditCardExpMonth().length == 2
+                    && this.creditCardExpYear().length == 4
+                    && this.creditCardCid().length >= 3
+                ) {
+                    return true;
+                }
+
                 return false;
             }
 
