@@ -154,7 +154,6 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     public function request()
     {
-        $r = '';
         try {
 
             $this->_eventManager->dispatch(
@@ -172,9 +171,11 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
 
         } catch(\Exception $e) {
             $this->_logger->error($e->getMessage());
+            $this->getResponse()
+                 ->setRequestError(__('Not possible process payment'));
         }
 
-        throw new \Exception('fbf');
+        return $this;
     }
 
 }
