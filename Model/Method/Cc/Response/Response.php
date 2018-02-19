@@ -36,17 +36,15 @@ class Response extends \Magento\Framework\DataObject
     public function hasError()
     {
         $message = __('Occurred an Error');
-        if (!in_array($this->getBody()->Payment->Status, $this->_statusCodeAllowed)) {
-            if (is_object($this->getBody())
-                && isset($this->getBody()->Payment->ReturnMessage)) {
-                $message = $this->getBody()->Payment->ReturnMessage;
-            }
 
-            throw new LocalizedException(__($message));
+        if ($message = $this->getRequestError() || !is_object($this->getBody())) {
+            throw new \Exception(__($message));
         }
 
-        if ($message = $this->getRequestError()) {
-            throw new \Exception(__($message));
+        if (!in_array($this->getBody()->Payment->Status, $this->_statusCodeAllowed)
+            && isset($this->getBody()->Payment->ReturnMessage)) {
+            $message = $this->getBody()->Payment->ReturnMessage;
+            throw new LocalizedException(__($message));
         }
 
         return $this;
