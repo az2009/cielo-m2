@@ -109,9 +109,9 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      * @param DataObject $data
      * @return $this
      */
-    public function post(\Magento\Framework\DataObject $data)
+    public function post()
     {
-        $params = $this->getParams($data);
+        $params = $this->getParams();
         $this->getClient()
              ->setMethod($this->httpClientFactory::POST)
              ->setRawData($params);
@@ -124,9 +124,9 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      * @param DataObject $data
      * @return $this
      */
-    public function get(\Magento\Framework\DataObject $data)
+    public function get()
     {
-        $params = $this->getParams($data);
+        $params = $this->getParams();
         $this->getClient()
              ->setMethod($this->httpClientFactory::GET)
              ->setRawData($params);
@@ -139,10 +139,10 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      * @param DataObject $payment
      * @return mixed
      */
-    public function getParams(\Magento\Framework\DataObject $payment)
+    public function getParams()
     {
         $request = $this->getRequest()
-                        ->setPaymentData($payment)
+                        ->setPaymentData($this->getInfoInstance())
                         ->buildRequest();
 
         return $request;
@@ -162,17 +162,23 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
             );
 
             $response = $this->getClient()->request();
-            $this->getResponse()->setResponseOfRequest($response);
+
+            $this->getResponse()
+                 ->setResponse($response)
+                 ->setPayment($this->getInfoInstance())
+                 ->process();
 
             $this->_eventManager->dispatch(
                 'after_send_request_cielo',
                 ['response' => $this->getResponse()]
             );
 
+        } catch(\Az2009\Cielo\Exception\Cc $e) {
+            throw $e;
         } catch(\Exception $e) {
             $this->_logger->error($e->getMessage());
             $this->getResponse()
-                 ->setRequestError(__('Not possible process payment'));
+                 ->setRequestError(__('Occurred an error during payment process. Try Again.'));
         }
 
         return $this;

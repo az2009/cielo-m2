@@ -102,19 +102,14 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $payment->setAdditionalInformation('can_capture', false);
-        $this->post($payment)
-             ->request();
+        $this->post()->request();
 
     }
 
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $payment->setAdditionalInformation('can_capture', true);
-        $this->post($payment)
-             ->request()
-             ->getResponse()
-             ->setPayment($payment)
-             ->processResponse();
+        $this->post()->request();
 
     }
 
