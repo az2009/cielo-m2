@@ -41,7 +41,7 @@ class Payment extends \Magento\Framework\DataObject
                         [
                            'Payment' => [
                                'Type' => Payment::TYPE,
-                               'Amount' => $this->order->getGrandTotal(),
+                               'Amount' => $info->getAmount(),
                                'ServiceTaxAmount' => 0,
                                'Installments' => $this->getInstallments(),
                                'Interest' => Payment::INTEREST,

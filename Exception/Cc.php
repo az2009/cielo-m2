@@ -2,7 +2,9 @@
 
 namespace Az2009\Cielo\Exception;
 
-class Cc extends \Exception
+use Magento\Framework\Exception\LocalizedException;
+
+class Cc extends LocalizedException
 {
 
 }

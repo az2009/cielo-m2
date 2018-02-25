@@ -2,6 +2,7 @@
 
 namespace Az2009\Cielo\Model\Method\Cc;
 
+use Braintree\Exception;
 use Magento\Framework\DataObject;
 
 class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
@@ -60,7 +61,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
         Request\Request $request,
-        Response\Response $response,
+        Response\Payment $response,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
@@ -101,17 +102,65 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
+        $this->setAmount($payment, $amount);
         $payment->setAdditionalInformation('can_capture', false);
         $this->post()->request();
-
     }
 
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $payment->setAdditionalInformation('can_capture', true);
-        $this->post()->request();
+        //set value that are being captured
+        $this->setAmount($payment, $amount);
 
+        //check if operation have transaction authorize
+        if ($payment->getAuthorizationTransaction()
+            && !$payment->getOrder()->getTotalPaid()) {
+
+            $payment->setCapturePartial(true);
+            $this->setPath($payment->getLastTransId(), 'capture')
+                 ->put();
+
+            if ($amount != $payment->getAmountAuthorized()) {
+                $this->getClient()
+                     ->setParameterGet('amount', $amount);
+            }
+
+        } else {
+
+            //check if transaction has invoice
+            if ($payment->getOrder()->getTotalPaid() > 0) {
+                throw new \Az2009\Cielo\Exception\Cc(
+                    __('                
+                        The request has already been captured. Cielo only supports one partial or full capture. 
+                        A catch is already created for this request. 
+                        Capture offline at the store and online at Cielo\'s backoffice.
+                    ')
+                );
+            }
+
+            $payment->setAdditionalInformation('can_capture', true);
+            $this->post();
+
+        }
+
+        $this->request();
     }
+
+    /**
+     * set amount total to authorize and capture
+     * @param \Magento\Payment\Model\InfoInterface $payment
+     * @param $amount
+     * @throws \Az2009\Cielo\Exception\Cc
+     */
+    public function setAmount(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+        if ($amount <= 0) {
+            throw new \Az2009\Cielo\Exception\Cc(__('Invalid amount for capture.'));
+        }
+
+        $payment->setAmount($amount);
+    }
+
 
     public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
     {

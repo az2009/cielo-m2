@@ -29,6 +29,11 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     protected $keyRequest;
 
     /**
+     * @var array
+     */
+    protected $_path = [];
+
+    /**
      * @var \Magento\Framework\HTTP\ZendClientFactory
      */
     protected $httpClientFactory;
@@ -93,7 +98,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->keyRequest = $this->helper->getKeyRequest();
 
         return $this->httpClientFactory
-                    ->setUri($this->helper->getRequestUriStage())
+                    ->setUri($this->getUri())
                     ->setHeaders(
                         [
                             'Content-Type' => 'application/json',
@@ -105,8 +110,33 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     }
 
     /**
+     * get uri to request
+     * @return mixed|string
+     */
+    public function getUri()
+    {
+        $uri = (string)$this->helper->getRequestUriStage() .'/'. $this->getPath();
+        $uri = str_replace('//', '/', $uri);
+        $uri = str_replace(':/', '://', $uri);
+        return $uri;
+    }
+
+    /**
+     * send request of type PUT
+     * @return $this
+     */
+    public function put()
+    {
+        $params = $this->getParams();
+        $this->getClient()
+             ->setRawData($params)
+             ->setMethod($this->httpClientFactory::PUT);
+
+        return $this;
+    }
+
+    /**
      * send request of type POST
-     * @param DataObject $data
      * @return $this
      */
     public function post()
@@ -121,7 +151,6 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
 
     /**
      * send request of type GET
-     * @param DataObject $data
      * @return $this
      */
     public function get()
@@ -130,6 +159,30 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->getClient()
              ->setMethod($this->httpClientFactory::GET)
              ->setRawData($params);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        $path = '';
+        foreach ($this->_path as $k => $v) {
+            $path .= $k .'/'.$v;
+        }
+
+        return $path;
+    }
+
+    /**
+     * @param $k
+     * @param $v
+     */
+    public function setPath($k, $v)
+    {
+        $this->_path[$k] = $v;
 
         return $this;
     }
@@ -154,6 +207,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     public function request()
     {
+        $r = '';
         try {
 
             $this->_eventManager->dispatch(
@@ -177,8 +231,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
             throw $e;
         } catch(\Exception $e) {
             $this->_logger->error($e->getMessage());
-            $this->getResponse()
-                 ->setRequestError(__('Occurred an error during payment process. Try Again.'));
+            throw new \Exception(__('Occurred an error during payment process. Try Again.'));
         }
 
         return $this;

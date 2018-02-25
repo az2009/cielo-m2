@@ -6,6 +6,9 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Response extends \Magento\Framework\DataObject
 {
+
+    protected $_requestStatusAllowed = [201, 200];
+
     public function process()
     {
         $this->hasError();
@@ -23,6 +26,11 @@ class Response extends \Magento\Framework\DataObject
             throw new \Exception(__($message));
         }
 
+        if (!in_array($this->getResponse()->getStatus(),
+            $this->_requestStatusAllowed)) {
+            throw new \Exception(__($this->getMessage()));
+        }
+
         return $this;
     }
 
@@ -36,25 +44,34 @@ class Response extends \Magento\Framework\DataObject
     }
 
     /**
+     * get message of request
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->getResponse()->getMessage();
+    }
+
+    /**
      * get body of request
      * @return mixed|string
      */
-    public function getBody()
+    public function getBody($type = \Zend\Json\Json::TYPE_OBJECT)
     {
         $body = $this->getResponse()->getBody();
-        $body = \Zend\Json\Json::decode($body);
+        $body = \Zend\Json\Json::decode($body, $type);
 
         return $body;
     }
 
     /**
-     * @return \Zend\Http\Response
+     * @return \Zend_Http_Response
      * @throws Exception
      */
     public function getResponse()
     {
         $response = $this->getData('response');
-        if (!($response instanceof \Zend\Http\Response)) {
+        if (!($response instanceof \Zend_Http_Response)) {
             throw new \Exception('invalid response');
         }
 
