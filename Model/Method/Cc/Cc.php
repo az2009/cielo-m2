@@ -26,11 +26,6 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canReviewPayment = true;
-
-    /**
-     * @var bool
-     */
     protected $_canRefund = true;
 
     /**
@@ -100,19 +95,30 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $r = '';
-        die();
+
+        $this->setAmount($payment, $amount);
+
+        if ($amount != $payment->getAmountAuthorized()) {
+            $payment->setRefundPartial(true);
+            $this->getClient()
+                 ->setParameterGet('amount', $amount);
+        }
+
+        $this->setPath($payment->getLastTransId(), 'void')
+             ->put()
+             ->request();
     }
 
     public function cancel(\Magento\Payment\Model\InfoInterface $payment)
     {
-        $r = '';
-        die();
+        self::void($payment);
     }
 
     public function void(\Magento\Payment\Model\InfoInterface $payment)
     {
-        $r = '';
-        die();
+        $this->setPath($payment->getLastTransId(), 'void')
+             ->put()
+             ->request();
     }
 
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)

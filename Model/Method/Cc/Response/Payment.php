@@ -7,6 +7,8 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
 
     const STATUS_AUTHORIZED = '1';
 
+    const STATUS_CANCELED = '10';
+
     const STATUS_CAPTURED = '2';
 
     const STATUS_PENDING = '12';
@@ -73,6 +75,12 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
                      ->setResponse($this->getResponse())
                      ->process();
             break;
+            case Payment::STATUS_CANCELED:
+                $this->_cancel
+                     ->setPayment($this->getPayment())
+                     ->setResponse($this->getResponse())
+                     ->process();
+                break;
             case Payment::STATUS_PAYMENT_REVIEW:
             case Payment::STATUS_PENDING:
                 $this->_pending
@@ -88,6 +96,8 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
             break;
         }
     }
+
+    problema status do cancel e capture são iguais
 
     /**
      * get status payment

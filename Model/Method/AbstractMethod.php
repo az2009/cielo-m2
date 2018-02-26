@@ -118,6 +118,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $uri = (string)$this->helper->getRequestUriStage() .'/'. $this->getPath();
         $uri = str_replace('//', '/', $uri);
         $uri = str_replace(':/', '://', $uri);
+        $uri = str_replace('-capture', '', $uri);
         return $uri;
     }
 
