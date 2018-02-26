@@ -98,6 +98,8 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 
         $this->setAmount($payment, $amount);
 
+        $payment->setActionCancel(true);
+
         if ($amount != $payment->getAmountAuthorized()) {
             $payment->setRefundPartial(true);
             $this->getClient()
@@ -116,6 +118,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function void(\Magento\Payment\Model\InfoInterface $payment)
     {
+        $payment->setActionCancel(true);
         $this->setPath($payment->getLastTransId(), 'void')
              ->put()
              ->request();

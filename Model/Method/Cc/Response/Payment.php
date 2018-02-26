@@ -9,6 +9,8 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
 
     const STATUS_CANCELED = '10';
 
+    const STATUS_CANCELED_PARTIAL = '2';
+
     const STATUS_CAPTURED = '2';
 
     const STATUS_PENDING = '12';
@@ -97,8 +99,6 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
         }
     }
 
-    problema status do cancel e capture são iguais
-
     /**
      * get status payment
      * @return mixed
@@ -108,12 +108,30 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
     {
         $body = $this->getBody();
         if (property_exists($body, 'Payment')) {
-            return $body->Payment->Status;
+            $status = $body->Payment->Status;
+            return $this->isStatusCanceled($status);
         } elseif (property_exists($body, 'Status')) {
-            return $body->Status;
+            $status = $body->Status;
+            return $this->isStatusCanceled($status);
         }
 
         throw new \Exception('invalid payment status');
+    }
+
+    /**
+     * check status canceled when partial
+     * @param $status
+     * @return string
+     */
+    public function isStatusCanceled($status)
+    {
+        $payment = $this->getPayment();
+        if ($payment->getActionCancel()
+            && $status == Payment::STATUS_CANCELED_PARTIAL) {
+            $status = self::STATUS_CANCELED;
+        }
+
+        return $status;
     }
 
 }
