@@ -8,6 +8,9 @@ use Magento\Framework\DataObject;
 class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 {
 
+    /**
+     * @var string
+     */
     protected $_code = 'az2009_cielo';
 
     /**
@@ -23,6 +26,11 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
+    protected $_canReviewPayment = true;
+
+    /**
+     * @var bool
+     */
     protected $_canRefund = true;
 
     /**
@@ -33,13 +41,17 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
+    protected $_canVoid = true;
+
+    /**
+     * @var bool
+     */
     protected $_canRefundInvoicePartial = true;
 
     /**
      * @var bool
      */
     protected $_canCancelInvoice = true;
-
 
     /**
      * @var string
@@ -87,17 +99,20 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        parent::refund($payment, $amount);
+        $r = '';
+        die();
     }
 
     public function cancel(\Magento\Payment\Model\InfoInterface $payment)
     {
-        parent::cancel($payment);
+        $r = '';
+        die();
     }
 
     public function void(\Magento\Payment\Model\InfoInterface $payment)
     {
-        parent::void($payment);
+        $r = '';
+        die();
     }
 
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
@@ -116,18 +131,18 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         if ($payment->getAuthorizationTransaction()
             && !$payment->getOrder()->getTotalPaid()) {
 
-            $payment->setCapturePartial(true);
             $this->setPath($payment->getLastTransId(), 'capture')
                  ->put();
 
             if ($amount != $payment->getAmountAuthorized()) {
+                $payment->setCapturePartial(true);
                 $this->getClient()
                      ->setParameterGet('amount', $amount);
             }
 
         } else {
 
-            //check if transaction has invoice
+            //check if transaction has value captured
             if ($payment->getOrder()->getTotalPaid() > 0) {
                 throw new \Az2009\Cielo\Exception\Cc(
                     __('                

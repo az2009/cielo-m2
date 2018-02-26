@@ -26,18 +26,32 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
     /**
      * @var \Az2009\Cielo\Model\Method\Cc\Transaction\General
      */
-    protected $_default;
+    protected $_pending;
+
+    /**
+     * @var \Az2009\Cielo\Model\Method\Cc\Transaction\Unauthorized
+     */
+    protected $_unauthorized;
+
+    /**
+     * @var \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
+     */
+    protected $_cancel;
 
 
     public function __construct(
         \Az2009\Cielo\Model\Method\Cc\Transaction\Authorize $authorize,
+        \Az2009\Cielo\Model\Method\Cc\Transaction\Unauthorized $unauthorized,
         \Az2009\Cielo\Model\Method\Cc\Transaction\Capture $capture,
-        \Az2009\Cielo\Model\Method\Cc\Transaction\DefaultTransaction $default,
+        \Az2009\Cielo\Model\Method\Cc\Transaction\Pending $pending,
+        \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel $cancel,
         array $data = []
     ) {
+        $this->_unauthorized = $unauthorized;
         $this->_authorize = $authorize;
         $this->_capture = $capture;
-        $this->_default = $default;
+        $this->_pending = $pending;
+        $this->_cancel = $cancel;
 
         parent::__construct($data);
     }
@@ -54,8 +68,20 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
                      ->process();
             break;
             case Payment::STATUS_CAPTURED:
-                $r = '';
                 $this->_capture
+                     ->setPayment($this->getPayment())
+                     ->setResponse($this->getResponse())
+                     ->process();
+            break;
+            case Payment::STATUS_PAYMENT_REVIEW:
+            case Payment::STATUS_PENDING:
+                $this->_pending
+                     ->setPayment($this->getPayment())
+                     ->setResponse($this->getResponse())
+                     ->process();
+            break;
+            default:
+                $this->_unauthorized
                      ->setPayment($this->getPayment())
                      ->setResponse($this->getResponse())
                      ->process();

@@ -2,13 +2,13 @@
 
 namespace Az2009\Cielo\Model\Method\Cc\Transaction;
 
-class Authorize extends \Az2009\Cielo\Model\Method\Transaction
+class Pending extends \Az2009\Cielo\Model\Method\Transaction
 {
-
     /**
      * @var \Az2009\Cielo\Helper\Data
      */
     protected $helper;
+
 
     public function __construct(\Az2009\Cielo\Helper\Data $helper, array $data = [])
     {
@@ -16,23 +16,14 @@ class Authorize extends \Az2009\Cielo\Model\Method\Transaction
         parent::__construct($data);
     }
 
-    /**
-     * process the authorization
-     * @return $this
-     */
     public function process()
     {
         $payment = $this->getPayment();
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
+        $paymentId = '';
 
-        if (!property_exists($this->getBody(), 'Payment')) {
-            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
-        }
-
-        $paymentId = $this->getBody()->Payment->PaymentId;
-
-        if (empty($paymentId)) {
-            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
+        if (property_exists($this->getBody(), 'Payment')) {
+            $paymentId = $this->getBody()->Payment->PaymentId;
         }
 
         if (!$payment->getTransactionId() && !empty($paymentId)) {
@@ -51,10 +42,11 @@ class Authorize extends \Az2009\Cielo\Model\Method\Transaction
             $this->getTransactionData()
         );
 
-        $payment->setIsTransactionClosed(false);
-
         $payment->getOrder()
-                ->setStatus($this->helper->getStatusPay());
+                ->setStatus($this->helper->getStatusPending());
+
+        $payment->setIsTransactionClosed(false)
+                ->setIsTransactionPending(true);
 
         return $this;
     }

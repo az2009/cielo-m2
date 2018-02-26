@@ -10,11 +10,18 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
      */
     protected $messageManager;
 
+    /**
+     * @var \Az2009\Cielo\Helper\Data
+     */
+    protected $helper;
+
 
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Az2009\Cielo\Helper\Data $helper,
         array $data = []
     ) {
+        $this->helper = $helper;
         $this->messageManager = $messageManager;
         parent::__construct($data);
     }
@@ -25,14 +32,20 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         $paymentId = '';
 
-        if (property_exists($this->getBody(), 'Payment')) {
+        if (!property_exists($this->getBody(), 'Payment') && !$payment->getLastTransId()) {
+            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
+        } elseif(property_exists($this->getBody(), 'Payment')) {
             $paymentId = $this->getBody()->Payment->PaymentId;
         }
 
-        if (!$payment->getLastTransId()) {
+        if (empty($paymentId) && !$payment->getLastTransId()) {
+            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
+        }
+
+        //check if is the first capture of order
+        if (!$payment->getLastTransId() && !empty($paymentId)) {
             $payment->setTransactionId($paymentId)
                     ->setLastTransId($paymentId);
-
         } else {
             $payment->setParentTransactionId(
                 $payment->getAdditionalInformation('transaction_authorization')
@@ -58,6 +71,9 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
                 )
             );
         }
+
+        $payment->getOrder()
+                ->setStatus($this->helper->getStatusPay());
 
         return $this;
     }
