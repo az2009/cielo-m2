@@ -8,6 +8,7 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
     const STATUS_AUTHORIZED = '1';
 
     const STATUS_CANCELED = '10';
+    const STATUS_CANCELED_AFTER = '11';
 
     const STATUS_CANCELED_PARTIAL = '2';
 
@@ -77,6 +78,7 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
                      ->setResponse($this->getResponse())
                      ->process();
             break;
+            case Payment::STATUS_CANCELED_AFTER:
             case Payment::STATUS_CANCELED:
                 $this->_cancel
                      ->setPayment($this->getPayment())

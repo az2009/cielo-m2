@@ -3,7 +3,6 @@
 namespace Az2009\Cielo\Model\Method;
 
 use \Magento\Framework\DataObject;
-use Magento\Framework\Exception\LocalizedException;
 
 abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
@@ -208,7 +207,6 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     public function request()
     {
-        $r = '';
         try {
 
             $this->_eventManager->dispatch(

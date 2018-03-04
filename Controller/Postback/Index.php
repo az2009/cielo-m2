@@ -6,21 +6,60 @@ use Magento\Framework\App\Action\Context;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
+    /**
+     * @var string
+     */
+    protected $_paymentId;
+
+    /**
+     * @var string
+     */
+    protected $_changeType;
+
+    /**
+     * @var \Az2009\Cielo\Model\Method\Cc\Postback
+     */
+    protected $_postback;
+
     public function __construct(
         Context $context,
-        \Az2009\Cielo\Helper\Data $helper,
-        \Az2009\Cielo\Model\CieloConfigProvider $config
+        \Az2009\Cielo\Model\Method\Cc\Postback $postback
     ) {
-        $this->helper = $helper;
-        $this->config = $config;
+        $this->_postback = $postback;
         parent::__construct($context);
     }
 
     public function execute()
     {
+        $response = $this->getResponse();
 
-        $r = var_export($this->config->getIcons(), true);
+        if ($this->_isValid()) {
 
-        return $this->getResponse()->setBody($r);
+            switch ($this->_changeType) {
+                case 1:
+                    $this->_postback
+                         ->setPaymentId($this->_paymentId)
+                         ->process();
+                break;
+            }
+
+           $response->setHttpResponseCode(200);
+           $response->clearBody();
+           $response->sendHeaders();
+        }
+    }
+
+    protected function _isValid()
+    {
+        $request = $this->getRequest();
+
+        if (/*!$request->isPost()
+            ||*/ !($this->_paymentId = $request->getParam('PaymentId'))
+            || !($this->_changeType = $request->getParam('ChangeType'))
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

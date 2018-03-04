@@ -2,6 +2,8 @@
 
 namespace Az2009\Cielo\Model\Method\Cc\Transaction;
 
+use Braintree\Exception;
+
 class Capture extends \Az2009\Cielo\Model\Method\Transaction
 {
 
@@ -30,7 +32,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
     {
         $payment = $this->getPayment();
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
-        $paymentId = '';
+        $paymentId = null;
 
         if (!property_exists($this->getBody(), 'Payment') && !$payment->getLastTransId()) {
             throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
@@ -75,7 +77,29 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         $payment->getOrder()
                 ->setStatus($this->helper->getStatusPay());
 
+        if ($this->getPostback()) {
+            $payment->registerCaptureNotification($this->_getCapturedAmount());
+            $payment->getOrder()->save();
+        }
+
         return $this;
+    }
+
+    protected function _getCapturedAmount()
+    {
+        $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
+        if (!isset($bodyArray['Payment']['CapturedAmount'])
+            || !($capturedAmount = floatval($bodyArray['Payment']['CapturedAmount']))
+        ) {
+            throw new Exception(
+                __(
+                    'not exists values to capture in order %1',
+                    $this->getPayment()->getOrder()->getId()
+                )
+            );
+        }
+
+        return $capturedAmount;
     }
 
 }

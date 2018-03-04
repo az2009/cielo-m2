@@ -56,7 +56,30 @@ class Authorize extends \Az2009\Cielo\Model\Method\Transaction
         $payment->getOrder()
                 ->setStatus($this->helper->getStatusPay());
 
+        if ($this->getPostback()) {
+            $payment->registerAuthorizationNotification($this->_getAuthorizedAmount());
+            $payment->getOrder()
+                    ->save();
+        }
+
         return $this;
+    }
+
+    protected function _getAuthorizedAmount()
+    {
+        $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
+        if (!isset($bodyArray['Payment']['Amount'])
+            || !($authorizeAmount = doubleval($bodyArray['Payment']['Amount']))
+        ) {
+            throw new Exception(
+                __(
+                    'not exists values to authorize in order %1',
+                    $this->getPayment()->getOrder()->getId()
+                )
+            );
+        }
+
+        return $authorizeAmount;
     }
 
 }

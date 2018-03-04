@@ -46,6 +46,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $config;
     }
 
+    public function getUriQueryStage()
+    {
+        $config = $this->scopeConfig->getValue(
+            'payment/az2009_cielo/uri_query_stage'
+        );
+
+        return $config;
+    }
+
     public function getStatusPending()
     {
         $config = $this->scopeConfig->getValue(

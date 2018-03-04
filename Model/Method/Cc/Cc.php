@@ -2,9 +2,6 @@
 
 namespace Az2009\Cielo\Model\Method\Cc;
 
-use Braintree\Exception;
-use Magento\Framework\DataObject;
-
 class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 {
 
@@ -42,6 +39,11 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
      * @var bool
      */
     protected $_canRefundInvoicePartial = true;
+
+    /**
+     * @var bool
+     */
+    protected $_canReviewPayment = true;
 
     /**
      * @var bool
@@ -94,26 +96,31 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $r = '';
-
         $this->setAmount($payment, $amount);
-
-        $payment->setActionCancel(true);
-
         if ($amount != $payment->getAmountAuthorized()) {
             $payment->setRefundPartial(true);
             $this->getClient()
                  ->setParameterGet('amount', $amount);
         }
 
-        $this->setPath($payment->getLastTransId(), 'void')
-             ->put()
-             ->request();
+        self::void($payment);
+    }
+
+    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        $r = '';
+        return self::capture($payment, $payment->getAmountAuthorized());
+    }
+
+    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        $r = '';
+        return self::void($payment);
     }
 
     public function cancel(\Magento\Payment\Model\InfoInterface $payment)
     {
-        self::void($payment);
+        return self::void($payment);
     }
 
     public function void(\Magento\Payment\Model\InfoInterface $payment)
@@ -185,9 +192,8 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         $payment->setAmount($amount);
     }
 
-
     public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
     {
-        return true;
+        return parent::isAvailable();
     }
 }
