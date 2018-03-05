@@ -43,7 +43,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             'payment/az2009_cielo/uri_request_stage'
         );
 
-        return $config;
+        return (string)$config;
     }
 
     public function getUriQueryStage()
@@ -52,7 +52,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             'payment/az2009_cielo/uri_query_stage'
         );
 
-        return $config;
+        return (string)$config;
     }
 
     public function getStatusPending()
@@ -96,4 +96,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
         return $key;
     }
+
+    /**
+     * remove placeholders of uri
+     * @param $uri
+     * @return mixed
+     */
+    public function sanitizeUri($uri)
+    {
+        $uri = str_replace('//', '/', $uri);
+        $uri = str_replace(':/', '://', $uri);
+        $uri = str_replace(['-capture', '-refun', '-refund'], '', $uri);
+
+        return $uri;
+    }
+
 }

@@ -8,6 +8,21 @@
 <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
     <legend>
         <label class="label">
+            <span><!-- ko i18n: 'Select The Credit Card'--><!-- /ko --></span>
+        </label>
+    </legend><br />
+
+    <div class="field type">
+        <div class="control">
+            <select name="" class="credit-card-types">
+                <!-- ko foreach: {data: getCardSaveValues(), as: 'item'} -->
+                <option class="item" data-bind="attr: {'value': item.value, 'label':item.type }"></option>
+                <!--/ko-->
+            </select>
+        </div>
+
+    <legend>
+        <label class="label">
             <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
         </label>
     </legend><br />
@@ -127,3 +142,12 @@
         </div>
     </div>
 </fieldset>
+<script type="text/javascript">
+    var viewModel = {
+        // These are the initial options
+        availableCountries: ko.observableArray(['France', 'Germany', 'Spain'])
+    };
+
+    // ... then later ...
+    viewModel.availableCountries.push('China'); // Adds another option
+</script>

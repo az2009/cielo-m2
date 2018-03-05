@@ -20,12 +20,13 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
 
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Magento\Customer\Model\Session $session,
         \Az2009\Cielo\Helper\Data $helper,
         array $data = []
     ) {
         $this->helper = $helper;
         $this->messageManager = $messageManager;
-        parent::__construct($data);
+        parent::__construct($session, $data);
     }
 
     public function process()
@@ -76,6 +77,8 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
 
         $payment->getOrder()
                 ->setStatus($this->helper->getStatusPay());
+
+        $this->saveCardToken();
 
         if ($this->getPostback()) {
             $payment->registerCaptureNotification($this->_getCapturedAmount());

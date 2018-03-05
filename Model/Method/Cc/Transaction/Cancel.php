@@ -4,7 +4,6 @@ namespace Az2009\Cielo\Model\Method\Cc\Transaction;
 
 class Cancel extends \Az2009\Cielo\Model\Method\Transaction
 {
-
     public function process()
     {
         $payment = $this->getPayment();

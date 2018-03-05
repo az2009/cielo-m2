@@ -53,6 +53,10 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
         }
     }
 
+    /**
+     * get payment instance of order
+     * @return $this
+     */
     protected function _getPaymentInstance()
     {
         $orderId = $this->_getMerchantOrderId();
@@ -63,6 +67,11 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
         return $this;
     }
 
+    /**
+     * get order id of post
+     * @return mixed
+     * @throws \Exception
+     */
     protected function _getMerchantOrderId()
     {
         $response = $this->getBody();

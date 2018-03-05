@@ -2,10 +2,26 @@
 
 namespace Az2009\Cielo\Model\Method;
 
-class Transaction extends \Az2009\Cielo\Model\Method\Response
+abstract class Transaction extends \Az2009\Cielo\Model\Method\Response
 {
+    /**
+     * @var array
+     */
     protected $_transactionData = array();
 
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $_session;
+
+
+    public function __construct(
+        \Magento\Customer\Model\Session $session,
+        array $data = []
+    ) {
+        $this->_session = $session;
+        parent::__construct($data);
+    }
 
     /**
      * set body response to transaction of payment
@@ -45,6 +61,19 @@ class Transaction extends \Az2009\Cielo\Model\Method\Response
         }
 
         return $payment;
+    }
+
+    public function saveCardToken()
+    {
+        $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
+
+        if ($this->_session->isLoggedIn()
+            && isset($bodyArray['Payment']['CreditCard']['CardToken'])
+            && $cardToken = $bodyArray['Payment']['CreditCard']['CardToken']
+        ) {
+            $this->getPayment()
+                 ->setCardToken($cardToken);
+        }
     }
 
     /**

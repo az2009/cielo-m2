@@ -37,6 +37,12 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     protected $httpClientFactory;
 
+    /**
+     * @var string
+     */
+    protected $_uri;
+
+
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -70,6 +76,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->response = $response;
         $this->request = $request;
         $this->httpClientFactory = $httpClientFactory->create();
+        $this->_uri = $this->helper->getRequestUriStage();
     }
 
     /**
@@ -114,10 +121,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     public function getUri()
     {
-        $uri = (string)$this->helper->getRequestUriStage() .'/'. $this->getPath();
-        $uri = str_replace('//', '/', $uri);
-        $uri = str_replace(':/', '://', $uri);
-        $uri = str_replace(['-capture', '-refun', '-refund'], '', $uri);
+        $uri = $this->_uri . '/' . $this->getPath();
+        $uri = $this->helper->sanitizeUri($uri);
         return $uri;
     }
 
@@ -170,7 +175,11 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     {
         $path = '';
         foreach ($this->_path as $k => $v) {
-            $path .= $k .'/'.$v;
+            if (!empty($v)) {
+                $path .= $k .'/'.$v;
+            } else {
+                $path .= $k;
+            }
         }
 
         return $path;
@@ -215,11 +224,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
             );
 
             $response = $this->getClient()->request();
-
-            $this->getResponse()
-                 ->setResponse($response)
-                 ->setPayment($this->getInfoInstance())
-                 ->process();
+            $this->_processResponse($response);
 
             $this->_eventManager->dispatch(
                 'after_send_request_cielo',
@@ -234,6 +239,18 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         }
 
         return $this;
+    }
+
+    /**
+     * process response
+     * @param $response
+     */
+    protected function _processResponse($response)
+    {
+        $this->getResponse()
+             ->setResponse($response)
+             ->setPayment($this->getInfoInstance())
+             ->process();
     }
 
 }

@@ -43,7 +43,6 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
      */
     protected $_cancel;
 
-
     public function __construct(
         \Az2009\Cielo\Model\Method\Cc\Transaction\Authorize $authorize,
         \Az2009\Cielo\Model\Method\Cc\Transaction\Unauthorized $unauthorized,

@@ -21,16 +21,22 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $_postback;
 
+
     public function __construct(
         Context $context,
-        \Az2009\Cielo\Model\Method\Cc\Postback $postback
+        \Az2009\Cielo\Model\Method\Cc\Postback $postback,
+        \Magento\Customer\Model\Session $session,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order
     ) {
         $this->_postback = $postback;
+        $this->_session = $session;
+        $this->_order = $order;
         parent::__construct($context);
     }
 
     public function execute()
     {
+
         $response = $this->getResponse();
 
         if ($this->_isValid()) {
@@ -53,8 +59,8 @@ class Index extends \Magento\Framework\App\Action\Action
     {
         $request = $this->getRequest();
 
-        if (/*!$request->isPost()
-            ||*/ !($this->_paymentId = $request->getParam('PaymentId'))
+         if(!$request->isPost()
+            || !($this->_paymentId = $request->getParam('PaymentId'))
             || !($this->_changeType = $request->getParam('ChangeType'))
         ) {
             return false;

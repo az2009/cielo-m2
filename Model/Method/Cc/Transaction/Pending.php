@@ -9,11 +9,13 @@ class Pending extends \Az2009\Cielo\Model\Method\Transaction
      */
     protected $helper;
 
-
-    public function __construct(\Az2009\Cielo\Helper\Data $helper, array $data = [])
-    {
+    public function __construct(
+        \Az2009\Cielo\Helper\Data $helper,
+        \Magento\Customer\Model\Session $session,
+        array $data = []
+    ) {
         $this->helper = $helper;
-        parent::__construct($data);
+        parent::__construct($session, $data);
     }
 
     public function process()

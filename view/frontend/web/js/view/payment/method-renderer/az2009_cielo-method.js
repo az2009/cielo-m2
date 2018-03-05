@@ -9,9 +9,10 @@ define([
         'mage/translate',
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-data',
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator',
-        'Az2009_Cielo/js/model/credit-card-validation/validate-docnumber'
+        'Az2009_Cielo/js/model/credit-card-validation/validate-docnumber',
+        'ko'
     ],
-    function ($, Component, $t, creditCardData, cardNumberValidator, validateCpfCnpj) {
+    function ($, Component, $t, creditCardData, cardNumberValidator, validateCpfCnpj, ko) {
         'use strict';
         return Component.extend({
             defaults: {
@@ -25,11 +26,11 @@ define([
                 creditCardName: '',
                 creditCardExpMonth: '',
                 creditCardExpYear: '',
-                creditCardCid: ''
+                creditCardCid: '',
+                card: ''
             },
 
             initObservable: function () {
-
                 this._super().observe([
                     'creditCardNumber',
                     'creditCardType',
@@ -39,7 +40,8 @@ define([
                     'creditCardName',
                     'creditCardExpMonth',
                     'creditCardExpYear',
-                    'creditCardCid'
+                    'creditCardCid',
+                    'card'
                 ]);
 
                 return this;
@@ -49,6 +51,8 @@ define([
 
                 this._super();
                 var self = this;
+
+                this.card = ko.observableArray(['France', 'Germany', 'Spain']);
 
                 this.creditCardNumber.subscribe(function (value) {
                     var result;
@@ -169,6 +173,21 @@ define([
                 }
 
                 return false;
+            },
+
+            getCardSave: function()
+            {
+                return window.checkoutConfig.payment.az2009_cielo.cards;
+            },
+
+            getCardSaveValues: function()
+            {
+                return _.map(this.getCardSave(), function (value, key) {
+                    return {
+                        'value': key,
+                        'type': value
+                    };
+                });
             }
 
         });
