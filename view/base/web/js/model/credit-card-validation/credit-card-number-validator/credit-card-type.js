@@ -34,6 +34,17 @@ define([
             }
         },
         {
+            title: 'Aura',
+            type: 'AUR',
+            pattern: '^(5078\\d{2})(\\d{2})(\\d{11})$',
+            gaps: [],
+            lengths: [14, 16, 17, 18, 19],
+            code: {
+                name: 'CVV',
+                size: 3
+            }
+        },
+        {
             title: 'Visa',
             type: 'VI',
             pattern: '^4\\d{12}(\\d{3})?$',
@@ -108,6 +119,7 @@ define([
          * @return {Array}
          */
         getCardTypes: function (cardNumber) {
+
             var i, value,
                 result = [];
 

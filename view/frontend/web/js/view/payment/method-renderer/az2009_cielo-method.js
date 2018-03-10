@@ -27,7 +27,8 @@ define([
                 creditCardExpMonth: '',
                 creditCardExpYear: '',
                 creditCardCid: '',
-                card: ''
+                card: '',
+                creditCardSave:''
             },
 
             initObservable: function () {
@@ -41,7 +42,8 @@ define([
                     'creditCardExpMonth',
                     'creditCardExpYear',
                     'creditCardCid',
-                    'card'
+                    'card',
+                    'creditCardSave'
                 ]);
 
                 return this;
@@ -97,6 +99,24 @@ define([
                         self.docNumber(value);
                     }
                 });
+
+                this.creditCardSave.subscribe(function(value){
+                    if (value == '') {
+                        $('#az2009_cielo_cc_type_cvv_div').hide();
+                    } else {
+                        $('#az2009_cielo_cc_type_cvv_div').show();
+                        var type = $('#cc_token option:selected').attr('data-type');
+                        if (type) {
+                            self.creditCardType(type);
+                        }
+                    }
+
+                    if (value == 'new') {
+                        $('.boxNewCard').show();
+                    } else {
+                        $('.boxNewCard').hide();
+                    }
+                });
             },
 
             getCode: function() {
@@ -114,6 +134,7 @@ define([
                         'cc_exp_month' : this.creditCardExpMonth(),
                         'cc_exp_year' : this.creditCardExpYear(),
                         'cc_cid_enc' : this.creditCardCid(),
+                        'cc_token':this.creditCardSave()
                     }
                 };
             },
@@ -132,6 +153,7 @@ define([
              */
             getCcAvailableTypesValues: function () {
                 return _.map(this.getCcAvailableTypes(), function (value, key) {
+                    console.log(value);
                     return {
                         'value': key,
                         'type': value
@@ -159,6 +181,11 @@ define([
             },
 
             isPlaceOrderActionAllowed: function(value) {
+
+                if (this.creditCardSave().length > 5 && this.creditCardCid().length >= 3) {
+                    return true;
+                }
+
                 var validateCard = cardNumberValidator(this.creditCardNumber());
                 var validateDoc = validateCpfCnpj(this.docNumber());
 
@@ -188,7 +215,22 @@ define([
                         'type': value
                     };
                 });
-            }
+            },
 
+            hasCardSave:function() {
+                var ccsave = window.checkoutConfig.payment.az2009_cielo.cards;
+                var map = _.map(ccsave, function (value, key) {
+                    return {
+                        'key': key,
+                        'value': value
+                    };
+                });
+
+                if (map.length) {
+                    return true;
+                }
+
+                return false;
+            }
         });
     });

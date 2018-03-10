@@ -7,13 +7,30 @@ use Magento\Framework\App\Helper\Context;
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
 
+    /**
+     * @var \Magento\Framework\View\Asset\Repository
+     */
     protected $_asset;
+
+    /**
+     * @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory
+     */
+    protected $_order;
+
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $_session;
 
     public function __construct(
         Context $context,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order,
+        \Magento\Customer\Model\Session $session,
         \Magento\Framework\View\Asset\Repository $asset
     ) {
         $this->_asset = $asset;
+        $this->_order = $order;
+        $this->_session = $session;
         parent::__construct($context);
     }
 
@@ -111,4 +128,48 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $uri;
     }
 
+    /**
+     * get cards saved by customerId
+     * @param $customerId int
+     * @return array
+     */
+    public function getCardSavedByCustomer($customerId = null)
+    {
+        $tokens = [];
+
+        if (is_null($customerId) && $this->_session->isLoggedIn()) {
+            $customerId = $this->_session->getCustomerId();
+        }
+
+        if (empty($customerId)) {
+            return $tokens;
+        }
+
+        $collection = $this->_order->create();
+        $collection->addAttributeToSelect('entity_id');
+        $collection->addAttributeToFilter(
+            'customer_id',
+            array(
+                'eq' => $customerId
+            )
+        );
+        $collection->getSelect()
+            ->join(
+                array('sop' => $collection->getTable('sales_order_payment')),
+                'main_table.entity_id = sop.parent_id AND sop.card_token IS NOT NULL',
+                []
+            )
+            ->group('sop.card_token');
+
+
+        foreach ($collection as $order) {
+            $tokens[$order->getPayment()->getData('card_token')] = [
+                'brand' => $order->getPayment()->getAdditionalInformation('cc_type'),
+                'last_four' => substr($order->getPayment()->getAdditionalInformation('cc_number_enc'), -4)
+            ];
+        }
+
+
+        return $tokens;
+    }
 }

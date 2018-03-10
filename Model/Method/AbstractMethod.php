@@ -42,6 +42,10 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     protected $_uri;
 
+    /**
+     * @var Validate
+     */
+    protected $validate;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -53,6 +57,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         \Magento\Payment\Model\Method\Logger $logger,
         DataObject $request,
         DataObject $response,
+        Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
@@ -72,11 +77,27 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
             $data
         );
 
+        $this->validate = $validate;
         $this->helper = $helper;
         $this->response = $response;
         $this->request = $request;
         $this->httpClientFactory = $httpClientFactory->create();
         $this->_uri = $this->helper->getRequestUriStage();
+    }
+
+    /**
+     * execute all validation
+     */
+    public function validate()
+    {
+        return true;
+    }
+
+    protected function _validate()
+    {
+        $this->validate
+             ->setPayment($this)
+             ->validate();
     }
 
     /**
@@ -222,6 +243,10 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
                 'before_send_request_cielo',
                 ['client' => $this->getClient()]
             );
+
+            if ($this->getRunValidate()) {
+                $this->_validate();
+            }
 
             $response = $this->getClient()->request();
             $this->_processResponse($response);

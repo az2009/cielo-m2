@@ -8,29 +8,14 @@ class CieloConfigProvider
     extends \Magento\Payment\Model\CcConfigProvider
         implements \Magento\Checkout\Model\ConfigProviderInterface
 {
-
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
-    protected $_session;
-
-    /**
-     * @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory
-     */
-    protected $_order;
-
     public function __construct(
         CcConfig $ccConfig,
         Source $assetSource,
-        \Az2009\Cielo\Helper\Data $helper,
-        \Magento\Customer\Model\Session $session,
-        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order
+        \Az2009\Cielo\Helper\Data $helper
     ) {
         $this->helper = $helper;
         $this->ccConfig = $ccConfig;
         $this->assetSource = $assetSource;
-        $this->_session = $session;
-        $this->_order = $order;
     }
 
     /**
@@ -45,7 +30,7 @@ class CieloConfigProvider
                 'az2009_cielo' => [
                     'icons' => $this->getIcons(),
                     'availableTypes' => $this->getCcAvailableTypes(),
-                    'cards' => $this->getCardsSave()
+                    'cards' => $this->helper->getCardSavedByCustomer()
                 ]
             ]
         ];
@@ -58,8 +43,7 @@ class CieloConfigProvider
     }
 
     /**
-     * Get icons for available payment methods
-     *
+     * get icons for available payment methods
      * @return array
      */
     public function getIcons()
@@ -86,40 +70,4 @@ class CieloConfigProvider
 
         return $this->icons;
     }
-
-    public function isValidDoc()
-    {
-
-    }
-
-    public function getCardsSave()
-    {
-        $tokens = [];
-        if ($this->_session->isLoggedIn()) {
-            $collection = $this->_order->create();
-            $collection->addAttributeToSelect('entity_id');
-            $collection->addAttributeToFilter(
-                'customer_id',
-                array(
-                    'eq' => $this->_session->getCustomerId()
-                )
-            );
-            $collection->getSelect()
-                       ->join(
-                           array('sop' => $collection->getTable('sales_order_payment')),
-                           'main_table.entity_id = sop.parent_id AND sop.card_token IS NOT NULL',
-                           []
-                       )
-                       ->group('sop.card_token');
-
-
-           foreach ($collection as $order) {
-                $tokens[$order->getPayment()->getData('card_token')] = $order->getPayment()->getAdditionalInformation('cc_type') .
-                                '-' . substr($order->getPayment()->getAdditionalInformation('cc_number_enc'), -4);
-            }
-        }
-
-        return $tokens;
-    }
-
 }

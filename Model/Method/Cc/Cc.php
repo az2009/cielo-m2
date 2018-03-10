@@ -71,19 +71,22 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         \Magento\Payment\Model\Method\Logger $logger,
         Request\Request $request,
         Response\Payment $response,
+        \Az2009\Cielo\Model\Method\Cc\Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig,
-            $logger, $request, $response, $httpClientFactory, $helper, $resource, $resourceCollection, $data);
-    }
-
-    public function validate()
-    {
-        return true;
+        parent::__construct(
+            $context, $registry,
+            $extensionFactory, $customAttributeFactory,
+            $paymentData, $scopeConfig,
+            $logger, $request,
+            $response, $validate, $httpClientFactory,
+            $helper, $resource,
+            $resourceCollection, $data
+        );
     }
 
     public function assignData(\Magento\Framework\DataObject $data)
@@ -91,6 +94,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         parent::assignData($data);
         $info = $this->getInfoInstance();
         $info->setAdditionalInformation($data->getAdditionalData());
+
         return $this;
     }
 
@@ -135,6 +139,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     {
         $this->setAmount($payment, $amount);
         $payment->setAdditionalInformation('can_capture', false);
+        $this->setRunValidate(true);
         $this->post()->request();
     }
 
@@ -142,11 +147,11 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     {
         //set value that are being captured
         $this->setAmount($payment, $amount);
-
+        $this->setRunValidate(true);
         //check if operation have transaction authorize
         if ($payment->getAuthorizationTransaction()
             && !$payment->getOrder()->getTotalPaid()) {
-
+            $this->setRunValidate(false);
             $this->setPath($payment->getLastTransId(), 'capture')
                  ->put();
 

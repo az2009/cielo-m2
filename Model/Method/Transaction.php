@@ -69,6 +69,8 @@ abstract class Transaction extends \Az2009\Cielo\Model\Method\Response
 
         if ($this->_session->isLoggedIn()
             && isset($bodyArray['Payment']['CreditCard']['CardToken'])
+            && isset($bodyArray['Payment']['CreditCard']['SaveCard'])
+            && $bodyArray['Payment']['CreditCard']['SaveCard']
             && $cardToken = $bodyArray['Payment']['CreditCard']['CardToken']
         ) {
             $this->getPayment()

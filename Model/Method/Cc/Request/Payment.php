@@ -84,11 +84,22 @@ class Payment extends \Magento\Framework\DataObject
         return $installments;
     }
 
+    public function getCreditCard()
+    {
+        $token = $this->getInfo()->getAdditionalInformation('cc_token');
+
+        if ($token == 'new') {
+            return $this->getCreditCardNew();
+        }
+
+        return $this->getCreditCardSaved();
+    }
+
     /**
-     * mock data credit card
+     * mock data credit card new
      * @return array
      */
-    public function getCreditCard()
+    public function getCreditCardNew()
     {
         return [
             'CardNumber' => $this->getInfo()->getAdditionalInformation('cc_number_enc'),
@@ -96,6 +107,19 @@ class Payment extends \Magento\Framework\DataObject
             'ExpirationDate' => $this->getExpDate(),
             'SecurityCode' => $this->getInfo()->getAdditionalInformation('cc_cid_enc'),
             'SaveCard' => (boolean)$this->getPayment()->getConfigData('can_save_cc', $this->order->getStoreId()),
+            'Brand' => $this->_cctype->getBrandFormatCielo($this->getInfo()->getAdditionalInformation('cc_type'))
+        ];
+    }
+
+    /**
+     * mock data credit card saved
+     * @return array
+     */
+    public function getCreditCardSaved()
+    {
+        return [
+            'CardToken' => $this->getInfo()->getAdditionalInformation('cc_token'),
+            'SaveCard' => false,
             'Brand' => $this->_cctype->getBrandFormatCielo($this->getInfo()->getAdditionalInformation('cc_type'))
         ];
     }
