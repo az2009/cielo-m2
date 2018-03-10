@@ -169,7 +169,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             ];
         }
 
-
         return $tokens;
+    }
+
+    public function substr($value, $maxlength, $init = null)
+    {
+        if (!is_null($init)) {
+            return substr($value, (int)$init, $maxlength);
+        }
+
+        return substr($value, $maxlength);
     }
 }

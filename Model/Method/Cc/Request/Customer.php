@@ -31,12 +31,18 @@ class Customer extends \Magento\Framework\DataObject
      */
     protected $_customerSession;
 
+    /**
+     * @var \Az2009\Cielo\Helper\Data
+     */
+    protected $helper;
 
     public function __construct(
         \Magento\Customer\Model\Session $customerSession,
+        \Az2009\Cielo\Helper\Data $helper,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
+        $this->helper = $helper;
         parent::__construct($data);
     }
 
@@ -58,10 +64,10 @@ class Customer extends \Magento\Framework\DataObject
         return $this->setData(
                         [
                             'Customer' => [
-                                'Name' => $this->billingAddress->getFirstname(),
-                                'Identity' => $this->getIdentity(),
+                                'Name' => $this->helper->substr($this->billingAddress->getFirstname(), 255, 0),
+                                'Identity' => $this->helper->substr($this->getIdentity(), 14, 0),
                                 'IdentityType' => $this->isCpfCnpj($this->getIdentity()),
-                                'Email' => $this->order->getCustomerEmail(),
+                                'Email' => $this->helper->substr($this->order->getCustomerEmail(), -255),
                                 'Address' => $this->getBillingAddress(),
                                 'DeliveryAddress' => $this->getShippingAddress(),
                             ]
@@ -76,12 +82,12 @@ class Customer extends \Magento\Framework\DataObject
     public function getBillingAddress()
     {
         return  [
-                    'Street' => $this->billingAddress->getStreetLine(1),
-                    'Number' => $this->billingAddress->getStreetLine(2),
-                    'Complement' => $this->getComplement(),
-                    'ZipCode' => $this->billingAddress->getPostcode(),
-                    'City' => $this->billingAddress->getCity(),
-                    'Country' => $this->billingAddress->getCountryId(),
+                    'Street' => $this->helper->substr($this->billingAddress->getStreetLine(1), 255, 0),
+                    'Number' => $this->helper->substr($this->billingAddress->getStreetLine(2), 15, 0),
+                    'Complement' => $this->helper->substr($this->getComplement(), 50, 0),
+                    'ZipCode' => $this->helper->substr($this->billingAddress->getPostcode(), 9, 0),
+                    'City' => $this->helper->substr($this->billingAddress->getCity(), 50, 0),
+                    'Country' => $this->helper->substr($this->billingAddress->getCountryId(), 35, 0),
                 ];
     }
 
@@ -91,12 +97,12 @@ class Customer extends \Magento\Framework\DataObject
     public function getShippingAddress()
     {
         return [
-                   'Street' => $this->shippingAddress->getStreetLine(1),
-                   'Number' => $this->shippingAddress->getStreetLine(2),
-                   'Complement' => $this->shippingAddress->getStreetLine(3),
-                   'ZipCode' => $this->shippingAddress->getPostcode(),
-                   'City' => $this->shippingAddress->getCity(),
-                   'Country' => $this->shippingAddress->getCountryId(),
+                   'Street' => $this->helper->substr($this->shippingAddress->getStreetLine(1), 255, 0),
+                   'Number' => $this->helper->substr($this->shippingAddress->getStreetLine(2), 15, 0),
+                   'Complement' => $this->helper->substr($this->getComplement(), 50, 0),
+                   'ZipCode' => $this->helper->substr($this->shippingAddress->getPostcode(), 9, 0),
+                   'City' => $this->helper->substr($this->shippingAddress->getCity(), 50, 0),
+                   'Country' => $this->helper->substr($this->shippingAddress->getCountryId(), 35, 0),
                ];
     }
 
@@ -142,7 +148,7 @@ class Customer extends \Magento\Framework\DataObject
         $identity = $this->_customerSession
                          ->getCustomer()
                          ->getData($attributeCode);
-
+        $identity = preg_replace('/[^0-9]/', '', $identity);
         return $identity;
     }
 

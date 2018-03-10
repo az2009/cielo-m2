@@ -2,8 +2,6 @@
 
 namespace Az2009\Cielo\Model\Method;
 
-use \Magento\Framework\DataObject;
-
 abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 {
 
@@ -55,8 +53,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         \Magento\Payment\Helper\Data $paymentData,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
-        DataObject $request,
-        DataObject $response,
+        \Magento\Framework\DataObject $request,
+        \Magento\Framework\DataObject $response,
         Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
@@ -83,14 +81,6 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->request = $request;
         $this->httpClientFactory = $httpClientFactory->create();
         $this->_uri = $this->helper->getRequestUriStage();
-    }
-
-    /**
-     * execute all validation
-     */
-    public function validate()
-    {
-        return true;
     }
 
     protected function _validate()

@@ -14,9 +14,18 @@ class Payment extends \Magento\Framework\DataObject
 
     protected $_cctype;
 
-    public function __construct(\Az2009\Cielo\Model\Source\Cctype $cctype, array $data = [])
-    {
+    /**
+     * @var \Az2009\Cielo\Helper\Data
+     */
+    protected $helper;
+
+    public function __construct(
+        \Az2009\Cielo\Model\Source\Cctype $cctype,
+        \Az2009\Cielo\Helper\Data $helper,
+        array $data = []
+    ) {
         $this->_cctype = $cctype;
+        $this->helper = $helper;
         parent::__construct($data);
     }
 
@@ -47,7 +56,7 @@ class Payment extends \Magento\Framework\DataObject
                                'Interest' => Payment::INTEREST,
                                'Capture' => $info->getAdditionalInformation('can_capture'),
                                'Authenticate' => false,
-                               'SoftDescriptor' => $this->getSoftDescriptor(),
+                               'SoftDescriptor' => $this->helper->substr($this->getSoftDescriptor(), 13, 0),
                                'CreditCard' => $this->getCreditCard(),
                            ]
                         ]

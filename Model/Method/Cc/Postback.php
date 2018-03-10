@@ -2,9 +2,6 @@
 
 namespace Az2009\Cielo\Model\Method\Cc;
 
-use Az2009\Cielo\Model\Method\Validate;
-use Magento\Framework\DataObject;
-
 class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
 {
 
@@ -16,9 +13,9 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
         \Magento\Payment\Helper\Data $paymentData,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
-        DataObject $request,
-        \Az2009\Cielo\Model\Method\Cc\Response\Postback $response,
-        \Az2009\Cielo\Model\Method\Validate $validate,
+        \Magento\Framework\DataObject $request,
+        Response\Postback $response,
+        Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
