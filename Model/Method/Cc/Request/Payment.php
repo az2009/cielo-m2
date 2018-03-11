@@ -56,7 +56,7 @@ class Payment extends \Magento\Framework\DataObject
                                'Interest' => Payment::INTEREST,
                                'Capture' => $info->getAdditionalInformation('can_capture'),
                                'Authenticate' => false,
-                               'SoftDescriptor' => $this->helper->substr($this->getSoftDescriptor(), 13, 0),
+                               'SoftDescriptor' => $this->helper->prepareString($this->getSoftDescriptor(), 13, 0),
                                'CreditCard' => $this->getCreditCard(),
                            ]
                         ]
@@ -76,7 +76,7 @@ class Payment extends \Magento\Framework\DataObject
                          $this->order->getStoreId()
                      );
 
-        return substr($desc, 0, 13);
+        return $desc;
     }
 
     /**
@@ -85,8 +85,9 @@ class Payment extends \Magento\Framework\DataObject
      */
     public function getInstallments()
     {
-        $installments = $this->getInfo()->getAdditionalInformation('installments');
-        if ((int)$installments <= 0) {
+        $installments = $this->getInfo()->getAdditionalInformation('cc_installments');
+        $installments = intval($installments);
+        if ($installments <= 0) {
             $installments = 1;
         }
 

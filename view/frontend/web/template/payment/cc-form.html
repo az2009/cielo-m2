@@ -6,49 +6,49 @@
 -->
 
 <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+    <div class="field type brandCard" style="display: none">
+        <div class="control">
+            <ul class="credit-card-types">
+                <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
+                <li class="item" data-bind="css: {
+                                                     _active: $parent.selectedCardType() == item.type,
+                                                     _inactive: $parent.selectedCardType() != null && $parent.selectedCardType() != item.type
+                                                     } ">
+                    <!--ko if: $parent.getIcons(item.type) -->
+                    <img data-bind="attr: {
+                            'src': $parent.getIcons(item.type).url,
+                            'width': $parent.getIcons(item.type).width,
+                            'height': $parent.getIcons(item.type).height
+                            }">
+                    <!--/ko-->
+                </li>
+                <!--/ko-->
+            </ul>
+            <input type="hidden"
+                   name="payment[cc_type]"
+                   class="input-text"
+                   data-bind="attr: {id: getCode() + '_cc_type', 'data-container': getCode() + '-cc-type'},
+                       value: creditCardType"
+                   value="">
+        </div>
+    </div>
     <!--ko if: hasCardSave()-->
     <div class="field type">
         <label class="label">
             <span><!-- ko i18n: 'Select The Credit Card'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <select name="cc_token" id="cc_token" class="credit-card-types" data-bind="value:creditCardSave">
+            <select name="payment[cc_token]" id="cc_token" class="credit-card-types" data-bind="value:creditCardSave">
                 <option class="item" data-bind="attr: {'value': '', 'label': ''}"></option>
                 <option class="item" data-bind="attr: {'value': 'new', 'label': $t('Add new Credit Card')}"></option>
                 <!-- ko foreach: {data: getCardSaveValues(), as: 'item'} -->
-                <option class="item" data-bind="attr: {'value': item.value, 'data-type':item.type.brand, 'label':item.type.brand + ' - ' + item.type.last_four }"></option>
+                <option class="item" data-bind="attr: {'value': item.value, 'data-type':item.type.brand, 'label': item.type.last_four }"></option>
                 <!--/ko-->
             </select>
         </div>
     </div>
     <!--/ko-->
     <div class="boxNewCard" style="display:none">
-        <div class="field type">
-            <div class="control">
-                <ul class="credit-card-types">
-                    <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
-                    <li class="item" data-bind="css: {
-                                                     _active: $parent.selectedCardType() == item.type,
-                                                     _inactive: $parent.selectedCardType() != null && $parent.selectedCardType() != item.type
-                                                     } ">
-                        <!--ko if: $parent.getIcons(item.type) -->
-                        <img data-bind="attr: {
-                            'src': $parent.getIcons(item.type).url,
-                            'width': $parent.getIcons(item.type).width,
-                            'height': $parent.getIcons(item.type).height
-                            }">
-                        <!--/ko-->
-                    </li>
-                    <!--/ko-->
-                </ul>
-                <input type="hidden"
-                       name="payment[cc_type]"
-                       class="input-text"
-                       data-bind="attr: {id: getCode() + '_cc_type', 'data-container': getCode() + '-cc-type'},
-                       value: creditCardType"
-                       value="">
-            </div>
-        </div>
         <div class="field number required">
             <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
                 <span><!-- ko i18n: 'Número do Cartão'--><!-- /ko --></span>
@@ -113,9 +113,9 @@
     </div>
     <div class="field cvv required" data-bind="attr: {id: getCode() + '_cc_type_cvv_div'}" style="display: none">
         <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
-            <span><!-- ko i18n: 'Código de segurança'--><!-- /ko --></span>
+            <span><!-- ko i18n: 'Code Security NUmber'--><!-- /ko --></span>
         </label>
-        <div class="control _with-tooltip">
+        <div>
             <input type="number"
                    autocomplete="off"
                    class="input-text cvv required-entry"
@@ -124,15 +124,20 @@
                    value=""
                    data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
             />
-            <div class="field-tooltip toggle">
-                    <span class="field-tooltip-action action-cvv"
-                          tabindex="0"
-                          data-toggle="dropdown"
-                          data-bind="attr: {title: $t('What is this?')}, mageInit: {'dropdown':{'activeClass': '_active'}}">
-                        <span><!-- ko i18n: 'What is this?'--><!-- /ko --></span>
-                    </span>
-                <div class="field-tooltip-content"></div>
+            <!--ko if: hasInstallments()-->
+            <div class="field" data-bind="attr: {id: getCode() + '_cc_installments_div'}">
+                <label data-bind="attr: {for: getCode() + '_installments'}" class="label">
+                    <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
+                </label>
+                <div class="control">
+                    <select data-bind="attr: {'id': 'cc_installments'}, value: creditCardInstallments" name="payment[cc_installments]">
+                        <!-- ko foreach: {data: getInstallments(), as: 'installment'} -->
+                        <option class="item" data-bind="attr: {'value': installment.key, 'label':installment.value }"></option>
+                        <!--/ko-->
+                    </select>
+                </div>
             </div>
+            <!-- /ko -->
         </div>
     </div>
 </fieldset>

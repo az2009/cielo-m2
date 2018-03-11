@@ -82,7 +82,18 @@
                         <field id="active">1</field>
                     </depends>
                 </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+
+                <field id="installments" translate="label" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Payment from Applicable Countries</label>
+                    <frontend_model>Az2009\Cielo\Block\Adminhtml\Form\Field\Installment</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <config_path>payment/az2009_cielo/installments</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Payment from Specific Countries</label>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                     <depends>

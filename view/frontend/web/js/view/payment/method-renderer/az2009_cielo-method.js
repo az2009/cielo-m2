@@ -28,7 +28,8 @@ define([
                 creditCardExpYear: '',
                 creditCardCid: '',
                 card: '',
-                creditCardSave:''
+                creditCardSave:'',
+                creditCardInstallments:''
             },
 
             initObservable: function () {
@@ -43,7 +44,8 @@ define([
                     'creditCardExpYear',
                     'creditCardCid',
                     'card',
-                    'creditCardSave'
+                    'creditCardSave',
+                    'creditCardInstallments'
                 ]);
 
                 return this;
@@ -102,12 +104,13 @@ define([
 
                 this.creditCardSave.subscribe(function(value){
                     if (value == '') {
-                        $('#az2009_cielo_cc_type_cvv_div').hide();
+                        $('#az2009_cielo_cc_type_cvv_div, .brandCard').hide();
                     } else {
-                        $('#az2009_cielo_cc_type_cvv_div').show();
+                        $('#az2009_cielo_cc_type_cvv_div, .brandCard').show();
                         var type = $('#cc_token option:selected').attr('data-type');
                         if (type) {
                             self.creditCardType(type);
+                            self.selectedCardType(type);
                         }
                     }
 
@@ -134,7 +137,8 @@ define([
                         'cc_exp_month' : this.creditCardExpMonth(),
                         'cc_exp_year' : this.creditCardExpYear(),
                         'cc_cid_enc' : this.creditCardCid(),
-                        'cc_token':this.creditCardSave()
+                        'cc_token':this.creditCardSave(),
+                        'cc_installments':this.creditCardInstallments()
                     }
                 };
             },
@@ -153,7 +157,6 @@ define([
              */
             getCcAvailableTypesValues: function () {
                 return _.map(this.getCcAvailableTypes(), function (value, key) {
-                    console.log(value);
                     return {
                         'value': key,
                         'type': value
@@ -231,6 +234,31 @@ define([
                 }
 
                 return false;
+            },
+
+            hasInstallments: function() {
+                var installments = this.getInstallments();
+                if (installments) {
+                    return true;
+                }
+
+                return false;
+            },
+
+            getInstallments: function() {
+                var installments = window.checkoutConfig.payment.az2009_cielo.installments;
+                var values = {};
+                console.log(installments);
+                if (installments) {
+                    values = _.map(installments, function (value, key) {
+                        return {
+                            'key': key,
+                            'value': value
+                        };
+                    });
+                }
+
+                return values;
             }
         });
     });

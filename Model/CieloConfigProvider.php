@@ -8,20 +8,28 @@ class CieloConfigProvider
     extends \Magento\Payment\Model\CcConfigProvider
         implements \Magento\Checkout\Model\ConfigProviderInterface
 {
-    public function __construct(
-        CcConfig $ccConfig,
-        Source $assetSource,
-        \Az2009\Cielo\Helper\Data $helper
-    ) {
-        $this->helper = $helper;
-        $this->ccConfig = $ccConfig;
-        $this->assetSource = $assetSource;
-    }
 
     /**
      * @var array
      */
-    private $icons = [];
+    protected $icons = [];
+
+    /**
+     * @var \Az2009\Cielo\Helper\Installment
+     */
+    protected $installment;
+
+    public function __construct(
+        CcConfig $ccConfig,
+        Source $assetSource,
+        \Az2009\Cielo\Helper\Data $helper,
+        \Az2009\Cielo\Helper\Installment $installment
+    ) {
+        $this->helper = $helper;
+        $this->ccConfig = $ccConfig;
+        $this->assetSource = $assetSource;
+        $this->installment = $installment;
+    }
 
     public function getConfig()
     {
@@ -30,7 +38,8 @@ class CieloConfigProvider
                 'az2009_cielo' => [
                     'icons' => $this->getIcons(),
                     'availableTypes' => $this->getCcAvailableTypes(),
-                    'cards' => $this->helper->getCardSavedByCustomer()
+                    'cards' => $this->helper->getCardSavedByCustomer(),
+                    'installments' => $this->installment->getInstallmentsAvailable()
                 ]
             ]
         ];

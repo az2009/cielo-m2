@@ -59,7 +59,7 @@ class Request extends \Magento\Framework\DataObject
 
         $this->_eventManager->dispatch(
             'after_prepare_request_params_cielo_cc',
-            ['data_object' => $this]
+            ['data_object' => $request]
         );
 
         return $request->toJson();

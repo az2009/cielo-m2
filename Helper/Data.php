@@ -165,19 +165,34 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         foreach ($collection as $order) {
             $tokens[$order->getPayment()->getData('card_token')] = [
                 'brand' => $order->getPayment()->getAdditionalInformation('cc_type'),
-                'last_four' => substr($order->getPayment()->getAdditionalInformation('cc_number_enc'), -4)
+                'last_four' => $this->getCardLabel($order->getPayment())
             ];
         }
 
         return $tokens;
     }
 
-    public function substr($value, $maxlength, $init = null)
+    public function getCardLabel(\Magento\Sales\Model\Order\Payment\Interceptor $payment)
+    {
+        $firstFour = substr($payment->getAdditionalInformation('cc_number_enc'),0, 4);
+        $lastFour = substr($payment->getAdditionalInformation('cc_number_enc'), -4);
+
+        return $firstFour. ' **** '.$lastFour;
+    }
+
+    /**
+     * sanitize string
+     * @param $value
+     * @param $maxlength
+     * @param null $init
+     * @return bool|string
+     */
+    public function prepareString($value, $maxlength, $init = null)
     {
         if (!is_null($init)) {
-            return substr($value, (int)$init, $maxlength);
+            return substr(trim($value), (int)$init, $maxlength);
         }
 
-        return substr($value, $maxlength);
+        return substr(trim($value), $maxlength);
     }
 }
