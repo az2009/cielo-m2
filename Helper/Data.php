@@ -20,7 +20,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @var \Magento\Customer\Model\Session
      */
-    protected $_session;
+    public $_session;
 
     public function __construct(
         Context $context,

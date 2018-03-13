@@ -98,11 +98,21 @@ class Payment extends \Magento\Framework\DataObject
     {
         $token = $this->getInfo()->getAdditionalInformation('cc_token');
 
-        if ($token == 'new') {
+        if (empty($token) || $token == 'new') {
             return $this->getCreditCardNew();
         }
 
         return $this->getCreditCardSaved();
+    }
+
+    public function isSaveCard()
+    {
+        if (!$this->helper->_session->isLoggedIn()) {
+            return false;
+        }
+
+        $isSave = $this->getPayment()->getConfigData('can_save_cc', $this->order->getStoreId());
+        return (boolean)$isSave;
     }
 
     /**
@@ -116,7 +126,7 @@ class Payment extends \Magento\Framework\DataObject
             'Holder' => $this->getInfo()->getAdditionalInformation('cc_owner'),
             'ExpirationDate' => $this->getExpDate(),
             'SecurityCode' => $this->getInfo()->getAdditionalInformation('cc_cid_enc'),
-            'SaveCard' => (boolean)$this->getPayment()->getConfigData('can_save_cc', $this->order->getStoreId()),
+            'SaveCard' => $this->isSaveCard(),
             'Brand' => $this->_cctype->getBrandFormatCielo($this->getInfo()->getAdditionalInformation('cc_type'))
         ];
     }

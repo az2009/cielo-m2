@@ -53,11 +53,6 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var string
      */
-    protected $_formBlockType = \Az2009\Cielo\Block\Form\Cc::class;
-
-    /**
-     * @var string
-     */
     protected $_infoBlockType = \Az2009\Cielo\Block\Info\Cc::class;
 
 

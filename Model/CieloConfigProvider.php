@@ -39,7 +39,8 @@ class CieloConfigProvider
                     'icons' => $this->getIcons(),
                     'availableTypes' => $this->getCcAvailableTypes(),
                     'cards' => $this->helper->getCardSavedByCustomer(),
-                    'installments' => $this->installment->getInstallmentsAvailable()
+                    'installments' => $this->installment->getInstallmentsAvailable(),
+                    'is_logged_in' => $this->helper->_session->isLoggedIn()
                 ]
             ]
         ];

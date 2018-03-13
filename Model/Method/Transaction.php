@@ -14,7 +14,6 @@ abstract class Transaction extends \Az2009\Cielo\Model\Method\Response
      */
     protected $_session;
 
-
     public function __construct(
         \Magento\Customer\Model\Session $session,
         array $data = []

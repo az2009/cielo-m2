@@ -6,7 +6,7 @@
 -->
 
 <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
-    <div class="field type brandCard" style="display: none">
+    <div class="field type brandCard" data-bind="style: {display: isShow() ? 'block' : 'none'}">
         <div class="control">
             <ul class="credit-card-types">
                 <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
@@ -48,7 +48,7 @@
         </div>
     </div>
     <!--/ko-->
-    <div class="boxNewCard" style="display:none">
+    <div class="boxNewCard" data-bind="style: {display: isShow() ? 'block' : 'none'}">
         <div class="field number required">
             <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
                 <span><!-- ko i18n: 'Número do Cartão'--><!-- /ko --></span>
@@ -71,20 +71,6 @@
                 <input type="text" name="payment[cc_name]" class="input-text" value=""
                        data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardName, valueUpdate: 'keyup'"
                 />
-            </div>
-        </div>
-        <div class="field doc required">
-            <label data-bind="attr: {for: getCode() + '_cc_doc'}" class="label">
-                <span><!-- ko i18n: 'CPF/CNPJ do Titular'--><!-- /ko --></span>
-            </label>
-            <div class="control">
-                <input type="number" name="payment[cc_doc]" class="input-text" max="15" value=""
-                       data-bind="
-                        value: docNumber,
-                        valueUpdate: 'keyup',
-                        attr: {'data-validate': JSON.stringify({required:true})}"
-                />
-                <span data-bind="text: messageValidateDoc"></span>
             </div>
         </div>
         <div class="field date required" data-bind="attr: {id: getCode() + '_cc_type_exp_div'}">
@@ -111,7 +97,7 @@
             </div>
         </div>
     </div>
-    <div class="field cvv required" data-bind="attr: {id: getCode() + '_cc_type_cvv_div'}" style="display: none">
+    <div class="field cvv required" data-bind="attr: {id: getCode() + '_cc_type_cvv_div'}" data-bind="style: {display: isShow() ? 'block' : 'none'}">
         <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
             <span><!-- ko i18n: 'Code Security NUmber'--><!-- /ko --></span>
         </label>
@@ -141,12 +127,3 @@
         </div>
     </div>
 </fieldset>
-<script type="text/javascript">
-    var viewModel = {
-        // These are the initial options
-        availableCountries: ko.observableArray(['France', 'Germany', 'Spain'])
-    };
-
-    // ... then later ...
-    viewModel.availableCountries.push('China'); // Adds another option
-</script>

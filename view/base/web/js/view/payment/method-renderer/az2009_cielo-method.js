@@ -9,10 +9,9 @@ define([
         'mage/translate',
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-data',
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator',
-        'Az2009_Cielo/js/model/credit-card-validation/validate-docnumber',
         'ko'
     ],
-    function ($, Component, $t, creditCardData, cardNumberValidator, validateCpfCnpj, ko) {
+    function ($, Component, $t, creditCardData, cardNumberValidator, ko) {
         'use strict';
         return Component.extend({
             defaults: {
@@ -21,15 +20,14 @@ define([
                 creditCardNumber: '',
                 creditCardType: '',
                 selectedCardType: '',
-                docNumber : '',
                 messageValidateDoc: '',
                 creditCardName: '',
                 creditCardExpMonth: '',
                 creditCardExpYear: '',
                 creditCardCid: '',
-                card: '',
                 creditCardSave:'',
-                creditCardInstallments:''
+                creditCardInstallments:'1',
+                isShow:''
             },
 
             initObservable: function () {
@@ -37,15 +35,14 @@ define([
                     'creditCardNumber',
                     'creditCardType',
                     'selectedCardType',
-                    'docNumber',
                     'messageValidateDoc',
                     'creditCardName',
                     'creditCardExpMonth',
                     'creditCardExpYear',
                     'creditCardCid',
-                    'card',
                     'creditCardSave',
-                    'creditCardInstallments'
+                    'creditCardInstallments',
+                    'isShow'
                 ]);
 
                 return this;
@@ -55,9 +52,7 @@ define([
 
                 this._super();
                 var self = this;
-
-                this.card = ko.observableArray(['France', 'Germany', 'Spain']);
-
+                this.iShowForm();
                 this.creditCardNumber.subscribe(function (value) {
                     var result;
 
@@ -90,18 +85,6 @@ define([
                     }
                 });
 
-                this.docNumber.subscribe(function(value){
-                    var response;
-                    if (response = validateCpfCnpj(value)) {
-                        self.messageValidateDoc(response.message);
-                    }
-
-                    if (value.length > 15) {
-                        value = value.substr(0, 15);
-                        self.docNumber(value);
-                    }
-                });
-
                 this.creditCardSave.subscribe(function(value){
                     if (value == '') {
                         $('#az2009_cielo_cc_type_cvv_div, .brandCard').hide();
@@ -130,7 +113,6 @@ define([
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'doc_number': this.docNumber(),
                         'cc_type': this.creditCardType(),
                         'cc_number_enc' : this.creditCardNumber(),
                         'cc_owner' : this.creditCardName(),
@@ -138,7 +120,7 @@ define([
                         'cc_exp_year' : this.creditCardExpYear(),
                         'cc_cid_enc' : this.creditCardCid(),
                         'cc_token':this.creditCardSave(),
-                        'cc_installments':this.creditCardInstallments()
+                        'cc_installments': this.creditCardInstallments() ? this.creditCardInstallments() : 1
                     }
                 };
             },
@@ -190,10 +172,8 @@ define([
                 }
 
                 var validateCard = cardNumberValidator(this.creditCardNumber());
-                var validateDoc = validateCpfCnpj(this.docNumber());
 
                 if (validateCard.isValid
-                    && validateDoc.isValid
                     && this.creditCardName().length > 3
                     && this.creditCardExpMonth().length == 2
                     && this.creditCardExpYear().length == 4
@@ -259,6 +239,19 @@ define([
                 }
 
                 return values;
+            },
+            
+            isLoggedIn: function () {
+                return window.checkoutConfig.payment.az2009_cielo.is_logged_in;
+            },
+
+            iShowForm: function() {
+                if (!this.isLoggedIn() || !this.hasCardSave()) {
+                    this.isShow(true);
+                    return;
+                }
+
+                this.isShow(false);
             }
         });
     });
