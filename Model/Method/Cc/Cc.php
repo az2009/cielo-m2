@@ -145,6 +145,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         $payment->setAdditionalInformation('can_capture', false);
         $this->setRunValidate(true);
         $this->post()->request();
+        $payment->setAdditionalInformation('cc_cid', '');
     }
 
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
@@ -184,6 +185,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         }
 
         $this->request();
+        $payment->setAdditionalInformation('cc_cid', '');
     }
 
     /**

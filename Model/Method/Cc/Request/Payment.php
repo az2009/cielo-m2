@@ -140,7 +140,7 @@ class Payment extends \Magento\Framework\DataObject
         return [
             'CardToken' => $this->getInfo()->getAdditionalInformation('cc_token'),
             'SaveCard' => false,
-            'SecurityCode' => $this->getInfo()->getAdditionalInformation('cc_cid_enc'),
+            'SecurityCode' => $this->getInfo()->getAdditionalInformation('cc_cid'),
             'Brand' => $this->_cctype->getBrandFormatCielo($this->getInfo()->getAdditionalInformation('cc_type'))
         ];
     }
