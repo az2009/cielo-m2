@@ -122,10 +122,10 @@ class Payment extends \Magento\Framework\DataObject
     public function getCreditCardNew()
     {
         return [
-            'CardNumber' => $this->getInfo()->getAdditionalInformation('cc_number_enc'),
-            'Holder' => $this->getInfo()->getAdditionalInformation('cc_owner'),
+            'CardNumber' => $this->getInfo()->getAdditionalInformation('cc_number'),
+            'Holder' => $this->getInfo()->getAdditionalInformation('cc_name'),
             'ExpirationDate' => $this->getExpDate(),
-            'SecurityCode' => $this->getInfo()->getAdditionalInformation('cc_cid_enc'),
+            'SecurityCode' => $this->getInfo()->getAdditionalInformation('cc_cid'),
             'SaveCard' => $this->isSaveCard(),
             'Brand' => $this->_cctype->getBrandFormatCielo($this->getInfo()->getAdditionalInformation('cc_type'))
         ];

@@ -19,21 +19,36 @@ class CieloConfigProvider
      */
     protected $installment;
 
+    /**
+     * @var \Magento\Backend\Model\Session\Quote
+     */
+    protected $sessionQuote;
+
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $state;
+
     public function __construct(
         CcConfig $ccConfig,
         Source $assetSource,
         \Az2009\Cielo\Helper\Data $helper,
-        \Az2009\Cielo\Helper\Installment $installment
+        \Az2009\Cielo\Helper\Installment $installment,
+        \Magento\Backend\Model\Session\Quote $sessionQuote,
+        \Magento\Framework\App\State $state
     ) {
         $this->helper = $helper;
         $this->ccConfig = $ccConfig;
         $this->assetSource = $assetSource;
         $this->installment = $installment;
+        $this->sessionQuote = $sessionQuote;
+        $this->state = $state;
     }
 
     public function getConfig()
     {
-        return [
+        $payment = $this->sessionQuote->getQuote()->getPayment();
+        $config = [
             'payment' => [
                 'az2009_cielo' => [
                     'icons' => $this->getIcons(),
@@ -44,6 +59,22 @@ class CieloConfigProvider
                 ]
             ]
         ];
+
+        if ($this->state->getAreaCode()
+            == \Magento\Framework\App\Area::AREA_ADMINHTML
+        ) {
+            $config['payment']['az2009_cielo']['info_credit_card'] = [
+                'method' => $payment->getMethod(),
+                'cc_number' => $this->sessionQuote->getCcNumber(),
+                'cc_name' => $this->sessionQuote->getCcName(),
+                'cc_type' => $this->sessionQuote->getCcType(),
+                'cc_exp_month' => $this->sessionQuote->getCcExpMonth(),
+                'cc_exp_year' => $this->sessionQuote->getCcExpYear(),
+                'cc_cid' => $this->sessionQuote->getCcCid()
+            ];
+        }
+
+        return $config;
     }
 
     public function getCcAvailableTypes()

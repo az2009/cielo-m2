@@ -5,10 +5,11 @@ namespace Az2009\Cielo\Model\Method\Cc;
 class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 {
 
+    const CODE_PAYMENT = 'az2009_cielo';
     /**
      * @var string
      */
-    protected $_code = 'az2009_cielo';
+    protected $_code = self::CODE_PAYMENT;
 
     /**
      * @var bool
@@ -55,6 +56,10 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
      */
     protected $_infoBlockType = \Az2009\Cielo\Block\Info\Cc::class;
 
+    /**
+     * @var \Az2009\Cielo\Block\Adminhtml\Cc\Data
+     */
+    protected $infoCreditCard;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -66,6 +71,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         \Magento\Payment\Model\Method\Logger $logger,
         Request\Request $request,
         Response\Payment $response,
+        \Az2009\Cielo\Block\Adminhtml\Cc\Data $infoCreditCard,
         \Az2009\Cielo\Model\Method\Cc\Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
@@ -82,12 +88,15 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
             $helper, $resource,
             $resourceCollection, $data
         );
+
+        $this->infoCreditCard = $infoCreditCard;
     }
 
     public function assignData(\Magento\Framework\DataObject $data)
     {
         parent::assignData($data);
         $info = $this->getInfoInstance();
+        $this->infoCreditCard->setDataToSessionQuote($data->getAdditionalData());
         $info->setAdditionalInformation($data->getAdditionalData());
 
         return $this;

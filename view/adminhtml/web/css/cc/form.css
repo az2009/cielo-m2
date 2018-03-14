@@ -1,0 +1,79 @@
+.checkout-payment-method .credit-card-types {
+    padding: 0
+}
+
+.checkout-payment-method .credit-card-types .item {
+    display: inline-block;
+    list-style: none;
+    margin: 0 5px 0 0;
+    vertical-align: top
+}
+
+.checkout-payment-method .credit-card-types .item._active {
+    font-weight: 700
+}
+
+.checkout-payment-method .credit-card-types .item._active img {
+    -webkit-filter: grayscale(0%)
+}
+
+.checkout-payment-method .credit-card-types .item._inactive {
+    opacity: .4
+}
+
+.checkout-payment-method .credit-card-types .item span {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: top
+}
+
+.checkout-payment-method .credit-card-types img {
+    -webkit-filter: grayscale(100%);
+    -webkit-transition: all .6s ease
+}
+
+.checkout-payment-method.ccard .fields > .year {
+    padding-left: 5px
+}
+
+.checkout-payment-method.ccard .fields .select {
+    padding-left: 5px;
+    padding-right: 5px
+}
+
+.checkout-payment-method.ccard .month .select {
+    width: 140px
+}
+
+.checkout-payment-method.ccard .year .select {
+    width: 50px
+}
+
+.checkout-payment-method.ccard .number .input-text {
+    width: 100%
+}
+
+.checkout-payment-method.ccard > .field.cvv > .control {
+    display: inline-block;
+    padding-right: 20px
+}
+
+.checkout-payment-method.ccard .cvv .label {
+    display: block
+}
+
+.checkout-payment-method.ccard .cvv .input-text {
+    width: 55px
+}
+
+.input-text.fluid {
+    width: 100% !important;
+}
+
+.checkout-payment-method.ccard.fieldset > .field .fields.group.group-2 .field {
+    width: auto !important
+}
+
+#cc_installments option:empty {
+    display: block !important;
+}

@@ -24,7 +24,7 @@ class Unauthorized extends \Az2009\Cielo\Model\Method\Transaction
     {
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
 
-        $message = 'Unauthorized Payment Action';
+        $message = __('Unauthorized Payment Action');
 
         if (isset($bodyArray['Payment']['ReturnMessage'])) {
             $message = $bodyArray['Payment']['ReturnMessage'];

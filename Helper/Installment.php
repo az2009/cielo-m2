@@ -31,13 +31,19 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $priceCurrency;
 
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $state;
+
     public function __construct(
         Context $context,
         \Magento\Checkout\Model\Type\Onepage $onepage,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Backend\Model\Session\Quote $sessionQuote,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
+        \Magento\Framework\App\State $state
     ) {
         parent::__construct($context);
         $this->onepage = $onepage;
@@ -45,6 +51,7 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
         $this->sessionQuote = $sessionQuote;
         $this->storeManager = $storeManager;
         $this->priceCurrency = $priceCurrency;
+        $this->state = $state;
     }
 
     public function getInstallmentsAvailable()
@@ -52,7 +59,7 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
         $quote = ($this->onepage !== false) ?
                         $this->onepage->getQuote() : $this->checkoutSession->getQuote();
 
-        if ($this->storeManager->getStore()->getId() == 0) {
+        if ($this->state->getAreaCode() == \Magento\Framework\App\Area::AREA_ADMINHTML) {
             $quote = $this->sessionQuote->getQuote();
         }
 
