@@ -116,13 +116,11 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
     {
-        $r = '';
         return self::capture($payment, $payment->getAmountAuthorized());
     }
 
     public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
     {
-        $r = '';
         return self::void($payment);
     }
 

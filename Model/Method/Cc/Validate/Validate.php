@@ -33,7 +33,6 @@ class Validate extends \Az2009\Cielo\Model\Method\Validate
 
     public function validate()
     {
-        $r = '';
         $this->_creditCard
              ->setPayment($this->getPayment())
              ->validate();

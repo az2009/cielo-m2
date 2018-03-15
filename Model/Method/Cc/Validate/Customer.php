@@ -18,7 +18,7 @@ class Customer extends \Az2009\Cielo\Model\Method\Validate
             'maxlength' => 255,
         ],
         'Email' => [
-            'required' => false,
+            'required' => true,
             'maxlength' => 255,
         ]
     ];
