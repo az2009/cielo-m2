@@ -23,13 +23,47 @@
             <!--/ko-->
         </div>
 
-        <div class="payment-form payment-az2009">
-            <div class="box-form">
-                <!-- ko template: 'Az2009_Cielo/payment/cc-form' --><!-- /ko -->
+        <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+            <div class="payment-form payment-az2009">
+                <div class="field type brandCard" data-bind="style: {display: isShow() ? 'block' : 'none'}">
+                    <div>
+                        <ul class="credit-card-types">
+                            <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
+                            <li class="item" data-bind="css: {
+                                                     _active: $parent.selectedCardType() == item.type,
+                                                     _inactive: $parent.selectedCardType() != null && $parent.selectedCardType() != item.type
+                                                     } ">
+                                <!--ko if: $parent.getIcons(item.type) -->
+                                <img data-bind="attr: {
+                            'src': $parent.getIcons(item.type).url,
+                            'width': $parent.getIcons(item.type).width,
+                            'height': $parent.getIcons(item.type).height
+                            }">
+                                <!--/ko-->
+                            </li>
+                            <!--/ko-->
+                        </ul>
+                        <input type="hidden"
+                               name="payment[cc_type]"
+                               class="input-text"
+                               data-bind="attr: {id: getCode() + '_cc_type', 'data-container': getCode() + '-cc-type'},
+                       value: creditCardType"
+                               value="">
+                    </div>
+                </div>
+                <div class="box-form">
+                    <!-- ko template: 'Az2009_Cielo/payment/cc-form' --><!-- /ko -->
+                </div>
+                <div class="box-card-label">
+                    <div class="box-card">
+                        <div class="box-cardnumber"></div>
+                        <div class="box-carddue"></div>
+                        <div class="box-cardholder"></div>
+                        <div class="box-cardbrand"></div>
+                    </div>
+                </div>
             </div>
-            <div class="box-card-label">
-            </div>
-        </div>
+        </fieldset>
 
         <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
@@ -37,7 +71,7 @@
             <!--/ko-->
         </div>
         <div class="actions-toolbar">
-            <div class="primary">
+            <div class="primary button-place-order">
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="

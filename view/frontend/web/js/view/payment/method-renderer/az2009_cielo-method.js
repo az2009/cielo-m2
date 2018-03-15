@@ -228,7 +228,6 @@ define([
             getInstallments: function() {
                 var installments = window.checkoutConfig.payment.az2009_cielo.installments;
                 var values = {};
-                console.log(installments);
                 if (installments) {
                     values = _.map(installments, function (value, key) {
                         return {
@@ -252,6 +251,27 @@ define([
                 }
 
                 this.isShow(false);
+            },
+            
+            getExpMonth: function () {
+                var values = window.checkoutConfig.payment.az2009_cielo.month;
+                return _.map(values, function (value, key) {
+                    return {
+                        'key': key,
+                        'value': value
+                    };
+                });
+            },
+
+            getExpYear: function () {
+                var values = window.checkoutConfig.payment.az2009_cielo.year;
+                return _.map(values, function (value, key) {
+                    return {
+                        'key': key,
+                        'value': value
+                    };
+                });
             }
+
         });
     });

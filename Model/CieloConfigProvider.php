@@ -55,7 +55,9 @@ class CieloConfigProvider
                     'availableTypes' => $this->getCcAvailableTypes(),
                     'cards' => $this->helper->getCardSavedByCustomer(),
                     'installments' => $this->installment->getInstallmentsAvailable(),
-                    'is_logged_in' => $this->helper->_session->isLoggedIn()
+                    'is_logged_in' => $this->helper->_session->isLoggedIn(),
+                    'month' => $this->getExpMonth(),
+                    'year' => $this->getExpYear(),
                 ]
             ]
         ];
@@ -81,6 +83,28 @@ class CieloConfigProvider
     {
         $types = $this->helper->getCardTypesAvailable();
         return $types;
+    }
+
+    public function getExpMonth()
+    {
+        $month = [];
+        for ($x=1; $x <= 12; $x++) {
+            $month[$x] = $x;
+        }
+
+        return $month;
+    }
+
+    public function getExpYear()
+    {
+        $year = [];
+        $yearCurrent = date('Y');
+        $yearFuture = $yearCurrent + 5;
+        for ($x = $yearCurrent; $x <= $yearFuture; $x++) {
+            $year[$x] = $x;
+        }
+
+        return $year;
     }
 
     /**

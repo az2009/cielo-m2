@@ -1,13 +1,19 @@
-.payment-az2009,
-.payment-az2009 .box-form{
+.payment-az2009 {
     width: 100% !important;
 }
 
+.payment-az2009 .box-form {
+    width: 50%;
+    float: left;
+}
+
 .payment-az2009 .max-width-50 {
-    max-width: 50% !important;
+    max-width: 99% !important;
 }
 
 .payment-az2009 .box-card-label {
+    width: 50%;
+    float: left;
     max-width: 50%;
 }
 
@@ -16,11 +22,11 @@
 }
 
 .payment-az2009 .ccard .select-month {
-    width: 50px !important;
+    width: 100px !important;
 }
 
 .payment-az2009 .ccard .select-year {
-    width: 80px !important;
+    width: 140px !important;
 }
 
 .payment-az2009 .input-text {
@@ -41,13 +47,72 @@
     width: 100%;
 }
 
+.payment-az2009 .box-date-due-cvv .input-text.cvv {
+    width: 55px !important;
+    float: right;
+}
+
+.payment-az2009 .box-date-due-cvv .box-f.cvv {
+    float: right !important;
+}
+
 .payment-az2009 .box-date-due-cvv .box-f {
     float: left !important;
-    margin-right: 15px;
 }
 
 .payment-az2009 label {
     font-weight: 600;
     display: block;
     padding-bottom: 3px;
+}
+
+.box-card {
+    width: 95%;
+    height: 190px;
+    background: #474EB2;
+    border-radius: 5px;
+    overflow: hidden;
+    float: right;
+    position: relative;
+}
+
+.button-place-order {
+    margin-top: 30px !important;
+    clear: both;
+}
+
+.box-cardnumber {
+    width: 90%;
+    border-bottom: 1px solid #333;
+    min-height: 1px;
+    margin: 85px auto 0 auto;
+}
+
+.box-carddue {
+    width: 20%;
+    border-bottom: 1px solid #333;
+    min-height: 1px;
+    margin: 25px auto 0 auto;
+    position: relative;
+    left: 30px;
+}
+
+.box-cardholder {
+    width: 90%;
+    border-bottom: 1px solid #333;
+    min-height: 1px;
+    margin: 25px auto 0 auto;
+}
+
+.box-cardbrand {
+    width: 20%;
+    border-bottom: 1px solid #333;
+    min-height: 1px;
+    margin: 36px 18px auto auto;
+}
+
+@media (min-width: 991px) {
+    .box-card {
+        margin-top: 23px;
+    }
 }
