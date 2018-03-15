@@ -60,12 +60,10 @@ class Cancel extends \Az2009\Cielo\Model\Method\Transaction
         if (!isset($bodyArray['Payment']['VoidedAmount'])
             || !($authorizeAmount = doubleval($bodyArray['Payment']['VoidedAmount']))
         ) {
-            throw new Exception(
-                __(
-                    'not exists values to void in order %1',
-                    $this->getPayment()->getOrder()->getId()
-                )
-            );
+            $authorizeAmount = $this->getPayment()->getAmount();
+            if ($this->getPayment()->getActionCancel() && (int)$this->getPayment()->getAmount() <= 0) {
+                $authorizeAmount = $this->getPayment()->getAmountPaid() ?: $this->getPayment()->getAmountAuthorized();
+            }
         }
 
         return $authorizeAmount;

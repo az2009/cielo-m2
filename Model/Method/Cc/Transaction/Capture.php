@@ -17,16 +17,16 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
      */
     protected $helper;
 
-
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Customer\Model\Session $session,
         \Az2009\Cielo\Helper\Data $helper,
+        \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         array $data = []
     ) {
         $this->helper = $helper;
         $this->messageManager = $messageManager;
-        parent::__construct($session, $data);
+        parent::__construct($session, $comment, $data);
     }
 
     public function process()
@@ -94,7 +94,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         if (!isset($bodyArray['Payment']['CapturedAmount'])
             || !($capturedAmount = floatval($bodyArray['Payment']['CapturedAmount']))
         ) {
-            throw new Exception(
+            throw new \Exception(
                 __(
                     'not exists values to capture in order %1',
                     $this->getPayment()->getOrder()->getId()

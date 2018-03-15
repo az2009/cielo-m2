@@ -13,10 +13,11 @@ class Authorize extends \Az2009\Cielo\Model\Method\Transaction
     public function __construct(
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Customer\Model\Session $session,
+        \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         array $data = []
     ) {
         $this->helper = $helper;
-        parent::__construct($session, $data);
+        parent::__construct($session, $comment, $data);
     }
 
     /**
@@ -76,7 +77,7 @@ class Authorize extends \Az2009\Cielo\Model\Method\Transaction
         if (!isset($bodyArray['Payment']['Amount'])
             || !($authorizeAmount = doubleval($bodyArray['Payment']['Amount']))
         ) {
-            throw new Exception(
+            throw new \Exception(
                 __(
                     'not exists values to authorize in order %1',
                     $this->getPayment()->getOrder()->getId()

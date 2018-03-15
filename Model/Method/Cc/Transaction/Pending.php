@@ -12,10 +12,11 @@ class Pending extends \Az2009\Cielo\Model\Method\Transaction
     public function __construct(
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Customer\Model\Session $session,
+        \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         array $data = []
     ) {
         $this->helper = $helper;
-        parent::__construct($session, $data);
+        parent::__construct($session, $comment, $data);
     }
 
     public function process()

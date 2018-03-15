@@ -16,6 +16,7 @@ abstract class Transaction extends \Az2009\Cielo\Model\Method\Response
 
     public function __construct(
         \Magento\Customer\Model\Session $session,
+        \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         array $data = []
     ) {
         $this->_session = $session;

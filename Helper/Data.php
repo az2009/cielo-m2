@@ -123,7 +123,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $uri = str_replace('//', '/', $uri);
         $uri = str_replace(':/', '://', $uri);
-        $uri = str_replace(['-capture', '-refun', '-refund'], '', $uri);
+        $uri = str_replace(['-capture', '-refund'], '', $uri);
 
         return $uri;
     }

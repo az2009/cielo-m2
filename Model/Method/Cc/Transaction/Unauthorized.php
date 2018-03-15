@@ -14,10 +14,11 @@ class Unauthorized extends \Az2009\Cielo\Model\Method\Transaction
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \Magento\Customer\Model\Session $session,
+        \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         array $data = []
     ) {
         $this->logger = $logger;
-        parent::__construct($session, $data);
+        parent::__construct($session, $comment, $data);
     }
 
     public function process()
