@@ -1,0 +1,53 @@
+.payment-az2009,
+.payment-az2009 .box-form{
+    width: 100% !important;
+}
+
+.payment-az2009 .max-width-50 {
+    max-width: 50% !important;
+}
+
+.payment-az2009 .box-card-label {
+    max-width: 50%;
+}
+
+.payment-az2009 .control {
+    margin: 0 0 9px 0;
+}
+
+.payment-az2009 .ccard .select-month {
+    width: 50px !important;
+}
+
+.payment-az2009 .ccard .select-year {
+    width: 80px !important;
+}
+
+.payment-az2009 .input-text {
+    width: 100% !important;
+}
+
+.payment-az2009 div.brandCard > div {
+    margin-bottom: 15px !important;
+}
+
+.payment-az2009 .fieldset > .field,
+.payment-az2009 .fieldset > .fields > .field {
+    margin: 0 0 0 !important;
+}
+
+.payment-az2009 .box-date-due-cvv {
+    float: left;
+    width: 100%;
+}
+
+.payment-az2009 .box-date-due-cvv .box-f {
+    float: left !important;
+    margin-right: 15px;
+}
+
+.payment-az2009 label {
+    font-weight: 600;
+    display: block;
+    padding-bottom: 3px;
+}
