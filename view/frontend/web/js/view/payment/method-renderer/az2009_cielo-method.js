@@ -131,6 +131,7 @@ define([
                 this.creditCardSave.subscribe(function(value){
                     if (value == '') {
                         $('#az2009_cielo_cc_type_cvv_div, .brandCard').hide();
+                        $('.box-cardbrand').empty();
                     } else {
                         $('#az2009_cielo_cc_type_cvv_div, .brandCard').show();
                         var type = $('#cc_token option:selected').attr('data-type');
