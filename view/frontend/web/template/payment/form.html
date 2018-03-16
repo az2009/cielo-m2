@@ -54,12 +54,18 @@
                 <div class="box-form">
                     <!-- ko template: 'Az2009_Cielo/payment/cc-form' --><!-- /ko -->
                 </div>
-                <div class="box-card-label">
-                    <div class="box-card">
-                        <div class="box-cardnumber"></div>
-                        <div class="box-carddue"></div>
-                        <div class="box-cardholder"></div>
-                        <div class="box-cardbrand"></div>
+                <div class="box-card-label flip-container">
+                    <div class="box-card flipper">
+                        <div class="front">
+                            <div class="box-cardnumber" data-bind="text:labelCardNumber"></div>
+                            <div class="box-carddue b-month" data-bind="text:labelCardDueMonth"></div>
+                            <div class="box-carddue b-year" data-bind="text:labelCardDueYear"></div>
+                            <div class="box-cardholder" data-bind="text:labelCardHolder"></div>
+                            <div class="box-cardbrand" data-bind="text:labelCardBrand"></div>
+                        </div>
+                        <div class="back">
+                            <div class="box-cardcvv" data-bind="text:labelCardCvv"></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -26,8 +26,15 @@ define([
                 creditCardExpYear: '',
                 creditCardCid: '',
                 creditCardSave:'',
-                creditCardInstallments:'1',
-                isShow:''
+                creditCardInstallments:'',
+                isShow:'',
+                labelCardNumber:'',
+                labelCardDue:'',
+                labelCardHolder:'',
+                labelCardBrand:'',
+                labelCardCvv:'',
+                labelCardDueMonth:'',
+                labelCardDueYear:'',
             },
 
             initObservable: function () {
@@ -42,7 +49,14 @@ define([
                     'creditCardCid',
                     'creditCardSave',
                     'creditCardInstallments',
-                    'isShow'
+                    'isShow',
+                    'labelCardNumber',
+                    'labelCardDue',
+                    'labelCardHolder',
+                    'labelCardBrand',
+                    'labelCardCvv',
+                    'labelCardDueMonth',
+                    'labelCardDueYear',
                 ]);
 
                 return this;
@@ -53,8 +67,27 @@ define([
                 this._super();
                 var self = this;
                 this.iShowForm();
+
+                this.creditCardExpMonth.subscribe(function (value) {
+                    self.labelCardDueMonth(value);
+                });
+
+                this.creditCardExpYear.subscribe(function (value) {
+                    self.labelCardDueYear(value);
+                });
+
+                this.creditCardName.subscribe(function (value) {
+                    self.labelCardHolder(value);
+                });
+
+                this.creditCardCid.subscribe(function (value) {
+                    self.labelCardCvv(value);
+                });
+
                 this.creditCardNumber.subscribe(function (value) {
                     var result;
+
+                    self.labelCardNumber(value);
 
                     if (value.length > 16) {
                         value = value.substr(0, 16);
@@ -80,6 +113,8 @@ define([
                     if (result.isValid) {
                         creditCardData.creditCardNumber = value;
                         self.creditCardType(result.card.type);
+                        $('.box-cardbrand').empty();
+                        $('.box-cardbrand').append('<img src="'+self.getIcons(result.card.type).url+'" />');
                     } else {
                         self.creditCardType(null);
                     }
