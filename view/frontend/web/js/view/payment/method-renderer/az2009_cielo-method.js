@@ -96,12 +96,14 @@ define([
 
                     self.selectedCardType(null);
                     if (value === '' || value === null) {
+                        $('.box-cardbrand').empty();
                         return false;
                     }
 
                     result = cardNumberValidator(value);
                     if (!result.isPotentiallyValid && !result.isValid) {
                         self.creditCardType(null);
+                        $('.box-cardbrand').empty();
                         return false;
                     }
 
@@ -116,9 +118,15 @@ define([
                         $('.box-cardbrand').empty();
                         $('.box-cardbrand').append('<img src="'+self.getIcons(result.card.type).url+'" />');
                     } else {
+                        $('.box-cardbrand').empty();
                         self.creditCardType(null);
                     }
                 });
+
+                this.creditCardCid.subscribe(function () {
+                    $('.flip-container').addClass('active');
+                });
+
 
                 this.creditCardSave.subscribe(function(value){
                     if (value == '') {
@@ -129,6 +137,8 @@ define([
                         if (type) {
                             self.creditCardType(type);
                             self.selectedCardType(type);
+                            $('.box-cardbrand').empty();
+                            $('.box-cardbrand').append('<img src="'+self.getIcons(type).url+'" />');
                         }
                     }
 
@@ -306,6 +316,10 @@ define([
                         'value': value
                     };
                 });
+            },
+
+            outFocus:function () {
+                $('.flip-container').removeClass('active');
             }
 
         });

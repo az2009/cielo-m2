@@ -5,117 +5,119 @@
  */
 -->
 
-    <!--ko if: hasCardSave()-->
-    <div class="field type max-width-50">
+<!--ko if: hasCardSave()-->
+<div class="field type max-width-50">
+    <div class="control">
+        <label class="label">
+            <span><!-- ko i18n: 'Select Credit Card'--><!-- /ko --></span>
+        </label>
+        <select name="payment[cc_token]" id="cc_token" class="credit-card-types" data-bind="value:creditCardSave">
+            <option class="item" data-bind="attr: {'value': '', 'label': ''}"></option>
+            <!-- ko foreach: {data: getCardSaveValues(), as: 'item'} -->
+            <option class="item" data-bind="attr: {'value': item.value, 'data-type':item.type.brand, 'label': item.type.last_four }"></option>
+            <!--/ko-->
+            <option class="item" data-bind="attr: {'value': 'new', 'label': $t('Other Credit Card')}"></option>
+        </select>
+    </div>
+</div>
+<!--/ko-->
+<div class="boxNewCard max-width-50" data-bind="style: {display: isShow() ? 'block' : 'none'}">
+    <div class="field number required">
         <div class="control">
-            <label class="label">
-                <span><!-- ko i18n: 'Select Credit Card'--><!-- /ko --></span>
+            <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
+                <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
             </label>
-            <select name="payment[cc_token]" id="cc_token" class="credit-card-types" data-bind="value:creditCardSave">
-                <option class="item" data-bind="attr: {'value': '', 'label': ''}"></option>
-                <!-- ko foreach: {data: getCardSaveValues(), as: 'item'} -->
-                <option class="item" data-bind="attr: {'value': item.value, 'data-type':item.type.brand, 'label': item.type.last_four }"></option>
-                <!--/ko-->
-                <option class="item" data-bind="attr: {'value': 'new', 'label': $t('Other Credit Card')}"></option>
-            </select>
+            <input type="number" name="payment[cc_number]" class="input-text cc_number" value=""
+                   data-bind="
+                    autocomplete: off,
+                    value: creditCardNumber,
+                    valueUpdate: 'keyup',
+                    attr: {'data-validate': JSON.stringify({'required-number':true, required:true})}
+                    " />
         </div>
     </div>
-    <!--/ko-->
-    <div class="boxNewCard max-width-50" data-bind="style: {display: isShow() ? 'block' : 'none'}">
-        <div class="field number required">
+    <div class="field name required">
+        <div class="control">
+            <label data-bind="attr: {for: getCode() + '_cc_name'}" class="label">
+                <span><!-- ko i18n: 'Cardholder Name'--><!-- /ko --></span>
+            </label>
+            <input type="text" name="payment[cc_name]" class="input-text" value=""
+                   data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardName, valueUpdate: 'keyup'"
+            />
+        </div>
+    </div>
+</div>
+
+<div class="box-date-due-cvv max-width-50">
+    <div class="boxNewCard box-f" data-bind="style: {display: isShow() ? 'block' : 'none'}">
+        <div class="field date required" data-bind="attr: {id: getCode() + '_cc_type_exp_div'}">
             <div class="control">
-                <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
-                    <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
+                <label data-bind="attr: {for: getCode() + '_expiration'}" class="label">
+                    <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
                 </label>
-                <input type="number" name="payment[cc_number]" class="input-text cc_number" value=""
-                       data-bind="
-                        autocomplete: off,
-                        value: creditCardNumber,
-                        valueUpdate: 'keyup',
-                        attr: {'data-validate': JSON.stringify({'required-number':true, required:true})}
-                        " />
+                <div class="fields group group-2">
+                    <div class="field no-label month">
+                        <div class="control">
+                            <select class="select select-month"
+                                    name="payment[cc_exp_month]"
+                                    data-bind="attr: {autocomplete: off, 'data-validate': JSON.stringify({required:true})},
+                                              value: creditCardExpMonth, valueUpdate: 'keyup'"
+                            >
+                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Month')}"></option>
+                                <!-- ko foreach: {data: getExpMonth(), as: 'month'} -->
+                                <option class="item" data-bind="attr: {'value': month.key, 'label': month.value}"></option>
+                                <!-- /ko -->
+
+                            </select>
+                            <select class="select select-year"
+                                    name="payment[cc_exp_year]"
+                                    data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardExpYear, valueUpdate: 'keyup'">
+                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Year')}"></option>
+                                <!-- ko foreach: {data: getExpYear(), as: 'year'} -->
+                                <option class="item" data-bind="attr: {'value': year.key, 'label': year.value}"></option>
+                                <!-- /ko -->
+
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-        <div class="field name required">
-            <div class="control">
-                <label data-bind="attr: {for: getCode() + '_cc_name'}" class="label">
-                    <span><!-- ko i18n: 'Cardholder Name'--><!-- /ko --></span>
-                </label>
-                <input type="text" name="payment[cc_name]" class="input-text" value=""
-                       data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardName, valueUpdate: 'keyup'"
+    </div>
+
+    <div class="field cvv required box-f" data-bind="attr: {id: getCode() + '_cc_type_cvv_div'}" data-bind="style: {display: isShow() ? 'block' : 'none'}">
+        <div class="control">
+            <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
+                <span><!-- ko i18n: 'CVV'--><!-- /ko --></span>
+            </label>
+            <div>
+                <input type="number"
+                       autocomplete="off"
+                       class="input-text cvv required-entry"
+                       name="payment[cc_cid]"
+                       max="5"
+                       value=""
+                       data-bind="
+                       event: {blur: outFocus },
+                       attr: {'id':'cvv-input', 'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
                 />
             </div>
         </div>
     </div>
+</div>
 
-    <div class="box-date-due-cvv max-width-50">
-        <div class="boxNewCard box-f" data-bind="style: {display: isShow() ? 'block' : 'none'}">
-            <div class="field date required" data-bind="attr: {id: getCode() + '_cc_type_exp_div'}">
-                <div class="control">
-                    <label data-bind="attr: {for: getCode() + '_expiration'}" class="label">
-                        <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
-                    </label>
-                    <div class="fields group group-2">
-                        <div class="field no-label month">
-                            <div class="control">
-                                <select class="select select-month"
-                                        name="payment[cc_exp_month]"
-                                        data-bind="attr: {autocomplete: off, 'data-validate': JSON.stringify({required:true})},
-                                                  value: creditCardExpMonth, valueUpdate: 'keyup'"
-                                >
-                                    <option class="item" data-bind="attr: {'value': '', 'label': $t('Month')}"></option>
-                                    <!-- ko foreach: {data: getExpMonth(), as: 'month'} -->
-                                    <option class="item" data-bind="attr: {'value': month.key, 'label': month.value}"></option>
-                                    <!-- /ko -->
-
-                                </select>
-                                <select class="select select-year"
-                                        name="payment[cc_exp_year]"
-                                        data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardExpYear, valueUpdate: 'keyup'">
-                                    <option class="item" data-bind="attr: {'value': '', 'label': $t('Year')}"></option>
-                                    <!-- ko foreach: {data: getExpYear(), as: 'year'} -->
-                                    <option class="item" data-bind="attr: {'value': year.key, 'label': year.value}"></option>
-                                    <!-- /ko -->
-
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="field cvv required box-f" data-bind="attr: {id: getCode() + '_cc_type_cvv_div'}" data-bind="style: {display: isShow() ? 'block' : 'none'}">
-            <div class="control">
-                <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
-                    <span><!-- ko i18n: 'CVV'--><!-- /ko --></span>
-                </label>
-                <div>
-                    <input type="number"
-                           autocomplete="off"
-                           class="input-text cvv required-entry"
-                           name="payment[cc_cid]"
-                           max="5"
-                           value=""
-                           data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
-                    />
-                </div>
-            </div>
-        </div>
+<!--ko if: hasInstallments()-->
+<div class="field max-width-50 installments" data-bind="attr: {id: getCode() + '_cc_installments_div'}">
+    <div class="control">
+        <label data-bind="attr: {for: getCode() + '_installments'}" class="label">
+            <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
+        </label>
+        <select data-bind="attr: {'id': 'cc_installments'}, value: creditCardInstallments" name="payment[cc_installments]">
+            <!-- ko foreach: {data: getInstallments(), as: 'installment'} -->
+            <option class="item" data-bind="attr: {'value': installment.key, 'label':installment.value }"></option>
+            <!--/ko-->
+        </select>
     </div>
-
-    <!--ko if: hasInstallments()-->
-    <div class="field max-width-50 installments" data-bind="attr: {id: getCode() + '_cc_installments_div'}">
-        <div class="control">
-            <label data-bind="attr: {for: getCode() + '_installments'}" class="label">
-                <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
-            </label>
-            <select data-bind="attr: {'id': 'cc_installments'}, value: creditCardInstallments" name="payment[cc_installments]">
-                <!-- ko foreach: {data: getInstallments(), as: 'installment'} -->
-                <option class="item" data-bind="attr: {'value': installment.key, 'label':installment.value }"></option>
-                <!--/ko-->
-            </select>
-        </div>
-    </div>
-    <!-- /ko -->
+</div>
+<!-- /ko -->
