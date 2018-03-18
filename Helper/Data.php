@@ -165,7 +165,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         foreach ($collection as $order) {
             $tokens[$order->getPayment()->getData('card_token')] = [
                 'brand' => $order->getPayment()->getAdditionalInformation('cc_type'),
-                'last_four' => $this->getCardLabel($order->getPayment())
+                'last_four' => $this->getCardLabel($order->getPayment()),
+                'month_due' => $order->getPayment()->getAdditionalInformation('cc_exp_month'),
+                'year_due' => $order->getPayment()->getAdditionalInformation('cc_exp_year'),
+                'cardholder' => $order->getPayment()->getAdditionalInformation('cc_name'),
             ];
         }
 
@@ -177,7 +180,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $firstFour = substr($payment->getAdditionalInformation('cc_number_enc'),0, 4);
         $lastFour = substr($payment->getAdditionalInformation('cc_number_enc'), -4);
 
-        return $firstFour. ' **** '.$lastFour;
+        return $firstFour. ' ****  **** '.$lastFour;
     }
 
     /**

@@ -14,7 +14,16 @@
         <select name="payment[cc_token]" id="cc_token" class="credit-card-types" data-bind="value:creditCardSave">
             <option class="item" data-bind="attr: {'value': '', 'label': ''}"></option>
             <!-- ko foreach: {data: getCardSaveValues(), as: 'item'} -->
-            <option class="item" data-bind="attr: {'value': item.value, 'data-type':item.type.brand, 'label': item.type.last_four }"></option>
+            <option class="item"
+                    data-bind="
+                    attr: {
+                        'value': item.value,
+                        'data-type':item.type.brand,
+                        'label': item.type.last_four,
+                        'month_due': item.type.month_due,
+                        'data-cardholder': item.type.cardholder,
+                        'year_due': item.type.year_due
+                    }"></option>
             <!--/ko-->
             <option class="item" data-bind="attr: {'value': 'new', 'label': $t('Other Credit Card')}"></option>
         </select>

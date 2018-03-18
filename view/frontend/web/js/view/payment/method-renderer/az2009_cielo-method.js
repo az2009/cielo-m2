@@ -96,14 +96,14 @@ define([
 
                     self.selectedCardType(null);
                     if (value === '' || value === null) {
-                        $('.box-cardbrand').empty();
+                        self.clearCardPlaceholder();
                         return false;
                     }
 
                     result = cardNumberValidator(value);
                     if (!result.isPotentiallyValid && !result.isValid) {
                         self.creditCardType(null);
-                        $('.box-cardbrand').empty();
+                        self.clearCardPlaceholder();
                         return false;
                     }
 
@@ -118,7 +118,7 @@ define([
                         $('.box-cardbrand').empty();
                         $('.box-cardbrand').append('<img src="'+self.getIcons(result.card.type).url+'" />');
                     } else {
-                        $('.box-cardbrand').empty();
+                        self.clearCardPlaceholder();
                         self.creditCardType(null);
                     }
                 });
@@ -131,7 +131,7 @@ define([
                 this.creditCardSave.subscribe(function(value){
                     if (value == '') {
                         $('#az2009_cielo_cc_type_cvv_div, .brandCard').hide();
-                        $('.box-cardbrand').empty();
+                        self.clearCardPlaceholder();
                     } else {
                         $('#az2009_cielo_cc_type_cvv_div, .brandCard').show();
                         var type = $('#cc_token option:selected').attr('data-type');
@@ -140,11 +140,16 @@ define([
                             self.selectedCardType(type);
                             $('.box-cardbrand').empty();
                             $('.box-cardbrand').append('<img src="'+self.getIcons(type).url+'" />');
+                            self.labelCardNumber($('#cc_token option:selected').attr('label'));
+                            self.labelCardHolder($('#cc_token option:selected').attr('data-cardholder'));
+                            self.labelCardDueMonth($('#cc_token option:selected').attr('month_due'));
+                            self.labelCardDueYear($('#cc_token option:selected').attr('year_due'));
                         }
                     }
 
                     if (value == 'new') {
                         $('.boxNewCard').show();
+                        self.clearCardPlaceholder();
                     } else {
                         $('.boxNewCard').hide();
                     }
@@ -153,6 +158,15 @@ define([
 
             getCode: function() {
                 return 'az2009_cielo';
+            },
+
+            clearCardPlaceholder: function () {
+                var self = this;
+                self.labelCardNumber('');
+                self.labelCardHolder('');
+                self.labelCardDueMonth('');
+                self.labelCardDueYear('');
+                $('.box-cardbrand').empty();
             },
 
             getData: function() {

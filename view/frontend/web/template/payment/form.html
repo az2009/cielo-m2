@@ -57,14 +57,19 @@
                 <div class="box-card-label flip-container">
                     <div class="box-card flipper">
                         <div class="front">
+                            <div class="background"></div>
+                            <div class="overlay"></div>
                             <div class="box-cardnumber" data-bind="text:labelCardNumber, attr: {'data-placeholder':'0000 0000 0000 0000'}"></div>
                             <div class="box-carddue b-month" data-bind="text:labelCardDueMonth, attr: {'data-placeholder':'00'}"></div>
                             <div class="box-carddue b-year" data-bind="text:labelCardDueYear, attr: {'data-placeholder':'0000'}"></div>
-                            <div class="box-cardholder" data-bind="text:labelCardHolder, attr: {'data-placeholder':$t('CARDHOLDER NAME')}"></div>
+                            <div class="box-cardholder" data-bind="text:labelCardHolder, attr: {'data-placeholder': $t('CARDHOLDER NAME')}"></div>
                             <div class="box-cardbrand" data-bind="text:labelCardBrand"></div>
                         </div>
                         <div class="back">
+                            <div class="background"></div>
+                            <div class="overlay"></div>
                             <div class="box-cardcvv" data-bind="text:labelCardCvv, attr: {'data-placeholder':'123'}"></div>
+                            <div class="box-cardbar"></div>
                         </div>
                     </div>
                 </div>
