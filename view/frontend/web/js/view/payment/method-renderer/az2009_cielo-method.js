@@ -235,7 +235,10 @@ define([
 
                 if (validateCard.isValid
                     && this.creditCardName().length > 3
-                    && this.creditCardExpMonth().length == 2
+                    && (
+                        this.creditCardExpMonth().length == 2 ||
+                        this.creditCardExpMonth().length == 1
+                       )
                     && this.creditCardExpYear().length == 4
                     && this.creditCardCid().length >= 3
                 ) {

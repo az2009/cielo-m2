@@ -182,7 +182,27 @@ define([
 
             getMethodCurrent:function() {
                 return window.checkoutConfig.payment.az2009_cielo.info_credit_card.method;
-            }
+            },
+
+            getExpMonth: function () {
+                var values = window.checkoutConfig.payment.az2009_cielo.month;
+                return _.map(values, function (value, key) {
+                    return {
+                        'key': key,
+                        'value': value
+                    };
+                });
+            },
+
+            getExpYear: function () {
+                var values = window.checkoutConfig.payment.az2009_cielo.year;
+                return _.map(values, function (value, key) {
+                    return {
+                        'key': key,
+                        'value': value
+                    };
+                });
+            },
 
         });
     });

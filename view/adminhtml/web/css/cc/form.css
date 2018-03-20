@@ -74,6 +74,8 @@
     width: auto !important
 }
 
+.select-year option:empty,
+.select-month option:empty,
 #cc_installments option:empty {
     display: block !important;
 }

@@ -89,7 +89,8 @@ class CieloConfigProvider
     {
         $month = [];
         for ($x=1; $x <= 12; $x++) {
-            $month[$x] = $x;
+            $value = $x <= 9 ? "0{$x}" : $x;
+            $month[$value] = $value ;
         }
 
         return $month;
