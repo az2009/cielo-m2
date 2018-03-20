@@ -86,8 +86,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     protected function _validate()
     {
         $this->validate
-             ->setPayment($this)
-             ->validate();
+            ->setPayment($this)
+            ->validate();
     }
 
     /**
@@ -115,15 +115,15 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->keyRequest = $this->helper->getKeyRequest();
 
         return $this->httpClientFactory
-                    ->setUri($this->getUri())
-                    ->setHeaders(
-                        [
-                            'Content-Type' => 'application/json',
-                            'MerchantId' => $this->helper->getMerchantId(),
-                            'MerchantKey' => $this->helper->getMerchantKey(),
-                            'RequestId' => $this->keyRequest,
-                        ]
-                    );
+            ->setUri($this->getUri())
+            ->setHeaders(
+                [
+                    'Content-Type' => 'application/json',
+                    'MerchantId' => $this->helper->getMerchantId(),
+                    'MerchantKey' => $this->helper->getMerchantKey(),
+                    'RequestId' => $this->keyRequest,
+                ]
+            );
     }
 
     /**
@@ -145,8 +145,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     {
         $params = $this->getParams();
         $this->getClient()
-             ->setRawData($params)
-             ->setMethod($this->httpClientFactory::PUT);
+            ->setRawData($params)
+            ->setMethod($this->httpClientFactory::PUT);
 
         return $this;
     }
@@ -159,8 +159,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     {
         $params = $this->getParams();
         $this->getClient()
-             ->setMethod($this->httpClientFactory::POST)
-             ->setRawData($params);
+            ->setMethod($this->httpClientFactory::POST)
+            ->setRawData($params);
 
         return $this;
     }
@@ -173,8 +173,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     {
         $params = $this->getParams();
         $this->getClient()
-             ->setMethod($this->httpClientFactory::GET)
-             ->setRawData($params);
+            ->setMethod($this->httpClientFactory::GET)
+            ->setRawData($params);
 
         return $this;
     }
@@ -215,8 +215,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     public function getParams()
     {
         $request = $this->getRequest()
-                        ->setPaymentData($this->getInfoInstance())
-                        ->buildRequest();
+            ->setPaymentData($this->getInfoInstance())
+            ->buildRequest();
 
         return $request;
     }
@@ -245,7 +245,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
 
             $this->_eventManager->dispatch(
                 'after_send_request_cielo',
-                ['response' => $this->getResponse()]
+                ['client' => $this->getClient()]
             );
 
             $this->_processResponse();
@@ -286,8 +286,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     protected function _processResponse()
     {
         $this->getResponse()
-             ->setPayment($this->getInfoInstance())
-             ->process();
+            ->setPayment($this->getInfoInstance())
+            ->process();
     }
 
 }

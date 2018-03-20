@@ -198,4 +198,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
         return substr(trim($value), $maxlength);
     }
+
+    public function canDebug()
+    {
+        $config = $this->scopeConfig->getValue(
+            'payment/az2009_cielo/debug',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+
+        return (boolean)$config;
+    }
 }

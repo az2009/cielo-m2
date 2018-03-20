@@ -1,6 +1,6 @@
+<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="customer_save_before">
-        <observer name="az2009_cielo_cc_debug_before" instance="Az2009\Cielo\Observer\BeforeSendRequestCielo" />
+    <event name="after_send_request_cielo">
         <observer name="az2009_cielo_cc_debug_after" instance="Az2009\Cielo\Observer\AfterSendRequestCielo" />
     </event>
 </config>
