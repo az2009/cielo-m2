@@ -76,7 +76,7 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
     {
         $response = $this->getBody();
         if (!property_exists($response, 'MerchantOrderId')) {
-            throw new \Exception(__('proper MerchantOrderId not found'));
+            throw new \Exception(__('Proper MerchantOrderId not found'));
         }
 
         return $response->MerchantOrderId;

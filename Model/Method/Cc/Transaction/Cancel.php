@@ -12,13 +12,13 @@ class Cancel extends \Az2009\Cielo\Model\Method\Transaction
         $order = $payment->getOrder();
 
         if (!property_exists($this->getBody(), 'Payment') && !$payment->getLastTransId()) {
-            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
         } elseif(property_exists($this->getBody(), 'Payment')) {
             $paymentId = $this->getBody()->Payment->PaymentId;
         }
 
         if (empty($paymentId) && !$payment->getLastTransId()) {
-            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
         }
 
         //check if is the first capture of order

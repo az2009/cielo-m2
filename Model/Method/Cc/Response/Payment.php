@@ -8,6 +8,7 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
     const STATUS_AUTHORIZED = '1';
 
     const STATUS_CANCELED = '10';
+
     const STATUS_CANCELED_AFTER = '11';
 
     const STATUS_CANCELED_PARTIAL = '2';
@@ -116,7 +117,7 @@ class Payment extends \Az2009\Cielo\Model\Method\Response
             return $this->isStatusCanceled($status);
         }
 
-        throw new \Exception('invalid payment status');
+        throw new \Exception(__('Invalid payment status'));
     }
 
     /**

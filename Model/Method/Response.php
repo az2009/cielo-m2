@@ -7,6 +7,9 @@ use Magento\Framework\Exception\LocalizedException;
 class Response extends \Magento\Framework\DataObject
 {
 
+    /**
+     * @var array
+     */
     protected $_requestStatusAllowed = [201, 200];
 
     public function process()
@@ -72,7 +75,7 @@ class Response extends \Magento\Framework\DataObject
     {
         $response = $this->getData('response');
         if (!($response instanceof \Zend_Http_Response)) {
-            throw new \Exception('invalid response');
+            throw new \Exception(__('invalid response'));
         }
 
         return $response;

@@ -62,7 +62,7 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
         $paymentId = $this->getData('payment_id');
 
         if (empty($paymentId)) {
-            throw new \Exception('payment_id empty to send the postback');
+            throw new \Exception(__('payment_id empty to send the postback'));
         }
 
         return $paymentId;

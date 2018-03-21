@@ -24,7 +24,7 @@
 
         <div class="field number required">
             <label for="<?php echo $block->getCode() ?>_cc_number" class="label">
-                <span><?php echo __('Número do Cartão') ?></span>
+                <span><?php echo __('Credit Card Number') ?></span>
             </label>
             <div class="control">
                 <input type="number" name="payment[cc_number]"
@@ -38,7 +38,7 @@
 
         <div class="field name required">
             <label for="<?php echo $block->getCode() ?>_cc_name" class="label">
-                <span><?php echo __('Nome do titular') ?></span>
+                <span><?php echo __('Cardholder Name') ?></span>
             </label>
             <div class="control">
                 <input type="text" name="payment[cc_name]" class="input-text fluid" value=""
@@ -48,7 +48,7 @@
 
         <div class="field date required">
             <label for="<?php echo $block->getCode() ?>_expiration"  class="label">
-                <span><?php echo __('Data de Vencimento') ?></span>
+                <span><?php echo __('Expiration Date') ?></span>
             </label>
             <div class="control">
                 <div class="fields group group-2">

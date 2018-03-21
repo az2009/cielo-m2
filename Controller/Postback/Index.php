@@ -58,8 +58,8 @@ class Index extends \Magento\Framework\App\Action\Action
     {
         $request = $this->getRequest();
 
-         if(/*!$request->isPost()
-            ||*/ !($this->_paymentId = $request->getParam('PaymentId'))
+         if(!$request->isPost()
+            || !($this->_paymentId = $request->getParam('PaymentId'))
             || !($this->_changeType = $request->getParam('ChangeType'))
         ) {
             return false;

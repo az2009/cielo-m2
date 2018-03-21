@@ -36,13 +36,13 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         $paymentId = null;
 
         if (!property_exists($this->getBody(), 'Payment') && !$payment->getLastTransId()) {
-            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
         } elseif(property_exists($this->getBody(), 'Payment')) {
             $paymentId = $this->getBody()->Payment->PaymentId;
         }
 
         if (empty($paymentId) && !$payment->getLastTransId()) {
-            throw new \Az2009\Cielo\Exception\Cc(_('Payment not authorized'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
         }
 
         //check if is the first capture of order
@@ -66,12 +66,10 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
 
         if ($payment->getCapturePartial()) {
             $this->messageManager->addNotice(
-                __('
-                *Obs: To capture partial: 
+                __('*Obs: To capture partial: 
                     Cielo only supports one partial or full capture. 
                     On the next capture for this request. 
-                    Capture offline at the store and online at Cielo\'s backoffice.'
-                )
+                    Capture offline at the store and online at Cielo\'s backoffice.')
             );
         }
 
@@ -96,7 +94,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         ) {
             throw new \Exception(
                 __(
-                    'not exists values to capture in order %1',
+                    'Not exists values to capture in order %1',
                     $this->getPayment()->getOrder()->getId()
                 )
             );

@@ -52,10 +52,13 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     protected $_canCancelInvoice = true;
 
     /**
-     * @var string
+     * @var \Az2009\Cielo\Block\Form\Cc
      */
     protected $_infoBlockType = \Az2009\Cielo\Block\Info\Cc::class;
 
+    /**
+     * @var \Az2009\Cielo\Block\Form\Cc
+     */
     protected $_formBlockType = \Az2009\Cielo\Block\Form\Cc::class;
 
     public function __construct(
@@ -163,11 +166,9 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
             //check if transaction has value captured
             if ($payment->getOrder()->getTotalPaid() > 0) {
                 throw new \Az2009\Cielo\Exception\Cc(
-                    __('                
-                        The request has already been captured. Cielo only supports one partial or full capture. 
+                    __('The request has already been captured. Cielo only supports one partial or full capture. 
                         A catch is already created for this request. 
-                        Capture offline at the store and online at Cielo\'s backoffice.
-                    ')
+                        Capture offline at the store and online at Cielo\'s backoffice.')
                 );
             }
 
@@ -193,10 +194,5 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         }
 
         $payment->setAmount($amount);
-    }
-
-    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
-    {
-        return parent::isAvailable();
     }
 }

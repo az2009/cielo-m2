@@ -8,7 +8,7 @@ var config = {
         'Az2009_Cielo/js/cc/validate': {
             deps: [
                 'jquery',
-                'jquery/validate'
+                'jquery/validate',
             ]
         }
     }

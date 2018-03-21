@@ -6,11 +6,10 @@ requirejs([
 
     $.validator.addMethod(
         "validate-credit-card",
-        function(value, element) {
+        function (value, element) {
             var result = cardNumberValidator(value);
             return result.isValid;
         },
-
         $.mage.__("Invalid Credit Card")
     );
 

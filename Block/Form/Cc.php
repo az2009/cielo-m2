@@ -46,5 +46,4 @@ class Cc extends \Magento\Payment\Block\Form\Cc
     {
         return \Az2009\Cielo\Model\Method\Cc\Cc::CODE_PAYMENT;
     }
-
 }

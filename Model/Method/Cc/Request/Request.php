@@ -25,7 +25,6 @@ class Request extends \Magento\Framework\DataObject
      */
     protected $_eventManager;
 
-
     public function __construct(
         Customer $customer,
         Payment $payment,
