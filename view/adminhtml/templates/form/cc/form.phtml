@@ -110,13 +110,10 @@
 <script>
     requirejs([
             'jquery',
-            'uiComponent',
-            'mage/translate',
             'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator',
-            'ko',
             'Az2009_Cielo/js/cc/validate'
     ],
-    function ($, Component, $t, cardNumberValidator, ko, va) {
+    function ($, cardNumberValidator, validate) {
 
         $('input[name="payment[cc_number]"]').keyup(function () {
             var number = $(this).val();
@@ -136,5 +133,6 @@
             }
 
         });
+
     });
 </script>
