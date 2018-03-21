@@ -54,7 +54,7 @@ class CieloConfigProvider
                     'icons' => $this->getIcons(),
                     'availableTypes' => $this->getCcAvailableTypes(),
                     'cards' => $this->helper->getCardSavedByCustomer(),
-                    'installments' => $this->installment->getInstallmentsAvailable(),
+                    'installments' => $this->getInstallmentsAvailable(),
                     'is_logged_in' => $this->helper->_session->isLoggedIn(),
                     'month' => $this->getExpMonth(),
                     'year' => $this->getExpYear(),
@@ -135,5 +135,35 @@ class CieloConfigProvider
         }
 
         return $this->icons;
+    }
+
+    /**
+     * get flag image of card
+     * @param $code
+     * @return \stdClass
+     */
+    public function getIconByCode($code)
+    {
+        $asset = $this->ccConfig->createAsset('Az2009_Cielo::images/cc/' . strtolower($code) . '.png');
+        $placeholder = $this->assetSource->findSource($asset);
+        $std = new \stdClass();
+
+        $std->url = '';
+        $std->width = '';
+        $std->height = '';
+
+        if ($placeholder) {
+            list($width, $height) = getimagesize($asset->getSourceFile());
+            $std->url = $asset->getUrl();
+            $std->width = $width;
+            $std->height = $height;
+        }
+
+        return $std;
+    }
+
+    public function getInstallmentsAvailable()
+    {
+        return $this->installment->getInstallmentsAvailable();
     }
 }

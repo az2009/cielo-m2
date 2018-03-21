@@ -1,14 +1,140 @@
-<div id="cieloccform" data-bind="scope:'cielo_cc_form'" data-mage-init='
-    {
-        "Magento_Ui/js/core/app": {
-            "components": {
-                "cielo_cc_form": {
-                    "component": "Az2009_Cielo/js/cc/cielo-cc-form",
-                    "template": "Az2009_Cielo/payment/cc-form"
-                }
+<?php /** @var \Az2009\Cielo\Block\Form\Cc $block*/ ?>
+<fieldset style="display:none"
+          class="checkout-payment-method fieldset payment items
+          ccard admin__fieldset payment-method" id="payment_form_<?php echo $block->getCode() ?>">
+
+    <div class="field type brandCard required">
+        <div class="control">
+            <ul class="credit-card-types">
+                <?php foreach ($block->getCcAvailableTypes() as $item): ?>
+                    <?php if($img = $block->getIcon($item)->url):?>
+                        <li class="_inactive item item-<?php echo $item ?>"><img src="<?php echo $img ?>"></li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+            <input type="hidden"
+                   name="payment[cc_type]"
+                   class="input-text"
+                   id="<?php echo $block->getCode() ?>_cc_type"
+                   value="">
+        </div>
+    </div>
+
+    <div class="boxNewCard">
+
+        <div class="field number required">
+            <label for="<?php echo $block->getCode() ?>_cc_number" class="label">
+                <span><?php echo __('Número do Cartão') ?></span>
+            </label>
+            <div class="control">
+                <input type="number" name="payment[cc_number]"
+                       class="input-text validate-credit-card fluid"
+                       value=""
+                       data-validate='{"required-number":true}'
+                       id="<?php echo $block->getCode() ?>_cc_number"
+                       autocomplete="off"/>
+            </div>
+        </div>
+
+        <div class="field name required">
+            <label for="<?php echo $block->getCode() ?>_cc_name" class="label">
+                <span><?php echo __('Nome do titular') ?></span>
+            </label>
+            <div class="control">
+                <input type="text" name="payment[cc_name]" class="input-text fluid" value=""
+                       id="<?php echo $block->getCode() ?>_cc_name" data-validate='{"required-entry":true}' />
+            </div>
+        </div>
+
+        <div class="field date required">
+            <label for="<?php echo $block->getCode() ?>_expiration"  class="label">
+                <span><?php echo __('Data de Vencimento') ?></span>
+            </label>
+            <div class="control">
+                <div class="fields group group-2">
+                    <div class="field no-label month">
+                        <div class="control">
+                            <select class="select select-month"
+                                    name="payment[cc_exp_month]"
+                                    autocomplete="off" data-validate='{"required-number":true}'>
+                                <option class="item" value=""><?php echo __('Month')?></option>
+                                <?php foreach ($block->config->getExpMonth() as $k => $v): ?>
+                                    <option class="item" value="<?php echo $k ?>"><?php echo $v ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <select class="select select-year" name="payment[cc_exp_year]" data-validate='{"required-number":true}'>
+                                <option class="item" value=""><?php echo __('Year') ?></option>
+                                <?php foreach ($block->config->getExpYear() as $k => $v): ?>
+                                    <option class="item" value="<?php echo $k ?>"><?php echo $v ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field cvv required">
+        <label for="<?php echo $block->getCode() ?>_cc_cid" class="label">
+            <span><?php echo __('CVV') ?></span>
+        </label>
+        <div>
+            <input type="number"
+                   autocomplete="off"
+                   class="input-text cvv required-entry"
+                   name="payment[cc_cid]"
+                   max="9999"
+                   value=""
+                   id="<?php echo $block->getCode() ?>_cc_cid"
+                   data-validate='{"required-number":true, "maxlength":4}' />
+
+            <?php if ($block->config->getInstallmentsAvailable()): ?>
+            <div class="field">
+                <label for="<?php echo $block->getCode() ?>_cc_installments" class="label">
+                    <span><?php echo __('Installments') ?></span>
+                </label>
+                <div class="control">
+                    <select id="<?php echo $block->getCode() ?>_cc_installments" name="payment[cc_installments]"
+                            data-validate='{"required-number":true}'>
+                        <?php foreach ($block->config->getInstallmentsAvailable() as $k => $v): ?>
+                        <option class="item" value="<?php echo $k ?>"><?php echo $v ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</fieldset>
+
+<script>
+    requirejs([
+            'jquery',
+            'uiComponent',
+            'mage/translate',
+            'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator',
+            'ko',
+            'Az2009_Cielo/js/cc/validate'
+    ],
+    function ($, Component, $t, cardNumberValidator, ko, va) {
+
+        $('input[name="payment[cc_number]"]').keyup(function () {
+            var number = $(this).val();
+            var result = cardNumberValidator(number);
+
+            if (!number.length) {
+                $('li.item').removeClass('_active').addClass('_inactive');
             }
-        }
-    }
-'>
-<!-- ko template: getTemplate() --><!-- /ko -->
-</div>
+
+            if (result.isValid) {
+                $('li.item').removeClass('_active').addClass('_inactive');
+                if(result.card !== null) {
+                    $('li.item-' + result.card.type).removeClass('_inactive').addClass('_active');
+                }
+            } else if(result.card !== null) {
+                $('li.item-' + result.card.type).removeClass('_active').addClass('_inactive');
+            }
+
+        });
+    });
+</script>

@@ -4,7 +4,7 @@
         <referenceBlock name="order.create.billing.method.form">
             <action method="setMethodFormTemplate">
                 <argument name="method" xsi:type="string">az2009_cielo</argument>
-                <argument name="template" xsi:type="string">Az2009_Cielo::form/cc/reload.phtml</argument>
+                <argument name="template" xsi:type="string">Az2009_Cielo::form/cc/form.phtml</argument>
             </action>
         </referenceBlock>
     </body>
