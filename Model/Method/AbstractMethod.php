@@ -80,7 +80,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->response = $response;
         $this->request = $request;
         $this->httpClientFactory = $httpClientFactory->create();
-        $this->_uri = $this->helper->getRequestUriStage();
+        $this->_uri = $this->helper->getUriRequest();
     }
 
     protected function _validate()

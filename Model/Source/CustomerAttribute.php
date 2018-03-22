@@ -18,6 +18,7 @@ class CustomerAttribute
     {
         $options = array();
         $attributes = $this->_customer->getAttributes();
+        $options[] = ['label' => __('Select a Attribute'), 'value' => ''];
         foreach ($attributes as $attr) {
             $options[] = [
                 'label' => $attr->getAttributeCode(),

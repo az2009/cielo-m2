@@ -2,11 +2,8 @@
 
 namespace Az2009\Cielo\Helper;
 
-use Magento\Framework\App\Helper\Context;
-
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-
     /**
      * @var \Magento\Framework\View\Asset\Repository
      */
@@ -23,7 +20,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public $_session;
 
     public function __construct(
-        Context $context,
+        \Magento\Framework\App\Helper\Context $context,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order,
         \Magento\Customer\Model\Session $session,
         \Magento\Framework\View\Asset\Repository $asset
@@ -54,20 +51,42 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $config;
     }
 
-    public function getRequestUriStage()
+    public function getMode()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/uri_request_stage'
+            'payment/az2009_cielo/mode',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
+
+        return $config;
+    }
+
+    public function getUriRequest()
+    {
+        $config = $this->scopeConfig->getValue(
+            'payment/az2009_cielo/uri_request_production'
+        );
+
+        if ($this->getMode() == \Az2009\Cielo\Model\Source\Mode::MODE_STAGE) {
+            $config = $this->scopeConfig->getValue(
+                'payment/az2009_cielo/uri_request_stage'
+            );
+        }
 
         return (string)$config;
     }
 
-    public function getUriQueryStage()
+    public function getUriQuery()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/uri_query_stage'
+            'payment/az2009_cielo/uri_query_production'
         );
+
+        if ($this->getMode() == \Az2009\Cielo\Model\Source\Mode::MODE_STAGE) {
+            $config = $this->scopeConfig->getValue(
+                'payment/az2009_cielo/uri_query_stage'
+            );
+        }
 
         return (string)$config;
     }

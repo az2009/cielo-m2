@@ -127,6 +127,7 @@
                 $('li.item').removeClass('_active').addClass('_inactive');
                 if(result.card !== null) {
                     $('li.item-' + result.card.type).removeClass('_inactive').addClass('_active');
+                    $('#<?php echo $block->getCode() ?>_cc_type').val(result.card.type);
                 }
             } else if(result.card !== null) {
                 $('li.item-' + result.card.type).removeClass('_active').addClass('_inactive');

@@ -20,7 +20,6 @@ class Validate extends \Az2009\Cielo\Model\Method\Validate
      */
     protected $_customer;
 
-
     public function __construct(
         CreditCard $creditCard,
         Payment $payment,

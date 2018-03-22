@@ -128,6 +128,10 @@ class Customer extends \Magento\Framework\DataObject
      */
     protected function isCpfCnpj($doc)
     {
+        if (!($identity = $this->getIdentity())) {
+            return '';
+        }
+
         $doc = preg_replace('/[^0-9]/', '', $doc);
         if (strlen($doc) > 11) {
             return Customer::CNPJ;
@@ -144,6 +148,10 @@ class Customer extends \Magento\Framework\DataObject
     {
         $attributeCode = $this->getPayment()
                               ->getConfigData('attribute_identity');
+
+        if (empty($attributeCode)) {
+            return '';
+        }
 
         $identity = $this->_customerSession
                          ->getCustomer()

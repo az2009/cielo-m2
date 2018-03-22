@@ -36,7 +36,7 @@ class AfterSendRequestCielo implements \Magento\Framework\Event\ObserverInterfac
             $debug = "\n\n\n Request - {$requestId}: \n {$lastRequest}\n".
                      "\n\n\n Response - {$requestId}: \n {$lastResponse} \n";
 
-            $this->logger->info($debug);
+            #$this->logger->info($debug);
         }
     }
 }

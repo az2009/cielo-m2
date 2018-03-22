@@ -22,6 +22,7 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
+
         parent::__construct(
             $context, $registry,
             $extensionFactory, $customAttributeFactory,
@@ -31,7 +32,8 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
             $helper, $resource,
             $resourceCollection, $data
         );
-        $this->_uri = $this->helper->getUriQueryStage();
+
+        $this->_uri = $this->helper->getUriQuery();
     }
 
     public function process()
@@ -45,10 +47,9 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
      * process response
      * @param $response
      */
-    protected function _processResponse($response)
+    protected function _processResponse()
     {
         $this->getResponse()
-             ->setResponse($response)
              ->process();
     }
 

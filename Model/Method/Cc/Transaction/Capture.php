@@ -78,7 +78,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
 
         $this->saveCardToken();
 
-        if ($this->getPostback()) {
+        if ($this->getPostback() && ($payment->getAmountPaid() != $payment->getAmountAuthorized())) {
             $payment->registerCaptureNotification($this->_getCapturedAmount());
             $payment->getOrder()->save();
         }

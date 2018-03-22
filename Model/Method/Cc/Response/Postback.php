@@ -20,6 +20,7 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
         array $data = []
     ) {
         $this->_order = $order;
+
         parent::__construct($authorize, $unauthorized, $capture, $pending, $cancel, $data);
     }
 

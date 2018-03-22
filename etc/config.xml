@@ -17,6 +17,8 @@
                 <sort_order>1</sort_order>
                 <uri_request_stage>https://apisandbox.cieloecommerce.cielo.com.br/1/sales/</uri_request_stage>
                 <uri_query_stage>https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/</uri_query_stage>
+                <uri_request_production>https://api.cieloecommerce.cielo.com.br/1/sales/</uri_request_production>
+                <uri_query_production>https://apiquery.cieloecommerce.cielo.com.br/1/sales/</uri_query_production>
             </az2009_cielo>
         </payment>
     </default>

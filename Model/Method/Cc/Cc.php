@@ -93,7 +93,6 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     {
         parent::assignData($data);
         $info = $this->getInfoInstance();
-        $this->infoCreditCard->setDataToSessionQuote($data->getAdditionalData());
         $info->setAdditionalInformation($data->getAdditionalData());
 
         return $this;
