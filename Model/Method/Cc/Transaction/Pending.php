@@ -24,6 +24,7 @@ class Pending extends \Az2009\Cielo\Model\Method\Transaction
         $payment = $this->getPayment();
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         $paymentId = '';
+        $order = $payment->getOrder();
 
         if (property_exists($this->getBody(), 'Payment')) {
             $paymentId = $this->getBody()->Payment->PaymentId;
@@ -45,11 +46,13 @@ class Pending extends \Az2009\Cielo\Model\Method\Transaction
             $this->getTransactionData()
         );
 
-        $payment->getOrder()
-                ->setStatus($this->helper->getStatusPending());
+        $order->setStatus($this->helper->getStatusPending());
+        $order->setState($this->helper->getStatusPending());
+        $order->addStatusToHistory($order->getStatus(), __('Payment in Review, Waiting for Update in Cielo'));
+        $order->save();
 
-        $payment->setIsTransactionClosed(false)
-                ->setIsTransactionPending(true);
+        $payment->setIsTransactionClosed(true);
+        $payment->setIsTransactionPending(true);
 
         return $this;
     }

@@ -2,8 +2,6 @@
 
 namespace Az2009\Cielo\Model\Method\Cc\Transaction;
 
-use Braintree\Exception;
-
 class Capture extends \Az2009\Cielo\Model\Method\Transaction
 {
 
@@ -74,7 +72,8 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         }
 
         $payment->getOrder()
-                ->setStatus($this->helper->getStatusPay());
+                ->setStatus($this->helper->getStatusPay())
+                ->setState($this->helper->getStatusPay());
 
         $this->saveCardToken();
 

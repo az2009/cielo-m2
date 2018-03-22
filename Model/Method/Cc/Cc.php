@@ -44,7 +44,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canReviewPayment = true;
+    protected $_canReviewPayment = false;
 
     /**
      * @var bool
@@ -112,6 +112,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
     {
+        $this->setAcceptPayment(true);
         return self::capture($payment, $payment->getAmountAuthorized());
     }
 
@@ -146,10 +147,12 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     {
         //set value that are being captured
         $this->setAmount($payment, $amount);
-        $this->setRunValidate(true);
+        if (is_null($this->getRunValidate())) {
+            $this->setRunValidate(true);
+        }
+
         //check if operation have transaction authorize
-        if ($payment->getAuthorizationTransaction()
-            && !$payment->getOrder()->getTotalPaid()) {
+        if ($payment->getLastTransId() && $payment->getOrder()->getTotalDue()) {
             $this->setRunValidate(false);
             $this->setPath($payment->getLastTransId(), 'capture')
                  ->put();
