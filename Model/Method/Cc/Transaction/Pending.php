@@ -46,11 +46,6 @@ class Pending extends \Az2009\Cielo\Model\Method\Transaction
             $this->getTransactionData()
         );
 
-        $order->setStatus($this->helper->getStatusPending());
-        $order->setState($this->helper->getStatusPending());
-        $order->addStatusToHistory($order->getStatus(), __('Payment in Review, Waiting for Update in Cielo'));
-        $order->save();
-
         $payment->setIsTransactionClosed(true);
         $payment->setIsTransactionPending(true);
 

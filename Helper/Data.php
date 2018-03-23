@@ -91,26 +91,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return (string)$config;
     }
 
-    public function getStatusPending()
-    {
-        $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/order_status_pending',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-
-        return $config;
-    }
-
-    public function getStatusPay()
-    {
-        $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/order_status_pay',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-
-        return $config;
-    }
-
     public function getCardTypesAvailable()
     {
         $config = $this->scopeConfig->getValue(

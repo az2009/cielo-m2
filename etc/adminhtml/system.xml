@@ -54,20 +54,6 @@
                         <field id="active">1</field>
                     </depends>
                 </field>
-                <field id="order_status_pay" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" >
-                    <label>Status to order pay</label>
-                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
-                    <depends>
-                        <field id="active">1</field>
-                    </depends>
-                </field>
-                <field id="order_status_pending" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" >
-                    <label>Status to order pending</label>
-                    <source_model>Az2009\Cielo\Model\Source\Order\Status</source_model>
-                    <depends>
-                        <field id="active">1</field>
-                    </depends>
-                </field>
                 <field id="debug" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Debug</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

@@ -57,9 +57,6 @@ class Authorize extends \Az2009\Cielo\Model\Method\Transaction
 
         $payment->setIsTransactionClosed(false);
 
-        $payment->getOrder()
-                ->setStatus($this->helper->getStatusPay());
-
         $this->saveCardToken();
 
         if ($this->getPostback()) {

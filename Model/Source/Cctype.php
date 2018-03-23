@@ -13,7 +13,6 @@ class Cctype extends PaymentCctype
         'DI' => 'Discover',
         'JCB' => 'JCB',
         'DN' => 'Diners',
-        'AUR' => 'Aura',
         'ELO' => 'Elo',
         'HIC' => 'Hipercard',
     ];

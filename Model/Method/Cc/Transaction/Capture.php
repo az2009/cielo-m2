@@ -71,10 +71,6 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
             );
         }
 
-        $payment->getOrder()
-                ->setStatus($this->helper->getStatusPay())
-                ->setState($this->helper->getStatusPay());
-
         $this->saveCardToken();
 
         if ($this->getPostback() && ($payment->getAmountPaid() != $payment->getAmountAuthorized())) {

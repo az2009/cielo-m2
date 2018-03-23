@@ -11,9 +11,6 @@
         <type id="ELO" order="61">
             <label>Elo</label>
         </type>
-        <type id="AUR" order="62">
-            <label>Aura</label>
-        </type>
         <type id="HIC" order="62">
             <label>Hipercard</label>
         </type>
