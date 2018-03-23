@@ -65,3 +65,5 @@
 "Installments","Installments"
 "Select a Attribute","Select a Attribute"
 "Payment in Review, Waiting for Update in Cielo","Payment in Review, Waiting for Update in Cielo"
+"Elements(.select-month, .select-year) necessary to validation(validate-credit-card-due-date) not found","Elements(.select-month, .select-year) necessary to validation(validate-credit-card-due-date) not found"
+"Invalid Due Date of Credit Card","Invalid Due Date of Credit Card"

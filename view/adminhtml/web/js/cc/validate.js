@@ -21,7 +21,7 @@ requirejs([
             var year = $('.select-year').val();
 
             if (typeof year == 'undefined' || typeof month == 'undefined') {
-                alert('Elements(.select-month, .select-year) necessary to validation(validate-credit-card-due-date) not found');
+                alert($.mage.__('Elements(.select-month, .select-year) necessary to validation(validate-credit-card-due-date) not found'));
                 return false;
             }
 
