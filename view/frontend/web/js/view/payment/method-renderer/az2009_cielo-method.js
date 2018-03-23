@@ -227,6 +227,8 @@ define([
 
             isPlaceOrderActionAllowed: function(value) {
 
+                var date = new Date();
+
                 if (this.creditCardSave().length > 5 && this.creditCardCid().length >= 3) {
                     return true;
                 }
@@ -242,6 +244,13 @@ define([
                     && this.creditCardExpYear().length == 4
                     && this.creditCardCid().length >= 3
                 ) {
+                    if (this.creditCardExpYear() < date.getFullYear()
+                        || ((this.creditCardExpMonth() - 1) < date.getMonth()
+                            && this.creditCardExpYear() <= date.getFullYear())
+                    ) {
+                        return false;
+                    }
+
                     return true;
                 }
 

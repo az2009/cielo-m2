@@ -64,7 +64,7 @@ class CreditCard extends \Az2009\Cielo\Model\Method\Validate
         '5[0-9]{14,17}))/',
 
         // Diners
-        'Diners' => '/^3(0[0-5][0-9]{13,16}|095[0-9]{12,15}|(6|[8-9])[0-9]{14,17})/',
+        'Diners' => '/^(3(0[0-5]|095|6|[8-9]))\d*$/',
 
         // JCB
         'JCB' => '/^35(2[8-9][0-9]{12,15}|[3-8][0-9]{13,16})/',
@@ -138,6 +138,7 @@ class CreditCard extends \Az2009\Cielo\Model\Method\Validate
         }
 
         $this->isValidCreditCard($creditCard);
+        $this->isValidDueDate($creditCard);
         $this->isValidToken($creditCard);
     }
 
@@ -152,6 +153,25 @@ class CreditCard extends \Az2009\Cielo\Model\Method\Validate
             && !array_key_exists($creditCard['CardToken'], $this->helper->getCardSavedByCustomer())
         ) {
             throw new \Az2009\Cielo\Exception\Cc(__('Invalid Token Credit Card'));
+        }
+    }
+
+    /**
+     * validate credit card due date
+     * @param array $creditCard
+     */
+    public function isValidDueDate(Array $creditCard)
+    {
+        if (!$this->isToken()) {
+
+            $date = $creditCard['ExpirationDate'];
+            $date = explode('/', $date);
+
+            if ($date[0] < date('m') && $date[1] <= date('Y')
+                || $date[1] < date('Y')
+            ) {
+                throw new \Az2009\Cielo\Exception\Cc(__('Invalid Due Date of Credit Card'));
+            }
         }
     }
 

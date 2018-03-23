@@ -196,8 +196,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function getCardLabel(\Magento\Sales\Model\Order\Payment\Interceptor $payment)
     {
-        $firstFour = substr($payment->getAdditionalInformation('cc_number_enc'),0, 4);
-        $lastFour = substr($payment->getAdditionalInformation('cc_number_enc'), -4);
+        $firstFour = substr($payment->getAdditionalInformation('cc_number') ?: $payment->getAdditionalInformation('cc_number_enc'),0, 4);
+        $lastFour = substr($payment->getAdditionalInformation('cc_number') ?: $payment->getAdditionalInformation('cc_number_enc'), -4);
 
         return $firstFour. ' ****  **** '.$lastFour;
     }
