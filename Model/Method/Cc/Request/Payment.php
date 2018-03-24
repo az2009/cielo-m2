@@ -12,12 +12,20 @@ class Payment extends \Magento\Framework\DataObject
     const INTEREST = 'ByMerchant';
     const SAVE_CARD = 'true';
 
+    /**
+     * @var \Az2009\Cielo\Model\Source\Cctype
+     */
     protected $_cctype;
 
     /**
      * @var \Az2009\Cielo\Helper\Data
      */
     protected $helper;
+
+    /**
+     * @var \Magento\Sales\Model\Order
+     */
+    protected $order;
 
     public function __construct(
         \Az2009\Cielo\Model\Source\Cctype $cctype,
@@ -28,11 +36,6 @@ class Payment extends \Magento\Framework\DataObject
         $this->helper = $helper;
         parent::__construct($data);
     }
-
-    /**
-     * @var \Magento\Sales\Model\Order
-     */
-    protected $order;
 
     public function getRequest()
     {

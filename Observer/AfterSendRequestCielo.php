@@ -8,17 +8,10 @@ class AfterSendRequestCielo implements \Magento\Framework\Event\ObserverInterfac
      */
     protected $helper;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $logger;
-
     public function __construct(
-        \Az2009\Cielo\Helper\Data $helper,
-        \Psr\Log\LoggerInterface $logger
+        \Az2009\Cielo\Helper\Data $helper
     ) {
         $this->helper = $helper;
-        $this->logger = $logger;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observe)
@@ -36,7 +29,7 @@ class AfterSendRequestCielo implements \Magento\Framework\Event\ObserverInterfac
             $debug = "\n\n\n Request - {$requestId}: \n {$lastRequest}\n".
                      "\n\n\n Response - {$requestId}: \n {$lastResponse} \n";
 
-            #$this->logger->info($debug);
+            $this->helper->getLogger()->info($debug);
         }
     }
 }

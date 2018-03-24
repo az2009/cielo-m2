@@ -207,4 +207,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
         return (boolean)$config;
     }
+
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->_logger;
+    }
 }
