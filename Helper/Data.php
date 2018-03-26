@@ -2,8 +2,13 @@
 
 namespace Az2009\Cielo\Helper;
 
+use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
+use MEQP2\Tests\NamingConventions\true\object;
+
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
+
+    const CHANGE_TYPE = 1;
     /**
      * @var \Magento\Framework\View\Asset\Repository
      */
@@ -12,6 +17,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory
      */
+    protected $_orderCollection;
+
+    /**
+     * @var \Magento\Sales\Model\Order
+     */
     protected $_order;
 
     /**
@@ -19,22 +29,39 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public $_session;
 
+    /**
+     * @var \Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory
+     */
+    protected $_transaction;
+
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollection,
+        \Magento\Sales\Model\Order $order,
+        \Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory $transaction,
         \Magento\Customer\Model\Session $session,
-        \Magento\Framework\View\Asset\Repository $asset
+        \Magento\Framework\View\Asset\Repository $asset,
+        \Magento\Framework\ObjectManagerInterface $objectManager
     ) {
         $this->_asset = $asset;
+        $this->_orderCollection = $orderCollection;
         $this->_order = $order;
         $this->_session = $session;
+        $this->_transaction = $transaction;
+        $this->_objectManager = $objectManager;
+
         parent::__construct($context);
     }
 
     public function getMerchantId()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/merchant_id',
+            'payment/az2009_cielo_core/merchant_id',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
@@ -44,7 +71,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getMerchantKey()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/merchant_key',
+            'payment/az2009_cielo_core/merchant_key',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
@@ -54,7 +81,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getMode()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/mode',
+            'payment/az2009_cielo_core/mode',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
@@ -64,12 +91,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getUriRequest()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/uri_request_production'
+            'payment/az2009_cielo_core/uri_request_production'
         );
 
         if ($this->getMode() == \Az2009\Cielo\Model\Source\Mode::MODE_STAGE) {
             $config = $this->scopeConfig->getValue(
-                'payment/az2009_cielo/uri_request_stage'
+                'payment/az2009_cielo_core/uri_request_stage'
             );
         }
 
@@ -79,12 +106,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getUriQuery()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/uri_query_production'
+            'payment/az2009_cielo_core/uri_query_production'
         );
 
         if ($this->getMode() == \Az2009\Cielo\Model\Source\Mode::MODE_STAGE) {
             $config = $this->scopeConfig->getValue(
-                'payment/az2009_cielo/uri_query_stage'
+                'payment/az2009_cielo_core/uri_query_stage'
             );
         }
 
@@ -144,7 +171,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             return $tokens;
         }
 
-        $collection = $this->_order->create();
+        $collection = $this->_orderCollection->create();
         $collection->addAttributeToSelect('entity_id');
         $collection->addAttributeToFilter(
             'customer_id',
@@ -201,7 +228,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function canDebug()
     {
         $config = $this->scopeConfig->getValue(
-            'payment/az2009_cielo/debug',
+            'payment/az2009_cielo_core/debug',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
@@ -214,5 +241,39 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getLogger()
     {
         return $this->_logger;
+    }
+
+    /**
+     * get instance postback of payment
+     * @param $transactionId
+     * @return bool | object
+     */
+    public function getPostbackByTransId($transactionId)
+    {
+        $instance = false;
+        $collection = $this->_transaction->create();
+
+        $collection->addAttributeToSelect('order_id')
+                   ->addAttributeToFilter('txn_id', array('eq' => $transactionId));
+
+        if ($collection->getSize() <= 0) {
+            return $instance;
+        }
+
+        $orderId = $collection->getFirstItem()
+                              ->getOrderId();
+
+        if ((int)$orderId && (int)$this->_order->load($orderId)->getId()) {
+            $instance = $this->_order
+                             ->getPayment()
+                             ->getMethodInstance()
+                             ->getPostbackInstance();
+        }
+
+        if ($instance !== null) {
+            $instance = $this->_objectManager->get($instance);
+        }
+
+        return $instance;
     }
 }

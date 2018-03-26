@@ -1,0 +1,75 @@
+<!--
+/**
+ * Copyright Â© Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}, visible: isAvailable()">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
+    </div>
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+
+        <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+            <div class="payment-form payment-az2009">
+                <div class="box-form">
+                    <div class="fields group group-2">
+
+                        <div class="field type max-width-50">
+                            <div class="control">
+                                <label class="label">
+                                    <span><!-- ko i18n: 'Type'--><!-- /ko --></span>
+                                </label>
+                                <select name="payment[bs_type]">
+                                    <option value="CPF"><!-- ko i18n: 'CPF'--><!-- /ko --></option>
+                                    <option value="CNPJ"><!-- ko i18n: 'CNPJ'--><!-- /ko --></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <label class="label">
+                                    <span><!-- ko i18n: 'Number'--><!-- /ko --></span>
+                                </label>
+                                <input type="number" name="payment[bs_identification]" class="input-text">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary button-place-order">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')},
+                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        ">
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

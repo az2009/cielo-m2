@@ -15,26 +15,24 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $_changeType;
 
     /**
-     * @var \Az2009\Cielo\Model\Method\Cc\Postback
-     */
-    protected $_postback;
-
-    /**
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
+    /**
+     * @var \Az2009\Cielo\Helper\Data
+     */
+    protected $helper;
+
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \Az2009\Cielo\Model\Method\Cc\Postback $postback,
         \Magento\Customer\Model\Session $session,
-        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $order,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        \Az2009\Cielo\Helper\Data $helper
     ) {
-        $this->_postback = $postback;
         $this->_session = $session;
-        $this->_order = $order;
         $this->logger = $logger;
+        $this->helper = $helper;
         parent::__construct($context);
     }
 
@@ -43,21 +41,26 @@ class Index extends \Magento\Framework\App\Action\Action
         $response = $this->getResponse();
         $response->setHttpResponseCode(403);
         $msg = '';
-        if ($this->_isValid()) {
-            switch ($this->_changeType) {
-                case 1:
-                    try {
-                        $this->_postback
-                             ->setPaymentId($this->_paymentId)
-                             ->process();
-                        $response->setHttpResponseCode(200);
-                    }catch (\Exception $e) {
-                        $code = mt_rand(2, 9999);
-                        $msg = __('CodeError: %1', $code);
-                        $this->logger->error(__("\n \n \n PostbackError: \n Code: %1 \n Message: %2", $code, $e->getMessage()));
-                        $response->setHttpResponseCode(500);
-                    }
-                break;
+        if ($this->_isValid()
+            && $this->_changeType == \Az2009\Cielo\Helper\Data::CHANGE_TYPE
+        ) {
+            try {
+
+                $postback = $this->helper->getPostbackByTransId($this->_paymentId);
+                if (!($postback instanceof \Az2009\Cielo\Model\Method\AbstractMethod)) {
+                    throw new \Exception((string)__('Order Not Found to PaymentId %1', $this->_paymentId));
+                }
+
+                $postback->setPaymentId($this->_paymentId)
+                         ->process();
+
+                $response->setHttpResponseCode(200);
+
+            } catch(\Exception $e) {
+                $code = mt_rand(2, 9999);
+                $msg = __('CodeError: %1', $code);
+                $this->logger->error(__("\n \n \n PostbackError: \n Code: %1 \n Message: %2", $code, $e->getMessage()));
+                $response->setHttpResponseCode(500);
             }
 
             $response->clearBody();
@@ -79,4 +82,5 @@ class Index extends \Magento\Framework\App\Action\Action
 
         return true;
     }
+
 }

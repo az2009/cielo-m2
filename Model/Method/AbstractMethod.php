@@ -45,6 +45,11 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     protected $validate;
 
+    /**
+     * @var bool
+     */
+    protected $_postback = false;
+
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -81,6 +86,113 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->request = $request;
         $this->httpClientFactory = $httpClientFactory->create();
         $this->_uri = $this->helper->getUriRequest();
+    }
+
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        parent::assignData($data);
+        $info = $this->getInfoInstance();
+        $info->setAdditionalInformation($data->getAdditionalData());
+
+        return $this;
+    }
+
+    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+        $this->setAmount($payment, $amount);
+        if ($amount != $payment->getAmountAuthorized()) {
+            $payment->setRefundPartial(true);
+            $this->getClient()
+                ->setParameterGet('amount', $amount);
+        }
+
+        self::void($payment);
+    }
+
+    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        $this->setAcceptPayment(true);
+        return self::capture($payment, $payment->getAmountAuthorized());
+    }
+
+    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        return self::void($payment);
+    }
+
+    public function cancel(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        return self::void($payment);
+    }
+
+    public function void(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        $payment->setActionCancel(true);
+        $this->setPath($payment->getLastTransId(), 'void')
+            ->put()
+            ->request();
+    }
+
+    public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+        $this->setAmount($payment, $amount);
+        $payment->setAdditionalInformation('can_capture', false);
+        $this->setRunValidate(true);
+        $this->post()->request();
+    }
+
+    public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+        //set value that are being captured
+        $this->setAmount($payment, $amount);
+        if (is_null($this->getRunValidate())) {
+            $this->setRunValidate(true);
+        }
+
+        //check if operation have transaction authorize
+        if ($payment->getLastTransId() && $payment->getOrder()->getTotalDue()) {
+            $this->setRunValidate(false);
+            $this->setPath($payment->getLastTransId(), 'capture')
+                ->put();
+
+            if ($amount != $payment->getAmountAuthorized()) {
+                $payment->setCapturePartial(true);
+                $this->getClient()
+                    ->setParameterGet('amount', $amount);
+            }
+
+        } else {
+
+            //check if transaction has value captured
+            if ($payment->getOrder()->getTotalPaid() > 0) {
+                throw new \Az2009\Cielo\Exception\Cc(
+                    __('The request has already been captured. Cielo only supports one partial or full capture. 
+                        A catch is already created for this request. 
+                        Capture offline at the store and online at Cielo\'s backoffice.')
+                );
+            }
+
+            $payment->setAdditionalInformation('can_capture', true);
+            $this->post();
+
+        }
+
+        $this->request();
+    }
+
+    /**
+     * set amount total to authorize and capture
+     * @param \Magento\Payment\Model\InfoInterface $payment
+     * @param $amount
+     * @throws \Az2009\Cielo\Exception\Cc
+     */
+    public function setAmount(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+        if ($amount <= 0) {
+            throw new \Az2009\Cielo\Exception\Cc(__('Invalid amount for capture.'));
+        }
+
+        $payment->setAmount($amount);
     }
 
     protected function _validate()
@@ -288,6 +400,11 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->getResponse()
             ->setPayment($this->getInfoInstance())
             ->process();
+    }
+
+    public function getPostbackInstance()
+    {
+        return $this->_postback;
     }
 
 }

@@ -44,13 +44,13 @@ class Payment extends \Magento\Framework\DataObject
                            'Payment' => [
                                'Type' => Payment::TYPE,
                                'Amount' => $info->getAmount(),
-                               'Provider' => $this->helper->getProvider(),
+                               'Provider' => $this->helper->prepareString($this->helper->getProvider(), 15, 0),
                                'ExpirationDate' => $this->getExpDate(),
-                               'Assignor' => $this->helper->getAssignor(),
-                               'Address' => $this->helper->getAssignorAddress(),
-                               'BoletoNumber' => $this->helper->getBoletoNumber(),
-                               'Demonstrative' => $this->helper->getDemonstrative(),
-                               'Identification' => $info->getAdditionalInformation('bs_identification'),
+                               'Assignor' => $this->helper->prepareString($this->helper->getAssignor(), 200, 0),
+                               'Address' => $this->helper->prepareString($this->helper->getAssignorAddress(),255, 0),
+                               'BoletoNumber' => $this->helper->prepareString($this->helper->getBoletoNumber(), 9, 0),
+                               'Demonstrative' => $this->helper->prepareString($this->helper->getDemonstrative(), 255, 0),
+                               'Identification' => $this->helper->prepareString($info->getAdditionalInformation('bs_identification'), 14, 0),
                                'Instructions' => $this->helper->prepareString($this->getInstructions(), 450, 0)
                            ]
                         ]

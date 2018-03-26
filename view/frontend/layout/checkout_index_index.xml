@@ -24,12 +24,22 @@
                                                 <item name="payment" xsi:type="array">
                                                     <item name="children" xsi:type="array">
                                                         <item name="renders" xsi:type="array">
-                                                            <!-- merge payment method renders here -->
+                                                            <!-- merge payment method renders Az2009_Cielo -->
                                                             <item name="children" xsi:type="array">
+                                                                <!-- Az2009_Cielo_Cc -->
                                                                 <item name="az2009_cielo" xsi:type="array">
                                                                     <item name="component" xsi:type="string">Az2009_Cielo/js/view/payment/az2009_cielo</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="az2009_cielo" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <!-- Az2009_Cielo_Bank_Slip -->
+                                                                <item name="az2009_cielo_bank_slip" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Az2009_Cielo/js/view/payment/az2009_cielo_bank_slip</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="az2009_cielo_bank_slip" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>
