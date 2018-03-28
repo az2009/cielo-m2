@@ -20,7 +20,17 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
+    protected $_canCaptureOnce = true;
+
+    /**
+     * @var bool
+     */
     protected $_canCapture = true;
+
+    /**
+     * @var bool
+     */
+    protected $_canFetchTransactionInfo = true;
 
     /**
      * @var bool
@@ -45,7 +55,7 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canReviewPayment = false;
+    protected $_canReviewPayment = true;
 
     /**
      * @var bool
@@ -67,6 +77,11 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
      */
     protected $_postback = \Az2009\Cielo\Model\Method\BankSlip\Postback::class;
 
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -80,6 +95,7 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
         Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\BankSlip $helper,
+        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -90,5 +106,48 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
             $request, $response, $validate, $httpClientFactory, $helper,
             $resource, $resourceCollection, $data
         );
+
+        $this->messageManager = $messageManager;
+    }
+
+    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        $msg = (string)__(
+            'Payment Denied Manual/Offline. '.
+            'Manually cancel the payment on the payment gateway. '.
+            'This cancellation is only effective in the store. Transaction ID: %1',
+            $payment->getLastTransId()
+        );
+
+        $this->messageManager->addNoticeMessage($msg);
+
+        $payment->getOrder()
+                ->addStatusHistoryComment($msg);
+
+        return true;
+    }
+
+    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        $msg = (string)__(
+            'Payment Accept/Authorize Manual/Offline. '.
+            'Manually capture the payment at the payment gateway and generate'.
+            'the offline invoice at the store. '.
+            'This authorization is only being made out in the store. '.
+            'Transaction ID: %1',
+            $payment->getLastTransId()
+        );
+
+        $this->messageManager->addNoticeMessage($msg);
+
+        $payment->getOrder()
+                ->addStatusHistoryComment($msg);
+
+        return true;
+    }
+
+    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId)
+    {
+        return [];
     }
 }

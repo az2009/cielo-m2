@@ -57,6 +57,7 @@ class Index extends \Magento\Framework\App\Action\Action
                 $response->setHttpResponseCode(200);
 
             } catch(\Exception $e) {
+                echo $e->getMessage();
                 $code = mt_rand(2, 9999);
                 $msg = __('CodeError: %1', $code);
                 $this->logger->error(__("\n \n \n PostbackError: \n Code: %1 \n Message: %2", $code, $e->getMessage()));

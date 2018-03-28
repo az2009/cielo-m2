@@ -49,11 +49,11 @@ class Payment extends \Az2009\Cielo\Model\Method\Validate
     {
         $params = $this->getRequest();
         if (!isset($params['Payment'])) {
-            throw new \Az2009\Cielo\Exception\CC(__('Payment info invalid'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Payment info invalid'));
         }
 
-        $creditCard = $params['Payment'];
-        foreach ($creditCard as $k => $v) {
+        $payment = $params['Payment'];
+        foreach ($payment as $k => $v) {
             $this->required($k,$v, __('Payment: '));
             $this->maxLength($k,$v, __('Payment: '));
         }

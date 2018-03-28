@@ -103,16 +103,67 @@
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0" >
+                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" >
                     <label>Payment from Applicable Countries</label>
                     <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
                     <depends>
                         <field id="active">1</field>
                     </depends>
                 </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Payment from Specific Countries</label>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="provider" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Provider</label>
+                    <source_model>Az2009\Cielo\Model\Source\Provider</source_model>
+                </field>
+                <field id="additional_days" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Additional Days</label>
+                    <validate>validate-zero-or-greater validate-digits</validate>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="boleto_number" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Slip Number</label>
+                    <validate>validate-length maximum-length-9 validate-zero-or-greater validate-digits</validate>
+                    <comment>Maximum length: 9 digits</comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="demonstrative" translate="label" type="textarea" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Demonstrative</label>
+                    <validate>validate-length maximum-length-255</validate>
+                    <comment>Maximum length: 255 characters</comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="assignor" translate="label" type="textarea" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assignor</label>
+                    <validate>validate-length maximum-length-200</validate>
+                    <comment>Maximum length: 200 characters</comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="assignor_address" translate="label" type="textarea" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assignor Address</label>
+                    <validate>validate-length maximum-length-255</validate>
+                    <comment>Maximum length: 255 characters</comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="instructions" translate="label" type="textarea" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Instructions</label>
+                    <validate>validate-length maximum-length-450</validate>
+                    <comment>Maximum length: 450 characters</comment>
                     <depends>
                         <field id="active">1</field>
                     </depends>

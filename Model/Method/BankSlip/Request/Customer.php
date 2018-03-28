@@ -42,12 +42,16 @@ class Customer extends \Magento\Framework\DataObject
                         ->getPayment()
                         ->getMethodInstance();
 
+        $info = $payment->getInfoInstance();
+
+        $this->setInfo($info);
         $this->setPayment($payment);
 
         return $this->setData(
                         [
                             'Customer' => [
                                 'Name' => $this->helper->prepareString($this->billingAddress->getFirstname(), 34, 0),
+                                'Identity' => $this->helper->prepareString($info->getAdditionalInformation('bs_identification'), 14, 0),
                                 'Address' => $this->getBillingAddress()
                             ]
                         ]

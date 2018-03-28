@@ -27,24 +27,24 @@
             <div class="payment-form payment-az2009">
                 <div class="box-form">
                     <div class="fields group group-2">
-
-                        <div class="field type max-width-50">
-                            <div class="control">
-                                <label class="label">
-                                    <span><!-- ko i18n: 'Type'--><!-- /ko --></span>
-                                </label>
-                                <select name="payment[bs_type]">
-                                    <option value="CPF"><!-- ko i18n: 'CPF'--><!-- /ko --></option>
-                                    <option value="CNPJ"><!-- ko i18n: 'CNPJ'--><!-- /ko --></option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="field">
                             <div class="control">
-                                <label class="label">
-                                    <span><!-- ko i18n: 'Number'--><!-- /ko --></span>
+                                <label class="label" data-bind="attr: {for: getCode() + '_bs_identification'}">
+                                    <label class="label">
+                                        <span><!-- ko i18n: 'Enter the document that will be issued the Bank Slip.'--><!-- /ko --></span>
+                                    </label>
+                                    <label class="label">
+                                        <span>
+                                            <span data-bind="text: bankSlipValid"></span>
+                                        </span>
+                                    </label>
                                 </label>
-                                <input type="number" name="payment[bs_identification]" class="input-text">
+                                <input type="number"
+                                       name="payment[bs_identification]"
+                                       data-bind="
+                                       value:bankSlipIdent,
+                                       valueUpdate: 'keyup',
+                                       attr: {'id': getCode() + '_bs_identification'}" class="input-text">
                             </div>
                         </div>
 

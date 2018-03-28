@@ -2,7 +2,7 @@
 
 namespace Az2009\Cielo\Model\Method\BankSlip\Validate;
 
-class Validate extends \Az2009\Cielo\Model\Method\Validate
+class Validate extends \Az2009\Cielo\Model\Method\Cc\Validate\Validate
 {
 
     /**
@@ -32,7 +32,6 @@ class Validate extends \Az2009\Cielo\Model\Method\Validate
 
     public function validate()
     {
-
         $this->_customer
              ->setPayment($this->getPayment())
              ->validate();

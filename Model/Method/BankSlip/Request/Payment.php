@@ -62,7 +62,7 @@ class Payment extends \Magento\Framework\DataObject
     /**
      * generates the date expiration of bank slip
      * @return string
-     * @throws \Az2009\Cielo\Exception\BankSlip
+     * @throws \Az2009\Cielo\Exception\Cc
      */
     public function getExpDate()
     {
@@ -72,9 +72,9 @@ class Payment extends \Magento\Framework\DataObject
 
             return $date->format(self::DATE_FORMAT);
 
-        } catch (\Az2009\Cielo\Exception\BankSlip $e) {
+        } catch (\Az2009\Cielo\Exception\Cc $e) {
             $this->helper->getLogger()->info($e->getMessage());
-            throw new \Az2009\Cielo\Exception\BankSlip(
+            throw new \Az2009\Cielo\Exception\Cc(
                 __('Occurred an error to generating the expiration date of Bank Slip')
             );
         }

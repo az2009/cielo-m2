@@ -7,6 +7,8 @@ use Magento\Framework\Event\ManagerInterface;
 class Request extends \Az2009\Cielo\Model\Method\Request
 {
 
+    protected $_prefixDispatch = 'after_prepare_request_params_cielo_cc';
+
     public function __construct(
         Customer $customer,
         Payment $payment,
@@ -15,7 +17,5 @@ class Request extends \Az2009\Cielo\Model\Method\Request
     ) {
         parent::__construct($customer, $payment, $eventManager, $data);
     }
-
-    const PREFIX_DISPATCH = 'after_prepare_request_params_cielo_cc';
 
 }

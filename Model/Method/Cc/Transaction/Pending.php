@@ -24,7 +24,6 @@ class Pending extends \Az2009\Cielo\Model\Method\Transaction
         $payment = $this->getPayment();
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         $paymentId = '';
-        $order = $payment->getOrder();
 
         if (property_exists($this->getBody(), 'Payment')) {
             $paymentId = $this->getBody()->Payment->PaymentId;

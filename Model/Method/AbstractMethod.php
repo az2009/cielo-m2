@@ -131,6 +131,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->setPath($payment->getLastTransId(), 'void')
             ->put()
             ->request();
+
+        return $this;
     }
 
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
@@ -139,6 +141,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $payment->setAdditionalInformation('can_capture', false);
         $this->setRunValidate(true);
         $this->post()->request();
+
+        return $this;
     }
 
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
@@ -178,6 +182,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         }
 
         $this->request();
+
+        return $this;
     }
 
     /**
@@ -360,7 +366,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
                 ['client' => $this->getClient()]
             );
 
-            $this->_processResponse();
+            return $this->_processResponse();
 
         } catch(\Az2009\Cielo\Exception\Cc $e) {
             throw $e;
@@ -400,6 +406,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->getResponse()
             ->setPayment($this->getInfoInstance())
             ->process();
+
+        return $this;
     }
 
     public function getPostbackInstance()

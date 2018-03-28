@@ -15,11 +15,11 @@ class Customer extends \Az2009\Cielo\Model\Method\Validate
     {
         $params = $this->getRequest();
         if (!isset($params['Customer'])) {
-            throw new \Az2009\Cielo\Exception\CC(__('Customer info invalid'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Customer info invalid'));
         }
 
-        $creditCard = $params['Customer'];
-        foreach ($creditCard as $k => $v) {
+        $customer = $params['Customer'];
+        foreach ($customer as $k => $v) {
             $this->required($k,$v, __('Customer: '));
             $this->maxLength($k,$v, __('Customer: '));
         }

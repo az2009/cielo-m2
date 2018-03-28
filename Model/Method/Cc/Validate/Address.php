@@ -35,7 +35,7 @@ class Address extends \Az2009\Cielo\Model\Method\Validate
     {
         $params = $this->getRequest();
         if (!isset($params['Customer']['Address'])) {
-            throw new \Az2009\Cielo\Exception\CC(__('Billing Address info invalid'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Billing Address info invalid'));
         }
 
         $creditCard = $params['Customer']['Address'];

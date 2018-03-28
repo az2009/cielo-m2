@@ -16,46 +16,14 @@ define([
             defaults: {
                 template: 'Az2009_Cielo/payment/bank-slip-form',
                 timeoutMessage: $t('Sorry, but something went wrong. Please contact the seller.'),
-                creditCardNumber: '',
-                creditCardType: '',
-                selectedCardType: '',
-                messageValidateDoc: '',
-                creditCardName: '',
-                creditCardExpMonth: '',
-                creditCardExpYear: '',
-                creditCardCid: '',
-                creditCardSave:'',
-                creditCardInstallments:'',
-                isShow:'',
-                labelCardNumber:'',
-                labelCardDue:'',
-                labelCardHolder:'',
-                labelCardBrand:'',
-                labelCardCvv:'',
-                labelCardDueMonth:'',
-                labelCardDueYear:'',
+                bankSlipIdent: '',
+                bankSlipValid: $t('Number')
             },
 
             initObservable: function () {
                 this._super().observe([
-                    'creditCardNumber',
-                    'creditCardType',
-                    'selectedCardType',
-                    'messageValidateDoc',
-                    'creditCardName',
-                    'creditCardExpMonth',
-                    'creditCardExpYear',
-                    'creditCardCid',
-                    'creditCardSave',
-                    'creditCardInstallments',
-                    'isShow',
-                    'labelCardNumber',
-                    'labelCardDue',
-                    'labelCardHolder',
-                    'labelCardBrand',
-                    'labelCardCvv',
-                    'labelCardDueMonth',
-                    'labelCardDueYear',
+                    'bankSlipIdent',
+                    'bankSlipValid'
                 ]);
 
                 return this;
@@ -65,6 +33,23 @@ define([
 
                 this._super();
                 var self = this;
+
+                this.bankSlipIdent.subscribe(function (value) {
+
+                    if (value.length > 14) {
+                        value = value.substr(0, 14);
+                        self.bankSlipIdent(value);
+                    }
+
+                    var result = validateDoc(value);
+
+                    if (!result.isValid) {
+                        self.bankSlipValid($t(result.message));
+                    } else {
+                        self.bankSlipValid(result.type.toUpperCase());
+                    }
+
+                });
 
             },
 
@@ -76,14 +61,7 @@ define([
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'cc_type': this.creditCardType(),
-                        'cc_number' : this.creditCardNumber(),
-                        'cc_name' : this.creditCardName(),
-                        'cc_exp_month' : this.creditCardExpMonth(),
-                        'cc_exp_year' : this.creditCardExpYear(),
-                        'cc_cid' : this.creditCardCid(),
-                        'cc_token':this.creditCardSave(),
-                        'cc_installments': this.creditCardInstallments() ? this.creditCardInstallments() : 1
+                        'bs_identification': this.bankSlipIdent()
                     }
                 };
             },
@@ -96,10 +74,14 @@ define([
                 return true;
             },
 
-            isPlaceOrderActionAllowed: function(value) {
+            isPlaceOrderActionAllowed: function() {
+                var result = validateDoc(this.bankSlipIdent());
+                if (!result.isValid) {
+                    return false;
+                }
 
                 return true;
-            },
+            }
 
         });
     });

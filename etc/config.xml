@@ -8,30 +8,32 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
+            <az2009_cielo_core>
+                <title>Cielo - Core</title>
+                <model>Az2009\Cielo\Model\Method\Dummy</model>
+                <active>0</active>
+                <sort_order>0</sort_order>
+                <uri_request_stage>https://apisandbox.cieloecommerce.cielo.com.br/1/sales/</uri_request_stage>
+                <uri_query_stage>https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/</uri_query_stage>
+                <uri_request_production>https://api.cieloecommerce.cielo.com.br/1/sales/</uri_request_production>
+                <uri_query_production>https://apiquery.cieloecommerce.cielo.com.br/1/sales/</uri_query_production>
+            </az2009_cielo_core>
             <az2009_cielo>
-                <active>1</active>
+                <active>0</active>
                 <model>Az2009\Cielo\Model\Method\Cc\Cc</model>
-                <order_status>pending_payment</order_status>
+                <order_status>pending</order_status>
                 <title>Credit Card Cielo</title>
                 <allowspecific>0</allowspecific>
                 <sort_order>1</sort_order>
-                <uri_request_stage>https://apisandbox.cieloecommerce.cielo.com.br/1/sales/</uri_request_stage>
-                <uri_query_stage>https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/</uri_query_stage>
-                <uri_request_production>https://api.cieloecommerce.cielo.com.br/1/sales/</uri_request_production>
-                <uri_query_production>https://apiquery.cieloecommerce.cielo.com.br/1/sales/</uri_query_production>
             </az2009_cielo>
             <az2009_cielo_bank_slip>
-                <active>1</active>
+                <active>0</active>
                 <model>Az2009\Cielo\Model\Method\BankSlip\BankSlip</model>
-                <order_status>pending_payment</order_status>
+                <order_status>pending</order_status>
                 <title>Bank Slip Cielo</title>
                 <allowspecific>0</allowspecific>
-                <sort_order>1</sort_order>
+                <sort_order>2</sort_order>
                 <payment_action>authorize</payment_action>
-                <uri_request_stage>https://apisandbox.cieloecommerce.cielo.com.br/1/sales/</uri_request_stage>
-                <uri_query_stage>https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/</uri_query_stage>
-                <uri_request_production>https://api.cieloecommerce.cielo.com.br/1/sales/</uri_request_production>
-                <uri_query_production>https://apiquery.cieloecommerce.cielo.com.br/1/sales/</uri_query_production>
             </az2009_cielo_bank_slip>
         </payment>
     </default>

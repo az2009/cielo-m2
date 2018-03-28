@@ -7,7 +7,7 @@ use Magento\Framework\Event\ManagerInterface;
 
 abstract class Request extends \Magento\Framework\DataObject
 {
-    const PREFIX_DISPATCH = 'after_prepare_request_params_cielo_default';
+    protected $_prefixDispatch = 'after_prepare_request_params_cielo_default';
 
     /**
      * @var \Magento\Framework\DataObject
@@ -56,7 +56,7 @@ abstract class Request extends \Magento\Framework\DataObject
         $this->setOrder($order);
         $request = $this->setData($this->merge());
         $this->_eventManager->dispatch(
-            self::PREFIX_DISPATCH,
+            $this->_prefixDispatch,
             ['data_object' => $request]
         );
 
@@ -81,8 +81,8 @@ abstract class Request extends \Magento\Framework\DataObject
     public function getCustomer()
     {
         return $this->customer
-            ->setOrder($this->getOrder())
-            ->getRequest();
+                    ->setOrder($this->getOrder())
+                    ->getRequest();
     }
 
     /**

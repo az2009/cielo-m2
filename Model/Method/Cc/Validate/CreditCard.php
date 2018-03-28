@@ -118,7 +118,7 @@ class CreditCard extends \Az2009\Cielo\Model\Method\Validate
 
     /**
      * validate fields
-     * @throws \Az2009\Cielo\Exception\CC
+     * @throws \Az2009\Cielo\Exception\Cc
      */
     public function validate()
     {
@@ -128,7 +128,7 @@ class CreditCard extends \Az2009\Cielo\Model\Method\Validate
 
         $params = $this->getRequest();
         if (!isset($params['Payment']['CreditCard'])) {
-            throw new \Az2009\Cielo\Exception\CC(__('Invalid Credit Card Info '));
+            throw new \Az2009\Cielo\Exception\Cc(__('Invalid Credit Card Info '));
         }
 
         $creditCard = $params['Payment']['CreditCard'];

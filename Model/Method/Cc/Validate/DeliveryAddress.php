@@ -35,7 +35,7 @@ class DeliveryAddress extends \Az2009\Cielo\Model\Method\Validate
     {
         $params = $this->getRequest();
         if (!isset($params['Customer']['DeliveryAddress'])) {
-            throw new \Az2009\Cielo\Exception\CC(__('Shipping Address info invalid'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Shipping Address info invalid'));
         }
 
         $creditCard = $params['Customer']['DeliveryAddress'];
