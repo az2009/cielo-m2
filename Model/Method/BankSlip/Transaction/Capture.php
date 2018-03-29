@@ -4,6 +4,23 @@ namespace Az2009\Cielo\Model\Method\BankSlip\Transaction;
 
 class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
 {
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $_registry;
+
+    public function __construct(
+        \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Magento\Customer\Model\Session $session,
+        \Az2009\Cielo\Helper\Data $helper,
+        \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
+        \Magento\Framework\Registry $registry,
+        array $data = []
+    ) {
+        $this->_registry = $registry;
+        parent::__construct($messageManager, $session, $helper, $comment, $data);
+    }
+
     public function process()
     {
         $payment = $this->getPayment();
@@ -18,6 +35,10 @@ class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
 
         if (empty($paymentId) && !$payment->getLastTransId()) {
             throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
+        }
+
+        if ($this->_registry->registry('process_fetch_update_payment')) {
+            $payment->setIsTransactionApproved(true);
         }
 
         //check if is the first capture of order
@@ -48,11 +69,10 @@ class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
             );
         }
 
-        $this->saveCardToken();
-
         if ($this->getPostback() && ($payment->getAmountPaid() != $payment->getAmountAuthorized())) {
             $payment->registerCaptureNotification($this->_getCapturedAmount());
-            $payment->getOrder()->save();
+            $payment->getOrder()
+                    ->save();
         }
 
         return $this;

@@ -24,9 +24,6 @@ class Payment extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
      */
     public function process()
     {
-
-        return parent::process();
-
         switch ($this->getStatus()) {
 
             case Payment::STATUS_CAPTURED:

@@ -30,4 +30,26 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Postback
             $resourceCollection, $data
         );
     }
+
+    /**
+     * process response
+     * @param $response
+     */
+    protected function _processResponse()
+    {
+        if ($this->getPaymentUpdate() instanceof \Magento\Payment\Model\InfoInterface) {
+            $this->getResponse()
+                 ->setPayment($this->getPaymentUpdate());
+        }
+
+        $this->getResponse()
+             ->process();
+    }
+
+    public function process()
+    {
+        $paymentId = $this->getPaymentId();
+        $this->setPath($paymentId, '');
+        $this->request();
+    }
 }

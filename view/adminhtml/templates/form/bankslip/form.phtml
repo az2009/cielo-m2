@@ -1,0 +1,29 @@
+<fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+    <div class="payment-form payment-az2009">
+        <div class="box-form">
+            <div class="fields group group-2">
+                <div class="field">
+                    <div class="control">
+                        <label class="label" data-bind="attr: {for: getCode() + '_bs_identification'}">
+                            <label class="label">
+                                <span><!-- ko i18n: 'Enter the document that will be issued the Bank Slip.'--><!-- /ko --></span>
+                            </label>
+                            <label class="label">
+                                        <span>
+                                            <span data-bind="text: bankSlipValid"></span>
+                                        </span>
+                            </label>
+                        </label>
+                        <input type="number"
+                               name="payment[bs_identification]"
+                               data-bind="
+                                       value:bankSlipIdent,
+                                       valueUpdate: 'keyup',
+                                       attr: {'id': getCode() + '_bs_identification'}" class="input-text">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</fieldset>

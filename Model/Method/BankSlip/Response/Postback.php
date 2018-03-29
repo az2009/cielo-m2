@@ -18,7 +18,9 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Postback
 
     public function process()
     {
-        $this->_getPaymentInstance();
+        if (!$this->getPayment()) {
+            $this->_getPaymentInstance();
+        }
 
         switch ($this->getStatus()) {
             case Payment::STATUS_AUTHORIZED:
@@ -28,7 +30,8 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Postback
                     ->setResponse($this->getResponse())
                     ->setPostback(true)
                     ->process();
-                break;
+            break;
+
             case Payment::STATUS_CANCELED_ABORTED:
             case Payment::STATUS_CANCELED_AFTER:
             case Payment::STATUS_CANCELED:
@@ -37,7 +40,7 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Postback
                     ->setResponse($this->getResponse())
                     ->setPostback(true)
                     ->process();
-                break;
+            break;
         }
     }
 }

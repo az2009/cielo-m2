@@ -82,6 +82,12 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
      */
     protected $messageManager;
 
+    /**
+     * @var Postback
+     */
+    protected $_update;
+
+
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -95,11 +101,13 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
         Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\BankSlip $helper,
+        \Az2009\Cielo\Model\Method\BankSlip\Postback $update,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
+        $this->_update = $update;
         parent::__construct(
             $context, $registry, $extensionFactory,
             $customAttributeFactory, $paymentData, $scopeConfig, $logger,
@@ -112,6 +120,10 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
     {
+        if ($this->getActionPostback()) {
+            return true;
+        }
+
         $msg = (string)__(
             'Payment Denied Manual/Offline. '.
             'Manually cancel the payment on the payment gateway. '.
@@ -129,6 +141,10 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
     {
+        if ($this->getActionPostback()) {
+            return true;
+        }
+
         $msg = (string)__(
             'Payment Accept/Authorize Manual/Offline. '.
             'Manually capture the payment at the payment gateway and generate'.
@@ -148,6 +164,17 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
 
     public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId)
     {
+        if ($this->_registry->registry('current_transaction')) {
+            return [];
+        }
+
+        $this->_registry->register('process_fetch_update_payment', true);
+
+        $this->_update
+             ->setPaymentId($transactionId)
+             ->setPaymentUpdate($payment)
+             ->process();
+
         return [];
     }
 }

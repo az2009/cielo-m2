@@ -9,6 +9,10 @@
                 <argument name="method" xsi:type="string">az2009_cielo</argument>
                 <argument name="template" xsi:type="string">Az2009_Cielo::form/cc/form.phtml</argument>
             </action>
+            <action method="setMethodFormTemplate">
+                <argument name="method" xsi:type="string">az2009_cielo_bank_slip</argument>
+                <argument name="template" xsi:type="string">Az2009_Cielo::form/bankslip/form.phtml</argument>
+            </action>
         </referenceBlock>
     </body>
 </page>
