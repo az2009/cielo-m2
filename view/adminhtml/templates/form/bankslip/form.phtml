@@ -1,29 +1,30 @@
-<fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+<?php /** @var \Az2009\Cielo\Block\Form\BankSlip $block*/ ?>
+<fieldset class="checkout-payment-method fieldset payment items admin__fieldset payment-method"
+          style="display:none" id="payment_form_<?php echo $block->getCode() ?>">
     <div class="payment-form payment-az2009">
         <div class="box-form">
             <div class="fields group group-2">
                 <div class="field">
                     <div class="control">
-                        <label class="label" data-bind="attr: {for: getCode() + '_bs_identification'}">
+                        <label class="label" for="<?php echo $block->getCode() ?>_bs_identification">
                             <label class="label">
-                                <span><!-- ko i18n: 'Enter the document that will be issued the Bank Slip.'--><!-- /ko --></span>
+                                <span><?php echo __('Enter the document(CPF/CNPJ) that will be issued the Bank Slip.') ?></span>
                             </label>
                             <label class="label">
-                                        <span>
-                                            <span data-bind="text: bankSlipValid"></span>
-                                        </span>
+                                <span><?php echo __('Number(CPF/CNPJ)') ?></span>
                             </label>
                         </label>
                         <input type="number"
                                name="payment[bs_identification]"
-                               data-bind="
-                                       value:bankSlipIdent,
-                                       valueUpdate: 'keyup',
-                                       attr: {'id': getCode() + '_bs_identification'}" class="input-text">
+                               id="<?php echo $block->getCode() ?>_bs_identification"
+                               class="input-text validate-identification"
+                               data-validate='{"required-number":true, "maxlength":15}'>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+    <script>
+        requirejs(['Az2009_Cielo/js/cc/validate'], function (validate) {});
+    </script>
 </fieldset>

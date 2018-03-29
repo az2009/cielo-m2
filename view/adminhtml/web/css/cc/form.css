@@ -73,6 +73,15 @@
 .checkout-payment-method.ccard.fieldset > .field .fields.group.group-2 .field {
     width: auto !important
 }
+#payment_form_az2009_cielo_bank_slip label > label{
+    display: block;
+    margin: 5px 0 0 0;
+}
+
+#az2009_cielo_bank_slip_bs_identification {
+    width: 100%;
+    margin: 10px 0;
+}
 
 .select-year option:empty,
 .select-month option:empty,

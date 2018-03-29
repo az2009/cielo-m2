@@ -1,8 +1,9 @@
 requirejs([
     'jquery',
     'jquery/validate',
-    'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator'
-], function($, validate, cardNumberValidator){
+    'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator',
+    'Az2009_Cielo/js/model/credit-card-validation/validate-docnumber'
+], function($, validate, cardNumberValidator, validateDoc){
 
     $.validator.addMethod(
         "validate-credit-card",
@@ -11,6 +12,16 @@ requirejs([
             return result.isValid;
         },
         $.mage.__("Invalid Credit Card")
+    );
+
+    $.validator.addMethod(
+        "validate-identification",
+        function (value, element) {
+            var result = validateDoc(value);
+            console.log(result);
+            return result.isValid;
+        },
+        $.mage.__("Invalid Document CPF/CNPJ")
     );
 
     $.validator.addMethod(
@@ -34,7 +45,6 @@ requirejs([
 
             return true;
         },
-
         $.mage.__("Invalid Due Date of Credit Card")
     );
 

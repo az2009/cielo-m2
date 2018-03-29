@@ -36,8 +36,8 @@ define([
 
                 this.bankSlipIdent.subscribe(function (value) {
 
-                    if (value.length > 14) {
-                        value = value.substr(0, 14);
+                    if (value.length > 15) {
+                        value = value.substr(0, 15);
                         self.bankSlipIdent(value);
                     }
 
