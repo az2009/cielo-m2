@@ -17,6 +17,7 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Postback
         Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\BankSlip $helper,
+        \Magento\Framework\DataObject $update,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -26,7 +27,7 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Postback
             $customAttributeFactory, $paymentData,
             $scopeConfig, $logger, $request,
             $response, $validate,
-            $httpClientFactory, $helper, $resource,
+            $httpClientFactory, $helper, $update, $resource,
             $resourceCollection, $data
         );
     }

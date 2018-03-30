@@ -4,6 +4,16 @@ namespace Az2009\Cielo\Model\Method\Cc\Transaction;
 
 class Cancel extends \Az2009\Cielo\Model\Method\Transaction
 {
+    public function __construct(
+        \Magento\Customer\Model\Session $session,
+        \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
+        \Magento\Framework\Registry $registry,
+        array $data = []
+    ) {
+        $this->_registry = $registry;
+        parent::__construct($session, $comment, $data);
+    }
+
     public function process()
     {
         $payment = $this->getPayment();
@@ -39,6 +49,11 @@ class Cancel extends \Az2009\Cielo\Model\Method\Transaction
         );
 
         $payment->setIsTransactionClosed(true);
+
+        if ($this->_registry->registry('process_fetch_update_payment')) {
+            $payment->setIsTransactionDenied(true);
+            return $this;
+        }
 
         if ($order->canCancel()) {
             $payment->registerVoidNotification($this->_getVoidedAmount());

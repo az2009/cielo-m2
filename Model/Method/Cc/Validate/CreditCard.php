@@ -88,7 +88,7 @@ class CreditCard extends \Az2009\Cielo\Model\Method\Validate
     {
         $payment = $this->getPayment()->getInfoInstance();
         $ccToken = $payment->getAdditionalInformation('cc_token');
-        if ($ccToken == 'new' || empty($ccToken)) {
+        if ($ccToken == \Az2009\Cielo\Helper\Data::CARD_TOKEN || empty($ccToken)) {
             return false;
         }
 

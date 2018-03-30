@@ -20,17 +20,17 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canCaptureOnce = true;
+    protected $_canCaptureOnce = false;
 
     /**
      * @var bool
      */
-    protected $_canCapture = true;
+    protected $_canCapture = false;
 
     /**
      * @var bool
      */
-    protected $_canFetchTransactionInfo = true;
+    protected $_canFetchTransactionInfo = false;
 
     /**
      * @var bool
@@ -55,7 +55,7 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canReviewPayment = true;
+    protected $_canReviewPayment = false;
 
     /**
      * @var bool
@@ -77,17 +77,6 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
      */
     protected $_postback = \Az2009\Cielo\Model\Method\BankSlip\Postback::class;
 
-    /**
-     * @var \Magento\Framework\Message\ManagerInterface
-     */
-    protected $messageManager;
-
-    /**
-     * @var Postback
-     */
-    protected $_update;
-
-
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -102,79 +91,18 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\BankSlip $helper,
         \Az2009\Cielo\Model\Method\BankSlip\Postback $update,
-        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        $this->_update = $update;
         parent::__construct(
             $context, $registry, $extensionFactory,
             $customAttributeFactory, $paymentData, $scopeConfig, $logger,
-            $request, $response, $validate, $httpClientFactory, $helper,
+            $request, $response, $validate, $httpClientFactory, $helper, $update,
             $resource, $resourceCollection, $data
         );
 
-        $this->messageManager = $messageManager;
     }
 
-    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
-    {
-        if ($this->getActionPostback()) {
-            return true;
-        }
 
-        $msg = (string)__(
-            'Payment Denied Manual/Offline. '.
-            'Manually cancel the payment on the payment gateway. '.
-            'This cancellation is only effective in the store. Transaction ID: %1',
-            $payment->getLastTransId()
-        );
-
-        $this->messageManager->addNoticeMessage($msg);
-
-        $payment->getOrder()
-                ->addStatusHistoryComment($msg);
-
-        return true;
-    }
-
-    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
-    {
-        if ($this->getActionPostback()) {
-            return true;
-        }
-
-        $msg = (string)__(
-            'Payment Accept/Authorize Manual/Offline. '.
-            'Manually capture the payment at the payment gateway and generate'.
-            'the offline invoice at the store. '.
-            'This authorization is only being made out in the store. '.
-            'Transaction ID: %1',
-            $payment->getLastTransId()
-        );
-
-        $this->messageManager->addNoticeMessage($msg);
-
-        $payment->getOrder()
-                ->addStatusHistoryComment($msg);
-
-        return true;
-    }
-
-    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId)
-    {
-        if ($this->_registry->registry('current_transaction')) {
-            return [];
-        }
-
-        $this->_registry->register('process_fetch_update_payment', true);
-
-        $this->_update
-             ->setPaymentId($transactionId)
-             ->setPaymentUpdate($payment)
-             ->process();
-
-        return [];
-    }
 }

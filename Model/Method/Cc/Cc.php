@@ -49,6 +49,11 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
+    protected $_canFetchTransactionInfo = false;
+
+    /**
+     * @var bool
+     */
     protected $_canCancelInvoice = true;
 
     /**
@@ -79,6 +84,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
         \Az2009\Cielo\Model\Method\Cc\Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
+        \Az2009\Cielo\Model\Method\Cc\Postback $update,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -89,7 +95,7 @@ class Cc extends \Az2009\Cielo\Model\Method\AbstractMethod
             $paymentData, $scopeConfig,
             $logger, $request,
             $response, $validate, $httpClientFactory,
-            $helper, $resource,
+            $helper, $update, $resource,
             $resourceCollection, $data
         );
     }

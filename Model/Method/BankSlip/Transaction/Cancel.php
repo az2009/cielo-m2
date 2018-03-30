@@ -4,19 +4,13 @@ namespace Az2009\Cielo\Model\Method\BankSlip\Transaction;
 
 class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
 {
-    /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $_registry;
-
     public function __construct(
         \Magento\Customer\Model\Session $session,
         \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        $this->_registry = $registry;
-        parent::__construct($session, $comment, $data);
+        parent::__construct($session, $comment, $registry, $data);
     }
 
     public function process()

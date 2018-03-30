@@ -18,6 +18,7 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
         Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
+        \Magento\Framework\DataObject $update,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -29,7 +30,7 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
             $paymentData, $scopeConfig,
             $logger, $request,
             $response, $validate, $httpClientFactory,
-            $helper, $resource,
+            $helper, $update, $resource,
             $resourceCollection, $data
         );
 
@@ -49,6 +50,11 @@ class Postback extends \Az2009\Cielo\Model\Method\AbstractMethod
      */
     protected function _processResponse()
     {
+        if ($this->getPaymentUpdate() instanceof \Magento\Payment\Model\InfoInterface) {
+            $this->getResponse()
+                 ->setPayment($this->getPaymentUpdate());
+        }
+
         $this->getResponse()
              ->process();
     }

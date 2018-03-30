@@ -15,15 +15,22 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
      */
     protected $helper;
 
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $_registry;
+
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Customer\Model\Session $session,
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
+        \Magento\Framework\Registry $registry,
         array $data = []
     ) {
         $this->helper = $helper;
         $this->messageManager = $messageManager;
+        $this->_registry = $registry;
         parent::__construct($session, $comment, $data);
     }
 
@@ -41,6 +48,10 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
 
         if (empty($paymentId) && !$payment->getLastTransId()) {
             throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
+        }
+
+        if ($this->_registry->registry('process_fetch_update_payment')) {
+            $payment->setIsTransactionApproved(true);
         }
 
         //check if is the first capture of order

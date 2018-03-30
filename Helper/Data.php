@@ -9,6 +9,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
 
     const CHANGE_TYPE = 1;
+
+    const CARD_TOKEN = 'new';
+
+    const ID_DENY = 'deny_payment';
+
+    const ID_ACCEPT = 'accept_payment';
+
     /**
      * @var \Magento\Framework\View\Asset\Repository
      */
@@ -38,6 +45,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @var \Magento\Framework\ObjectManagerInterface
      */
     protected $_objectManager;
+
+    protected $_item = null;
 
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -149,7 +158,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $uri = str_replace('//', '/', $uri);
         $uri = str_replace(':/', '://', $uri);
-        $uri = str_replace(['-capture', '-refund'], '', $uri);
+        $uri = str_replace(
+            [
+                '-capture',
+                '-refund',
+                '-order',
+                '-offline',
+                '-authorize'
+            ],
+            '',
+            $uri
+        );
 
         return $uri;
     }
@@ -254,7 +273,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $collection = $this->_transaction->create();
 
         $collection->addAttributeToSelect('order_id')
-                   ->addAttributeToFilter('txn_id', array('eq' => $transactionId));
+                   ->addAttributeToFilter('txn_id',
+                       array(
+                           array('eq' => $transactionId),
+                           array('eq' => $transactionId . '-order'),
+                       )
+                   );
 
         if ($collection->getSize() <= 0) {
             return $instance;
@@ -275,5 +299,52 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         return $instance;
+    }
+
+    public function getCardDataByToken($token)
+    {
+        if ($this->_item !== null
+            && $this->_item->getData('card_token') == $token
+        ) {
+            return $this->_item;
+        }
+
+        /** @var \Magento\Sales\Model\Order\Payment $payment*/
+        $payment = $this->_objectManager->get(\Magento\Sales\Model\Order\Payment::class);
+        $this->_item = $payment->load($token, 'card_token');
+
+        if ($this->_item->getId()) {
+            return $this->_item;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return \Magento\Framework\Message\ManagerInterface
+     */
+    public function getMessage()
+    {
+        return $this->_objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
+    }
+
+    public function isOrderAndPayment($order)
+    {
+        if ($order instanceof \Magento\Sales\Model\Order
+            && in_array($order->getPayment()->getMethod(), $this->getCodesPayment())
+            && $order->isPaymentReview()
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getCodesPayment()
+    {
+        return [
+            \Az2009\Cielo\Model\Method\Cc\Cc::CODE_PAYMENT,
+            \Az2009\Cielo\Model\Method\BankSlip\BankSlip::CODE_PAYMENT
+        ];
     }
 }

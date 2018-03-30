@@ -12,6 +12,7 @@ class Pending extends \Az2009\Cielo\Model\Method\Cc\Transaction\Pending
 
         if (property_exists($this->getBody(), 'Payment')) {
             $paymentId = $this->getBody()->Payment->PaymentId;
+            $paymentId .= '-order';
         }
 
         if (!$payment->getTransactionId() && !empty($paymentId)) {
@@ -39,6 +40,8 @@ class Pending extends \Az2009\Cielo\Model\Method\Cc\Transaction\Pending
 
         $payment->setIsTransactionClosed(true);
         $payment->setIsTransactionPending(true);
+        $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER);
+        $payment->setTransactionId(null);
 
         return $this;
     }

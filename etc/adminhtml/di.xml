@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Backend\Block\Widget\Context">
+        <plugin name="custom_button_sales_order_view" type="Az2009\Cielo\Plugin\Widget\Context" sortOrder="1"/>
+    </type>
+</config>

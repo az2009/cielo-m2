@@ -10,6 +10,11 @@ class Cc extends \Magento\Payment\Block\Info\Cc
      */
     public $helper;
 
+    /**
+     * @var \Magento\Payment\Model\InfoInterface | null
+     */
+    protected $info = null;
+
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Az2009\Cielo\Helper\Data $helper,
@@ -27,7 +32,7 @@ class Cc extends \Magento\Payment\Block\Info\Cc
     public function getCcTypeName()
     {
         $types = $this->_paymentConfig->getCcTypes();
-        $ccType = $this->getInfo()->getAdditionalInformation('cc_type');
+        $ccType = $this->getInfo(true)->getAdditionalInformation('cc_type');
         if (isset($types[$ccType])) {
             return $types[$ccType];
         }
@@ -41,8 +46,8 @@ class Cc extends \Magento\Payment\Block\Info\Cc
      */
     public function hasCcExpDate()
     {
-        return (int)$this->getInfo()->getAdditionalInformation('cc_exp_month')
-               || (int)$this->getInfo()->getAdditionalInformation('cc_exp_year');
+        return (int)$this->getInfo(true)->getAdditionalInformation('cc_exp_month')
+               || (int)$this->getInfo(true)->getAdditionalInformation('cc_exp_year');
     }
 
     /**
@@ -52,7 +57,7 @@ class Cc extends \Magento\Payment\Block\Info\Cc
      */
     public function getCcExpMonth()
     {
-        $month = $this->getInfo()->getAdditionalInformation('cc_exp_month');
+        $month = $this->getInfo(true)->getAdditionalInformation('cc_exp_month');
         return $month;
     }
 
@@ -63,7 +68,7 @@ class Cc extends \Magento\Payment\Block\Info\Cc
      */
     public function getCcExpYear()
     {
-        $year = $this->getInfo()->getAdditionalInformation('cc_exp_year');
+        $year = $this->getInfo(true)->getAdditionalInformation('cc_exp_year');
         return $year;
     }
 
@@ -76,8 +81,8 @@ class Cc extends \Magento\Payment\Block\Info\Cc
     {
         $date = new \DateTime('now', new \DateTimeZone($this->_localeDate->getConfigTimezone()));
         $date->setDate(
-            $this->getInfo()->getAdditionalInformation('cc_exp_year'),
-            $this->getInfo()->getAdditionalInformation('cc_exp_month'
+            $this->getInfo(true)->getAdditionalInformation('cc_exp_year'),
+            $this->getInfo(true)->getAdditionalInformation('cc_exp_month'
             ) + 1, 0
         );
         return $date;
@@ -132,7 +137,34 @@ class Cc extends \Magento\Payment\Block\Info\Cc
 
     public function getCcLast4()
     {
-        return substr($this->getInfo()->getAdditionalInformation('cc_number'), -4);
+        return substr($this->getInfo(true)->getAdditionalInformation('cc_number'), -4);
     }
 
+    /**
+     * Retrieve info model
+     *
+     * @return \Magento\Payment\Model\InfoInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getInfo($token = false)
+    {
+        $info = $this->getData('info');
+
+        $ccToken = $info->getAdditionalInformation('cc_token');
+
+        if ($token && $ccToken != \Az2009\Cielo\Helper\Data::CARD_TOKEN
+            && !empty($ccToken)
+            && $payment = $this->helper->getCardDataByToken($ccToken)
+        ) {
+            $info = $payment;
+        }
+
+        if (!$info instanceof \Magento\Payment\Model\InfoInterface) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('We cannot retrieve the payment info model object.')
+            );
+        }
+
+        return $info;
+    }
 }

@@ -101,7 +101,7 @@ class Payment extends \Magento\Framework\DataObject
     {
         $token = $this->getInfo()->getAdditionalInformation('cc_token');
 
-        if (empty($token) || $token == 'new') {
+        if (empty($token) || $token == \Az2009\Cielo\Helper\Data::CARD_TOKEN) {
             return $this->getCreditCardNew();
         }
 

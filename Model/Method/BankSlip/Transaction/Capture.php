@@ -4,10 +4,6 @@ namespace Az2009\Cielo\Model\Method\BankSlip\Transaction;
 
 class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
 {
-    /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $_registry;
 
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
@@ -17,8 +13,10 @@ class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
         \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        $this->_registry = $registry;
-        parent::__construct($messageManager, $session, $helper, $comment, $data);
+        parent::__construct(
+            $messageManager, $session, $helper,
+            $comment, $registry, $data
+        );
     }
 
     public function process()

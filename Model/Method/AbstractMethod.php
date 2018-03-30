@@ -50,6 +50,11 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     protected $_postback = false;
 
+    /**
+     * @var \Magento\Framework\DataObject
+     */
+    protected $_update;
+
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -63,6 +68,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
         \Az2009\Cielo\Helper\Data $helper,
+        \Magento\Framework\DataObject $update,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -86,6 +92,8 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $this->request = $request;
         $this->httpClientFactory = $httpClientFactory->create();
         $this->_uri = $this->helper->getUriRequest();
+        $this->_update = $update;
+
     }
 
     public function assignData(\Magento\Framework\DataObject $data)
@@ -107,17 +115,6 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         }
 
         self::void($payment);
-    }
-
-    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
-    {
-        $this->setAcceptPayment(true);
-        return self::capture($payment, $payment->getAmountAuthorized());
-    }
-
-    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
-    {
-        return self::void($payment);
     }
 
     public function cancel(\Magento\Payment\Model\InfoInterface $payment)

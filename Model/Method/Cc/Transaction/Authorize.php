@@ -10,13 +10,20 @@ class Authorize extends \Az2009\Cielo\Model\Method\Transaction
      */
     protected $helper;
 
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $_registry;
+
     public function __construct(
         \Az2009\Cielo\Helper\Data $helper,
         \Magento\Customer\Model\Session $session,
         \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
+        \Magento\Framework\Registry $registry,
         array $data = []
     ) {
         $this->helper = $helper;
+        $this->_registry = $registry;
         parent::__construct($session, $comment, $data);
     }
 
