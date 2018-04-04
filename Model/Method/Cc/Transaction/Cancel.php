@@ -50,21 +50,17 @@ class Cancel extends \Az2009\Cielo\Model\Method\Transaction
 
         $payment->setIsTransactionClosed(true);
 
-        if ($this->_registry->registry('process_fetch_update_payment')) {
-            $payment->setIsTransactionDenied(true);
-            return $this;
-        }
-
         if ($order->canCancel()) {
             $payment->registerVoidNotification($this->_getVoidedAmount());
-            $order->registerCancellation()
-                  ->save();
+            $order->registerCancellation();
         }
 
         if ($order->canCreditmemo()) {
             $payment->registerRefundNotification($this->_getVoidedAmount());
-            $order->save();
         }
+
+        $order->save();
+        $this->addReturnMessageToTransaction($bodyArray);
 
         return $this;
     }

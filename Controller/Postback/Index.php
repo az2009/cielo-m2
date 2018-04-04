@@ -24,12 +24,19 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $helper;
 
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Customer\Model\Session $session,
         \Psr\Log\LoggerInterface $logger,
-        \Az2009\Cielo\Helper\Data $helper
+        \Az2009\Cielo\Helper\Data $helper,
+        \Magento\Framework\Registry $registry
     ) {
+        $this->registry = $registry;
         $this->_session = $session;
         $this->logger = $logger;
         $this->helper = $helper;

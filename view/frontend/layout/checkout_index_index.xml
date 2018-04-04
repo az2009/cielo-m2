@@ -44,6 +44,15 @@
                                                                         </item>
                                                                     </item>
                                                                 </item>
+                                                                <!-- Az2009_Cielo_Debit_Card -->
+                                                                <item name="az2009_cielo_dc" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Az2009_Cielo/js/view/payment/az2009_cielo_dc</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="az2009_cielo_dc" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
                                                             </item>
                                                         </item>
                                                     </item>

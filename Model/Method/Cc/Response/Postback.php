@@ -46,6 +46,7 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
                      ->setPostback(true)
                      ->process();
             break;
+            case Payment::STATUS_CANCELED_DENIED:
             case Payment::STATUS_CANCELED_ABORTED:
             case Payment::STATUS_CANCELED_AFTER:
             case Payment::STATUS_CANCELED:

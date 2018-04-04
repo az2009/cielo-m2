@@ -1,6 +1,6 @@
 <?php
 
-namespace Az2009\Cielo\Model\Method\BankSlip\Transaction;
+namespace Az2009\Cielo\Model\Method\Dc\Transaction;
 
 class Pending extends \Az2009\Cielo\Model\Method\Cc\Transaction\Pending
 {
@@ -31,7 +31,14 @@ class Pending extends \Az2009\Cielo\Model\Method\Cc\Transaction\Pending
             }
         }
 
+        if (isset($bodyArray['Payment']['AuthenticationUrl'])
+            && $url = $bodyArray['Payment']['AuthenticationUrl']
+        ) {
+            $payment->setAdditionalInformation('redirect_url', $url);
+        }
+
         $this->prepareBodyTransaction($bodyArray);
+
         $payment->setTransactionAdditionalInfo(
             \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
             $this->getTransactionData()

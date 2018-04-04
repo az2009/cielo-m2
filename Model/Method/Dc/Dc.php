@@ -1,11 +1,11 @@
 <?php
 
-namespace Az2009\Cielo\Model\Method\BankSlip;
+namespace Az2009\Cielo\Model\Method\Dc;
 
-class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
+class Dc extends \Az2009\Cielo\Model\Method\AbstractMethod
 {
 
-    const CODE_PAYMENT = 'az2009_cielo_bank_slip';
+    const CODE_PAYMENT = 'az2009_cielo_dc';
 
     /**
      * @var string
@@ -35,7 +35,7 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canRefund = false;
+    protected $_canRefund = true;
 
     /**
      * @var bool
@@ -45,12 +45,7 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canVoid = false;
-
-    /**
-     * @var bool
-     */
-    protected $_canRefundInvoicePartial = false;
+    protected $_canVoid = true;
 
     /**
      * @var bool
@@ -60,22 +55,27 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canCancelInvoice = false;
+    protected $_canCancelInvoice = true;
 
     /**
-     * @var \Az2009\Cielo\Block\Form\BankSlip
+     * @var bool
      */
-    protected $_infoBlockType = \Az2009\Cielo\Block\Info\BankSlip::class;
+    protected $_canRefundInvoicePartial = false;
 
     /**
-     * @var \Az2009\Cielo\Block\Form\BankSlip
+     * @var \Az2009\Cielo\Block\Form\Dc
      */
-    protected $_formBlockType = \Az2009\Cielo\Block\Form\BankSlip::class;
+    protected $_infoBlockType = \Az2009\Cielo\Block\Info\Dc::class;
 
     /**
-     * @var \Az2009\Cielo\Model\Method\BankSlip\Postback
+     * @var \Az2009\Cielo\Block\Form\Dc
      */
-    protected $_postback = \Az2009\Cielo\Model\Method\BankSlip\Postback::class;
+    protected $_formBlockType = \Az2009\Cielo\Block\Form\Dc::class;
+
+    /**
+     * @var \Az2009\Cielo\Model\Method\Dc\Postback
+     */
+    protected $_postback = \Az2009\Cielo\Model\Method\Dc\Postback::class;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -89,8 +89,8 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
         Response\Payment $response,
         Validate\Validate $validate,
         \Magento\Framework\HTTP\ZendClientFactory $httpClientFactory,
-        \Az2009\Cielo\Helper\BankSlip $helper,
-        \Az2009\Cielo\Model\Method\BankSlip\Postback $update,
+        \Az2009\Cielo\Helper\Dc $helper,
+        \Az2009\Cielo\Model\Method\Dc\Postback $update,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -101,12 +101,5 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
             $request, $response, $validate, $httpClientFactory, $helper, $update,
             $resource, $resourceCollection, $data
         );
-
-    }
-
-    public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
-    {
-        $payment->setPlaceOrderBankSlip(true);
-        return parent::authorize($payment, $amount);
     }
 }

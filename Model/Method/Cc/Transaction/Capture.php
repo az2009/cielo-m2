@@ -50,8 +50,9 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
             throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
         }
 
-        if ($this->_registry->registry('process_fetch_update_payment')) {
-            $payment->setIsTransactionApproved(true);
+        if ($this->isCompleteCaptured()) {
+            $this->_registry->register('payment_captured', true);
+            return $this;
         }
 
         //check if is the first capture of order
@@ -84,12 +85,26 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
 
         $this->saveCardToken();
 
-        if ($this->getPostback() && ($payment->getAmountPaid() != $payment->getAmountAuthorized())) {
+        $this->addReturnMessageToTransaction($bodyArray);
+
+        if ($this->getPostback() && !$this->isCompleteCaptured()) {
             $payment->registerCaptureNotification($this->_getCapturedAmount());
             $payment->getOrder()->save();
         }
 
+        $this->_registry->register('payment_captured', true);
+
         return $this;
+    }
+
+    /**
+     * check if the order are full capture
+     * @return bool
+     */
+    protected function isCompleteCaptured()
+    {
+        $payment = $this->getPayment();
+        return $payment->getAmountPaid() == $payment->getAmountAuthorized();
     }
 
     protected function _getCapturedAmount()

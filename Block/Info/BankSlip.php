@@ -64,7 +64,9 @@ class BankSlip extends \Magento\Payment\Block\Info
             $data[(string)__('Provider')] = $transaction['Provider'];
         }
 
-        return $transport->setData(array_merge($data, $transport->getData()));
+        $this->_paymentSpecificInformation = $transport->setData(array_merge($data, $transport->getData()));
+
+        return $this->_paymentSpecificInformation;
     }
 
 }

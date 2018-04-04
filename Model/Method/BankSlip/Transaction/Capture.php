@@ -35,8 +35,9 @@ class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
             throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
         }
 
-        if ($this->_registry->registry('process_fetch_update_payment')) {
-            $payment->setIsTransactionApproved(true);
+        if ($this->isCompleteCaptured()) {
+            $this->_registry->register('payment_captured', true);
+            return $this;
         }
 
         //check if is the first capture of order
@@ -58,20 +59,14 @@ class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
 
         $payment->setIsTransactionClosed(true);
 
-        if ($payment->getCapturePartial()) {
-            $this->messageManager->addNotice(
-                __('*Obs: To capture partial: 
-                    Cielo only supports one partial or full capture. 
-                    On the next capture for this request. 
-                    Capture offline at the store and online at Cielo\'s backoffice.')
-            );
+        $this->addReturnMessageToTransaction($bodyArray);
+
+        if ($this->getPostback() && !$this->isCompleteCaptured()) {
+            $payment->registerCaptureNotification($this->_getCapturedAmount());
+            $payment->getOrder()->save();
         }
 
-        if ($this->getPostback() && ($payment->getAmountPaid() != $payment->getAmountAuthorized())) {
-            $payment->registerCaptureNotification($this->_getCapturedAmount());
-            $payment->getOrder()
-                    ->save();
-        }
+        $this->_registry->register('payment_captured', true);
 
         return $this;
     }

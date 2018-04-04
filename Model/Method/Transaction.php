@@ -86,4 +86,14 @@ abstract class Transaction extends \Az2009\Cielo\Model\Method\Response
         return $this->_transactionData;
     }
 
+
+    public function addReturnMessageToTransaction($bodyArray)
+    {
+        $payment = $this->getPayment();
+        if (isset($bodyArray['Payment']['ReturnMessage'])
+            && $returnMessage = $bodyArray['Payment']['ReturnMessage']
+        ) {
+            $payment->addTransactionCommentsToOrder($payment->getTransactionId(), $returnMessage);
+        }
+    }
 }

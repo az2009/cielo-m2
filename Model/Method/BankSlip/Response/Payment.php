@@ -15,17 +15,11 @@ class Payment extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
         parent::__construct($authorize, $unauthorized, $capture, $pending, $cancel, $data);
     }
 
-    /**
-     *
-     *
-     * TESTE NÃO ESQUECEDE REMOVER O AUTHORIZE DO PENDING
-     *
-     *
-     */
     public function process()
     {
         switch ($this->getStatus()) {
 
+            case Payment::STATUS_AUTHORIZED:
             case Payment::STATUS_CAPTURED:
                 $this->_capture
                     ->setPayment($this->getPayment())
@@ -40,7 +34,6 @@ class Payment extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
                     ->setResponse($this->getResponse())
                     ->process();
                 break;
-            case Payment::STATUS_AUTHORIZED:
             case Payment::STATUS_PAYMENT_REVIEW:
             case Payment::STATUS_PENDING:
                 $this->_pending
@@ -55,5 +48,30 @@ class Payment extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
                     ->process();
                 break;
         }
+    }
+
+    /**
+     * get status payment
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getStatus()
+    {
+        $payment = $this->getPayment();
+
+        if ($payment->getPlaceOrderBankSlip()) {
+            return Payment::STATUS_PAYMENT_REVIEW;
+        }
+
+        $body = $this->getBody();
+        if (property_exists($body, 'Payment')) {
+            $status = $body->Payment->Status;
+            return $this->isStatusCanceled($status);
+        } elseif (property_exists($body, 'Status')) {
+            $status = $body->Status;
+            return $this->isStatusCanceled($status);
+        }
+
+        throw new \Exception(__('Invalid payment status'));
     }
 }

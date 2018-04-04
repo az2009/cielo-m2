@@ -1,0 +1,92 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<div class="boxNewCard max-width-50">
+    <div class="field number required">
+        <div class="control">
+            <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
+                <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
+            </label>
+            <input type="number" name="payment[cc_number]" class="input-text cc_number" value=""
+                   data-bind="
+                    autocomplete: off,
+                    value: creditCardNumber,
+                    valueUpdate: 'keyup',
+                    attr: {'data-validate': JSON.stringify({'required-number':true, required:true})}
+                    " />
+        </div>
+    </div>
+    <div class="field name required">
+        <div class="control">
+            <label data-bind="attr: {for: getCode() + '_cc_name'}" class="label">
+                <span><!-- ko i18n: 'Cardholder Name'--><!-- /ko --></span>
+            </label>
+            <input type="text" name="payment[cc_name]" class="input-text" value=""
+                   data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardName, valueUpdate: 'keyup'"
+            />
+        </div>
+    </div>
+</div>
+
+<div class="box-date-due-cvv max-width-50">
+    <div class="boxNewCard box-f">
+        <div class="field date required" data-bind="attr: {id: getCode() + '_cc_type_exp_div'}">
+            <div class="control">
+                <label data-bind="attr: {for: getCode() + '_expiration'}" class="label">
+                    <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
+                </label>
+                <div class="fields group group-2">
+                    <div class="field no-label month">
+                        <div class="control">
+                            <select class="select select-month"
+                                    name="payment[cc_exp_month]"
+                                    data-bind="attr: {autocomplete: off, 'data-validate': JSON.stringify({required:true})},
+                                              value: creditCardExpMonth, valueUpdate: 'keyup'"
+                            >
+                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Month')}"></option>
+                                <!-- ko foreach: {data: getExpMonth(), as: 'month'} -->
+                                <option class="item" data-bind="attr: {'value': month.key, 'label': month.value}"></option>
+                                <!-- /ko -->
+
+                            </select>
+                            <select class="select select-year"
+                                    name="payment[cc_exp_year]"
+                                    data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardExpYear, valueUpdate: 'keyup'">
+                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Year')}"></option>
+                                <!-- ko foreach: {data: getExpYear(), as: 'year'} -->
+                                <option class="item" data-bind="attr: {'value': year.key, 'label': year.value}"></option>
+                                <!-- /ko -->
+
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field cvv required box-f" data-bind="attr: {id: getCode() + '_cc_type_cvv_div'}">
+        <div class="control">
+            <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
+                <span><!-- ko i18n: 'CVV'--><!-- /ko --></span>
+            </label>
+            <div>
+                <input type="number"
+                       autocomplete="off"
+                       class="input-text cvv required-entry"
+                       name="payment[cc_cid]"
+                       max="5"
+                       value=""
+                       data-bind="
+                       event: {blur: outFocus },
+                       attr: {'id':'cvv-input', 'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
+                />
+            </div>
+        </div>
+    </div>
+</div>

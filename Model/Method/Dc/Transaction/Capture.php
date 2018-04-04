@@ -1,28 +1,29 @@
 <?php
 
-namespace Az2009\Cielo\Model\Method\BankSlip\Transaction;
+namespace Az2009\Cielo\Model\Method\Dc\Transaction;
 
-class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
+class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
 {
+
     public function __construct(
+        \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Customer\Model\Session $session,
+        \Az2009\Cielo\Helper\Data $helper,
         \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        parent::__construct($session, $comment, $registry, $data);
+        parent::__construct(
+            $messageManager, $session, $helper,
+            $comment, $registry, $data
+        );
     }
 
     public function process()
     {
         $payment = $this->getPayment();
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
-        $paymentId = '';
-        $order = $payment->getOrder();
-
-        if ($order->isCanceled() || $order->hasCreditmemos()) {
-            return $this;
-        }
+        $paymentId = null;
 
         if (!property_exists($this->getBody(), 'Payment') && !$payment->getLastTransId()) {
             throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
@@ -32,6 +33,11 @@ class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
 
         if (empty($paymentId) && !$payment->getLastTransId()) {
             throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
+        }
+
+        if ($this->isCompleteCaptured()) {
+            $this->_registry->register('payment_captured', true);
+            return $this;
         }
 
         //check if is the first capture of order
@@ -53,43 +59,32 @@ class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
 
         $payment->setIsTransactionClosed(true);
 
-        if ($this->_registry->registry('process_fetch_update_payment')) {
-            $payment->setIsTransactionDenied(true);
-            return $this;
-        }
-
-        //\Az2009\Cielo\Model\Method\BankSlip\BankSlip::denyPayment
-        $payment->getMethodInstance()
-                ->setActionPostback(true);
-
-        if ($order->canCreditmemo()) {
-            $payment->registerRefundNotification($this->_getVoidedAmount());
-
-        } else {
-            $payment->setTransactionId($payment->getLastTransId() . '-void');
-            $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_VOID);
-            $payment->deny();
-        }
-
         $this->addReturnMessageToTransaction($bodyArray);
 
-        $order->save();
+        if ($this->getPostback() && !$this->isCompleteCaptured()) {
+            $payment->registerCaptureNotification($this->_getCapturedAmount());
+            $payment->getOrder()->save();
+        }
 
+        $this->_registry->register('payment_captured', true);
         return $this;
     }
 
-    protected function _getVoidedAmount()
+    protected function _getCapturedAmount()
     {
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         if (!isset($bodyArray['Payment']['Amount'])
-            || !($authorizeAmount = doubleval($bodyArray['Payment']['Amount']))
+            || !($capturedAmount = floatval($bodyArray['Payment']['Amount']))
         ) {
-            $authorizeAmount = $this->getPayment()->getAmount();
-            if ($this->getPayment()->getActionCancel() && (int)$this->getPayment()->getAmount() <= 0) {
-                $authorizeAmount = $this->getPayment()->getAmountPaid() ?: $this->getPayment()->getAmountAuthorized();
-            }
+            throw new \Exception(
+                __(
+                    'Not exists values to capture in order %1',
+                    $this->getPayment()->getOrder()->getId()
+                )
+            );
         }
 
-        return $authorizeAmount;
+        return $capturedAmount;
     }
+
 }

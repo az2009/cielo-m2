@@ -1,6 +1,6 @@
 <?php
 
-namespace Az2009\Cielo\Model\Method\BankSlip\Transaction;
+namespace Az2009\Cielo\Model\Method\Dc\Transaction;
 
 class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
 {
@@ -19,10 +19,6 @@ class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         $paymentId = '';
         $order = $payment->getOrder();
-
-        if ($order->isCanceled() || $order->hasCreditmemos()) {
-            return $this;
-        }
 
         if (!property_exists($this->getBody(), 'Payment') && !$payment->getLastTransId()) {
             throw new \Az2009\Cielo\Exception\Cc(__('Payment not authorized'));
@@ -58,21 +54,20 @@ class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
             return $this;
         }
 
-        //\Az2009\Cielo\Model\Method\BankSlip\BankSlip::denyPayment
-        $payment->getMethodInstance()
-                ->setActionPostback(true);
-
         if ($order->canCreditmemo()) {
             $payment->registerRefundNotification($this->_getVoidedAmount());
 
-        } else {
+        } elseif ($order->canCancel()) {
+            $payment->registerVoidNotification($this->_getVoidedAmount());
+            $order->registerCancellation()->save();
+
+        }  elseif($order->isPaymentReview()) {
             $payment->setTransactionId($payment->getLastTransId() . '-void');
             $payment->addTransaction(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_VOID);
             $payment->deny();
         }
 
         $this->addReturnMessageToTransaction($bodyArray);
-
         $order->save();
 
         return $this;

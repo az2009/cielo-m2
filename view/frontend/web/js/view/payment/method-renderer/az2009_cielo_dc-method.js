@@ -9,13 +9,14 @@ define([
         'mage/translate',
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-data',
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator',
-        'ko'
+        'ko',
+        'Az2009_Cielo/js/action/redirect-authentication',
     ],
-    function ($, Component, $t, creditCardData, cardNumberValidator, ko) {
+    function ($, Component, $t, creditCardData, cardNumberValidator, ko, setPaymentMethodAction) {
         'use strict';
         return Component.extend({
             defaults: {
-                template: 'Az2009_Cielo/payment/form-cc',
+                template: 'Az2009_Cielo/payment/form-dc',
                 timeoutMessage: $t('Sorry, but something went wrong. Please contact the seller.'),
                 creditCardNumber: '',
                 creditCardType: '',
@@ -35,8 +36,14 @@ define([
                 labelCardCvv:'',
                 labelCardDueMonth:'',
                 labelCardDueYear:'',
+                disabledButton: true
             },
-
+            redirectAfterPlaceOrder: false,
+            afterPlaceOrder: function () {
+                setPaymentMethodAction();
+                this.disabledButton(false);
+                return false;
+            },
             initObservable: function () {
                 this._super().observe([
                     'creditCardNumber',
@@ -57,6 +64,7 @@ define([
                     'labelCardCvv',
                     'labelCardDueMonth',
                     'labelCardDueYear',
+                    'disabledButton'
                 ]);
 
                 return this;
@@ -157,7 +165,7 @@ define([
             },
 
             getCode: function() {
-                return 'az2009_cielo';
+                return 'az2009_cielo_dc';
             },
 
             clearCardPlaceholder: function () {
@@ -229,6 +237,10 @@ define([
 
                 var date = new Date();
 
+                if (!this.disabledButton()) {
+                    return false;
+                }
+
                 if (this.creditCardSave().length > 5 && this.creditCardCid().length >= 3) {
                     return true;
                 }
@@ -240,7 +252,7 @@ define([
                     && (
                         this.creditCardExpMonth().length == 2 ||
                         this.creditCardExpMonth().length == 1
-                       )
+                    )
                     && this.creditCardExpYear().length == 4
                     && this.creditCardCid().length >= 3
                 ) {
@@ -311,7 +323,7 @@ define([
 
                 return values;
             },
-            
+
             isLoggedIn: function () {
                 return window.checkoutConfig.payment.az2009_cielo.is_logged_in;
             },
@@ -324,7 +336,7 @@ define([
 
                 this.isShow(false);
             },
-            
+
             getExpMonth: function () {
                 var values = window.checkoutConfig.payment.az2009_cielo.month;
                 return _.map(values, function (value, key) {

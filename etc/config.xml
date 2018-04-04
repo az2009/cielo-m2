@@ -35,6 +35,15 @@
                 <sort_order>2</sort_order>
                 <payment_action>authorize</payment_action>
             </az2009_cielo_bank_slip>
+            <az2009_cielo_dc>
+                <active>0</active>
+                <model>Az2009\Cielo\Model\Method\Dc\Dc</model>
+                <order_status>pending</order_status>
+                <title>Debit Card Cielo</title>
+                <allowspecific>0</allowspecific>
+                <sort_order>2</sort_order>
+                <payment_action>authorize</payment_action>
+            </az2009_cielo_dc>
         </payment>
     </default>
 </config>

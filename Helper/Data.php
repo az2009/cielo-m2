@@ -344,7 +344,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return [
             \Az2009\Cielo\Model\Method\Cc\Cc::CODE_PAYMENT,
-            \Az2009\Cielo\Model\Method\BankSlip\BankSlip::CODE_PAYMENT
+            \Az2009\Cielo\Model\Method\BankSlip\BankSlip::CODE_PAYMENT,
+            \Az2009\Cielo\Model\Method\Dc\Dc::CODE_PAYMENT
         ];
+    }
+
+    /**
+     * @return \Magento\Framework\UrlInterface
+     */
+    public function getUrlBuilder()
+    {
+        return $this->_urlBuilder;
     }
 }

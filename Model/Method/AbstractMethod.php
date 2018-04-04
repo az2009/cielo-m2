@@ -412,4 +412,9 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         return $this->_postback;
     }
 
+    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+        return true;
+    }
+
 }

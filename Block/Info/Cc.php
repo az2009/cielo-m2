@@ -117,8 +117,12 @@ class Cc extends \Magento\Payment\Block\Info\Cc
             $data[(string)__('Due Date')] = $this->_formatCardDate($year, $month);
         }
 
-        $data[(string)__('Transaction Type')] = $this->getIsAuthorizeOrCapture() ?: __('N/A');
-        $data[(string)__('Transaction ID')] = $this->helper->sanitizeUri($this->getInfo()->getLastTransId()) ?: __('N/A');
+        if ($this->_appState->getAreaCode()
+            == \Magento\Framework\App\Area::AREA_ADMINHTML
+        ) {
+            $data[(string)__('Transaction Type')] = $this->getIsAuthorizeOrCapture() ?: __('N/A');
+            $data[(string)__('Transaction ID')] = $this->helper->sanitizeUri($this->getInfo()->getLastTransId()) ?: __('N/A');
+        }
 
         return $transport->setData(array_merge($data, $transport->getData()));
     }
