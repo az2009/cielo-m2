@@ -10,7 +10,7 @@ define([
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-data',
         'Az2009_Cielo/js/model/credit-card-validation/credit-card-number-validator',
         'ko',
-        'Az2009_Cielo/js/action/redirect-authentication',
+        'Az2009_Cielo/js/action/redirect-authentication'
     ],
     function ($, Component, $t, creditCardData, cardNumberValidator, ko, setPaymentMethodAction) {
         'use strict';
@@ -36,12 +36,12 @@ define([
                 labelCardCvv:'',
                 labelCardDueMonth:'',
                 labelCardDueYear:'',
-                disabledButton: true
             },
+
             redirectAfterPlaceOrder: false,
+
             afterPlaceOrder: function () {
                 setPaymentMethodAction();
-                this.disabledButton(false);
                 return false;
             },
             initObservable: function () {
@@ -63,8 +63,7 @@ define([
                     'labelCardBrand',
                     'labelCardCvv',
                     'labelCardDueMonth',
-                    'labelCardDueYear',
-                    'disabledButton'
+                    'labelCardDueYear'
                 ]);
 
                 return this;
@@ -123,8 +122,8 @@ define([
                     if (result.isValid) {
                         creditCardData.creditCardNumber = value;
                         self.creditCardType(result.card.type);
-                        $('.box-cardbrand').empty();
-                        $('.box-cardbrand').append('<img src="'+self.getIcons(result.card.type).url+'" />');
+                        $('#payment_form_' + self.getCode() + ' .box-cardbrand').empty();
+                        $('#payment_form_' + self.getCode() + ' .box-cardbrand').append('<img src="'+self.getIcons(result.card.type).url+'" />');
                     } else {
                         self.clearCardPlaceholder();
                         self.creditCardType(null);
@@ -132,36 +131,9 @@ define([
                 });
 
                 this.creditCardCid.subscribe(function () {
-                    $('.flip-container').addClass('active');
+                    $('#payment_form_' + self.getCode() + ' .flip-container').addClass('active');
                 });
 
-
-                this.creditCardSave.subscribe(function(value){
-                    if (value == '') {
-                        $('#az2009_cielo_cc_type_cvv_div, .brandCard').hide();
-                        self.clearCardPlaceholder();
-                    } else {
-                        $('#az2009_cielo_cc_type_cvv_div, .brandCard').show();
-                        var type = $('#cc_token option:selected').attr('data-type');
-                        if (type) {
-                            self.creditCardType(type);
-                            self.selectedCardType(type);
-                            $('.box-cardbrand').empty();
-                            $('.box-cardbrand').append('<img src="'+self.getIcons(type).url+'" />');
-                            self.labelCardNumber($('#cc_token option:selected').attr('label'));
-                            self.labelCardHolder($('#cc_token option:selected').attr('data-cardholder'));
-                            self.labelCardDueMonth($('#cc_token option:selected').attr('month_due'));
-                            self.labelCardDueYear($('#cc_token option:selected').attr('year_due'));
-                        }
-                    }
-
-                    if (value == 'new') {
-                        $('.boxNewCard').show();
-                        self.clearCardPlaceholder();
-                    } else {
-                        $('.boxNewCard').hide();
-                    }
-                });
             },
 
             getCode: function() {
@@ -174,7 +146,7 @@ define([
                 self.labelCardHolder('');
                 self.labelCardDueMonth('');
                 self.labelCardDueYear('');
-                $('.box-cardbrand').empty();
+                $('#payment_form_' + self.getCode() + ' .box-cardbrand').empty();
             },
 
             getData: function() {
@@ -237,8 +209,8 @@ define([
 
                 var date = new Date();
 
-                if (!this.disabledButton()) {
-                    return false;
+                if (this.disabledButton) {
+
                 }
 
                 if (this.creditCardSave().length > 5 && this.creditCardCid().length >= 3) {
@@ -358,7 +330,8 @@ define([
             },
 
             outFocus:function () {
-                $('.flip-container').removeClass('active');
+                var self = this;
+                $('#payment_form_' + self.getCode() + ' .flip-container').removeClass('active');
             }
 
         });

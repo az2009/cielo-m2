@@ -40,29 +40,38 @@ class Context
 
     public function addButtonPaymentUpdate(\Magento\Backend\Block\Widget\Button\ButtonList $buttonList)
     {
-        $order = $this->registry->registry('current_order');
-        if ($this->_helper->isOrderAndPayment($order)) {
-            $buttonList->add(
-                'update_payment',
-                [
-                    'label' => __('Get Update Payment'),
-                    'onclick' => "setLocation('{$this->helper->getUrl('cielo/payment/update', ['order_id' => $order->getId()])}')"
-                ]
-            );
+        if ($this->registry->registry('current_invoice')) {
+            return $this;
+        }
 
+        $order = $this->registry->registry('current_order');
+
+        if ($this->_helper->canAuthorizeOffline($order)) {
             $buttonList->add(
                 'authorize_payment_offline',
                 [
-                    'label' => __('Authorize Offline'),
+                    'label' => __('Capture Offline'),
                     'onclick' => "setLocation('{$this->helper->getUrl('cielo/payment/authorize', ['order_id' => $order->getId()])}')"
                 ]
             );
+        }
 
+        if ($this->_helper->canCancelOffline($order)) {
             $buttonList->add(
                 'deny_payment_offline',
                 [
                     'label' => __('Deny Offline'),
                     'onclick' => "setLocation('{$this->helper->getUrl('cielo/payment/deny', ['order_id' => $order->getId()])}')"
+                ]
+            );
+        }
+
+        if ($this->_helper->canUpdate($order)) {
+            $buttonList->add(
+                'update_payment',
+                [
+                    'label' => __('Get Update Payment'),
+                    'onclick' => "setLocation('{$this->helper->getUrl('cielo/payment/update', ['order_id' => $order->getId()])}')"
                 ]
             );
         }

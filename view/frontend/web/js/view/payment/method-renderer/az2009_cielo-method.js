@@ -115,8 +115,8 @@ define([
                     if (result.isValid) {
                         creditCardData.creditCardNumber = value;
                         self.creditCardType(result.card.type);
-                        $('.box-cardbrand').empty();
-                        $('.box-cardbrand').append('<img src="'+self.getIcons(result.card.type).url+'" />');
+                        $('#payment_form_' + self.getCode() + ' .box-cardbrand').empty();
+                        $('#payment_form_' + self.getCode() + ' .box-cardbrand').append('<img src="'+self.getIcons(result.card.type).url+'" />');
                     } else {
                         self.clearCardPlaceholder();
                         self.creditCardType(null);
@@ -124,34 +124,34 @@ define([
                 });
 
                 this.creditCardCid.subscribe(function () {
-                    $('.flip-container').addClass('active');
+                    $('#payment_form_' + self.getCode() + ' .flip-container').addClass('active');
                 });
 
 
                 this.creditCardSave.subscribe(function(value){
                     if (value == '') {
-                        $('#az2009_cielo_cc_type_cvv_div, .brandCard').hide();
+                        $('#payment_form_' + self.getCode() + ' #az2009_cielo_cc_type_cvv_div,' + '#payment_form_' + self.getCode() + ' .brandCard').hide();
                         self.clearCardPlaceholder();
                     } else {
-                        $('#az2009_cielo_cc_type_cvv_div, .brandCard').show();
-                        var type = $('#cc_token option:selected').attr('data-type');
+                        $('#payment_form_' + self.getCode() + ' #az2009_cielo_cc_type_cvv_div, ' + '#payment_form_' + self.getCode() + ' .brandCard').show();
+                        var type = $('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('data-type');
                         if (type) {
                             self.creditCardType(type);
                             self.selectedCardType(type);
-                            $('.box-cardbrand').empty();
-                            $('.box-cardbrand').append('<img src="'+self.getIcons(type).url+'" />');
-                            self.labelCardNumber($('#cc_token option:selected').attr('label'));
-                            self.labelCardHolder($('#cc_token option:selected').attr('data-cardholder'));
-                            self.labelCardDueMonth($('#cc_token option:selected').attr('month_due'));
-                            self.labelCardDueYear($('#cc_token option:selected').attr('year_due'));
+                            $('#payment_form_' + self.getCode() + ' .box-cardbrand').empty();
+                            $('#payment_form_' + self.getCode() + ' .box-cardbrand').append('<img src="'+self.getIcons(type).url+'" />');
+                            self.labelCardNumber($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('label'));
+                            self.labelCardHolder($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('data-cardholder'));
+                            self.labelCardDueMonth($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('month_due'));
+                            self.labelCardDueYear($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('year_due'));
                         }
                     }
 
                     if (value == 'new') {
-                        $('.boxNewCard').show();
+                        $('#payment_form_' + self.getCode() + ' .boxNewCard').show();
                         self.clearCardPlaceholder();
                     } else {
-                        $('.boxNewCard').hide();
+                        $('#payment_form_' + self.getCode() + ' .boxNewCard').hide();
                     }
                 });
             },
@@ -166,7 +166,8 @@ define([
                 self.labelCardHolder('');
                 self.labelCardDueMonth('');
                 self.labelCardDueYear('');
-                $('.box-cardbrand').empty();
+                self.selectedCardType('');
+                $('#payment_form_' + self.getCode() + ' .box-cardbrand').empty();
             },
 
             getData: function() {
@@ -346,7 +347,8 @@ define([
             },
 
             outFocus:function () {
-                $('.flip-container').removeClass('active');
+                var self = this;
+                $('#payment_form_' + self.getCode() + ' .flip-container').removeClass('active');
             }
 
         });

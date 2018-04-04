@@ -109,7 +109,7 @@
                        value=""
                        data-bind="
                        event: {blur: outFocus },
-                       attr: {'id':'cvv-input', 'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
+                       attr: {'id':'cvv-input_' + getCode(), 'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
                 />
             </div>
         </div>
@@ -122,7 +122,7 @@
         <label data-bind="attr: {for: getCode() + '_installments'}" class="label">
             <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
         </label>
-        <select data-bind="attr: {'id': 'cc_installments'}, value: creditCardInstallments" name="payment[cc_installments]">
+        <select data-bind="attr: {'id': getCode() + '_cc_installments'}, value: creditCardInstallments" name="payment[cc_installments]">
             <!-- ko foreach: {data: getInstallments(), as: 'installment'} -->
             <option class="item" data-bind="attr: {'value': installment.key, 'label':installment.value }"></option>
             <!--/ko-->

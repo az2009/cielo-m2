@@ -84,7 +84,7 @@
                        value=""
                        data-bind="
                        event: {blur: outFocus },
-                       attr: {'id':'cvv-input', 'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
+                       attr: {'id':'cvv-input_' + getCode(), 'data-validate': JSON.stringify({required:true})}, value: creditCardCid, valueUpdate: 'keyup'"
                 />
             </div>
         </div>

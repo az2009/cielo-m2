@@ -328,16 +328,51 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->_objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
     }
 
-    public function isOrderAndPayment($order)
+    public function canAuthorizeOffline($order)
     {
         if ($order instanceof \Magento\Sales\Model\Order
             && in_array($order->getPayment()->getMethod(), $this->getCodesPayment())
-            && $order->isPaymentReview()
+            && ($order->isPaymentReview())
         ) {
             return true;
         }
 
         return false;
+    }
+
+    public function canCancelOffline($order)
+    {
+        if ($order instanceof \Magento\Sales\Model\Order
+            && in_array($order->getPayment()->getMethod(), $this->getCodesPayment())
+            && !in_array(
+                $order->getState(), [
+                \Magento\Sales\Model\Order::STATE_CLOSED,
+                \Magento\Sales\Model\Order::STATE_COMPLETE,
+                \Magento\Sales\Model\Order::STATE_CANCELED
+            ])
+            && ($this->hasInvoiceOpen($order) || !$order->hasInvoices())
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function hasInvoiceOpen(\Magento\Sales\Model\Order $order)
+    {
+        /** @var \Magento\Sales\Model\Order\Invoice $invoice*/
+        foreach ($order->getInvoiceCollection() as $invoice) {
+            if ($invoice->getState() == $invoice::STATE_OPEN) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function canUpdate($order)
+    {
+        return $this->canCancelOffline($order);
     }
 
     public function getCodesPayment()

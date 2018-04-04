@@ -31,7 +31,6 @@ class Postback extends \Az2009\Cielo\Model\Method\Cc\Response\Payment
         }
 
         switch ($this->getStatus()) {
-            case 0:
             case Payment::STATUS_AUTHORIZED:
                 $this->_authorize
                     ->setPayment($this->getPayment())

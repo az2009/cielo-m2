@@ -20,7 +20,7 @@ class Authorize extends AbstractController
                 $payment = $order->getPayment();
                 $transactionId = $payment->getLastTransId();
                 $payment->setParentTransactionId($transactionId);
-                $transactionId .= '-authorize-offline';
+                $transactionId .= '-capture-offline';
                 $payment->setTransactionId($transactionId);
 
                 $user = $this->_auth->getUser()->getUsername();
@@ -30,14 +30,12 @@ class Authorize extends AbstractController
                     ['User' => $user]
                 );
 
-                $payment->authorize(false, $payment->getAmountAuthorized());
-
-                $order->addStatusHistoryComment(__('Order Authorized Offline/Manual. Authorized by User %1', $user));
-
+                $payment->registerCaptureNotification($payment->getAmountAuthorized());
+                $order->addStatusHistoryComment(__('Order Captured Offline/Manual. Captured by User %1', $user));
                 $order->save();
             }
 
-            $this->helper->getMessage()->addSuccess(__('Order Authorized Offline'));
+            $this->helper->getMessage()->addSuccess(__('Order Captured Offline'));
 
         } catch (\Exception $e) {
             $this->helper->getMessage()->addError($e->getMessage());
