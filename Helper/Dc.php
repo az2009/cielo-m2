@@ -14,4 +14,16 @@ class Dc extends Data
     {
         return $this->_getUrl(self::URL_REDIRECT);
     }
+
+    public function getCardTypesAvailable()
+    {
+        $config = $this->scopeConfig->getValue(
+            'payment/az2009_cielo_dc/cctypes',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+
+        $config = explode(',', $config);
+
+        return $config;
+    }
 }

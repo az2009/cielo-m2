@@ -108,6 +108,11 @@ define([
                     }
 
                     result = cardNumberValidator(value);
+
+                    if (!self.isTypeAllowed(result)) {
+                        return false;
+                    }
+
                     if (!result.isPotentiallyValid && !result.isValid) {
                         self.creditCardType(null);
                         self.clearCardPlaceholder();
@@ -134,6 +139,16 @@ define([
                     $('#payment_form_' + self.getCode() + ' .flip-container').addClass('active');
                 });
 
+            },
+
+            in_array: function(needle, haystack) {
+                for (var i in haystack) {
+                    if (haystack[i] == needle) {
+                        return true;
+                    }
+                }
+
+                return false;
             },
 
             getCode: function() {
@@ -177,8 +192,8 @@ define([
              * Get list of available credit card types values
              * @returns {Object}
              */
-            getCcAvailableTypesValues: function () {
-                return _.map(this.getCcAvailableTypes(), function (value, key) {
+            getCcAvailableTypesValues: function (type) {
+                return _.map(this.getDcAvailableTypes(), function (value, key) {
                     return {
                         'value': key,
                         'type': value
@@ -190,8 +205,8 @@ define([
              * Get list of available credit card types
              * @returns {Object}
              */
-            getCcAvailableTypes: function () {
-                return window.checkoutConfig.payment.az2009_cielo.availableTypes;
+            getDcAvailableTypes: function () {
+                return window.checkoutConfig.payment.az2009_cielo.availableTypesDc;
             },
 
             /**
@@ -203,6 +218,20 @@ define([
                 return window.checkoutConfig.payment.az2009_cielo.icons.hasOwnProperty(type) ?
                     window.checkoutConfig.payment.az2009_cielo.icons[type]
                     : false;
+            },
+
+            isTypeAllowed: function(result) {
+                if (result.card) {
+                    var self = this;
+                    var types = self.getDcAvailableTypes();
+                    if (!self.in_array(result.card.type, types)) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return false;
             },
 
             isPlaceOrderActionAllowed: function(value) {
@@ -218,6 +247,10 @@ define([
                 }
 
                 var validateCard = cardNumberValidator(this.creditCardNumber());
+
+                if (!this.isTypeAllowed(validateCard)) {
+                    return false;
+                }
 
                 if (validateCard.isValid
                     && this.creditCardName().length > 3

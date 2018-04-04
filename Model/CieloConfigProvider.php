@@ -29,15 +29,27 @@ class CieloConfigProvider
      */
     protected $state;
 
+    /**
+     * @var \Az2009\Cielo\Helper\Data
+     */
+    protected $helper;
+
+    /**
+     * @var \Az2009\Cielo\Helper\Dc
+     */
+    protected $helperdc;
+
     public function __construct(
         CcConfig $ccConfig,
         Source $assetSource,
         \Az2009\Cielo\Helper\Data $helper,
+        \Az2009\Cielo\Helper\Dc $helperdc,
         \Az2009\Cielo\Helper\Installment $installment,
         \Magento\Backend\Model\Session\Quote $sessionQuote,
         \Magento\Framework\App\State $state
     ) {
         $this->helper = $helper;
+        $this->helperdc = $helperdc;
         $this->ccConfig = $ccConfig;
         $this->assetSource = $assetSource;
         $this->installment = $installment;
@@ -53,6 +65,7 @@ class CieloConfigProvider
                 'az2009_cielo' => [
                     'icons' => $this->getIcons(),
                     'availableTypes' => $this->getCcAvailableTypes(),
+                    'availableTypesDc' => $this->getCcAvailableTypesDc(),
                     'cards' => $this->helper->getCardSavedByCustomer(),
                     'installments' => $this->getInstallmentsAvailable(),
                     'is_logged_in' => $this->helper->_session->isLoggedIn(),
@@ -82,6 +95,12 @@ class CieloConfigProvider
     public function getCcAvailableTypes()
     {
         $types = $this->helper->getCardTypesAvailable();
+        return $types;
+    }
+
+    public function getCcAvailableTypesDc()
+    {
+        $types = $this->helperdc->getCardTypesAvailable();
         return $types;
     }
 
