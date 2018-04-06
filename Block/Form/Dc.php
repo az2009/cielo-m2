@@ -2,7 +2,7 @@
 
 namespace Az2009\Cielo\Block\Form;
 
-class Dc extends Cc
+class Dc extends \Magento\Payment\Block\Form
 {
 
 }

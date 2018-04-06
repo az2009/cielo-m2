@@ -56,7 +56,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Customer\Model\Session $session,
         \Magento\Framework\View\Asset\Repository $asset,
         \Magento\Framework\ObjectManagerInterface $objectManager
-    ) {
+    )
+    {
         $this->_asset = $asset;
         $this->_orderCollection = $orderCollection;
         $this->_order = $order;
@@ -142,9 +143,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function getKeyRequest()
     {
         $key = urlencode(mt_rand(0, 999) .
-               mt_rand(1000, 1999) .
-               time() .
-               $_SERVER['SERVER_ADDR']);
+            mt_rand(1000, 1999) .
+            time() .
+            $_SERVER['SERVER_ADDR']);
 
         return $key;
     }
@@ -222,10 +223,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function getCardLabel(\Magento\Sales\Model\Order\Payment\Interceptor $payment)
     {
-        $firstFour = substr($payment->getAdditionalInformation('cc_number') ?: $payment->getAdditionalInformation('cc_number_enc'),0, 4);
+        $firstFour = substr($payment->getAdditionalInformation('cc_number') ?: $payment->getAdditionalInformation('cc_number_enc'), 0, 4);
         $lastFour = substr($payment->getAdditionalInformation('cc_number') ?: $payment->getAdditionalInformation('cc_number_enc'), -4);
 
-        return $firstFour. ' ****  **** '.$lastFour;
+        return $firstFour . ' ****  **** ' . $lastFour;
     }
 
     /**
@@ -273,25 +274,25 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $collection = $this->_transaction->create();
 
         $collection->addAttributeToSelect('order_id')
-                   ->addAttributeToFilter('txn_id',
-                       array(
-                           array('eq' => $transactionId),
-                           array('eq' => $transactionId . '-order'),
-                       )
-                   );
+            ->addAttributeToFilter('txn_id',
+                array(
+                    array('eq' => $transactionId),
+                    array('eq' => $transactionId . '-order'),
+                )
+            );
 
         if ($collection->getSize() <= 0) {
             return $instance;
         }
 
         $orderId = $collection->getFirstItem()
-                              ->getOrderId();
+            ->getOrderId();
 
         if ((int)$orderId && (int)$this->_order->load($orderId)->getId()) {
             $instance = $this->_order
-                             ->getPayment()
-                             ->getMethodInstance()
-                             ->getPostbackInstance();
+                ->getPayment()
+                ->getMethodInstance()
+                ->getPostbackInstance();
         }
 
         if ($instance !== null) {
@@ -309,7 +310,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             return $this->_item;
         }
 
-        /** @var \Magento\Sales\Model\Order\Payment $payment*/
+        /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $this->_objectManager->get(\Magento\Sales\Model\Order\Payment::class);
         $this->_item = $payment->load($token, 'card_token');
 
@@ -360,7 +361,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function hasInvoiceOpen(\Magento\Sales\Model\Order $order)
     {
-        /** @var \Magento\Sales\Model\Order\Invoice $invoice*/
+        /** @var \Magento\Sales\Model\Order\Invoice $invoice */
         foreach ($order->getInvoiceCollection() as $invoice) {
             if ($invoice->getState() == $invoice::STATE_OPEN) {
                 return true;
@@ -384,11 +385,27 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         ];
     }
 
+    public function createDate($date)
+    {
+        try {
+            $object = new \DateTime($date);
+            return $object;
+        } catch(\Exception $e) {}
+
+        return false;
+    }
+
+
     /**
      * @return \Magento\Framework\UrlInterface
      */
     public function getUrlBuilder()
     {
         return $this->_urlBuilder;
+    }
+
+    public function getBodyClass()
+    {
+        $r = '';
     }
 }

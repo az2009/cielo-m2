@@ -270,6 +270,15 @@
     z-index: 1;
 }
 
+.checkout-success .actions-toolbar > .primary {
+    float: right;
+    margin: 10px 0 20px 0;
+}
+
+.box.box-order-billing-method {
+    overflow-x: auto;
+}
+
 @media (min-width: 991px) {
     .payment-az2009 .box-card {
         margin-top: 23px;

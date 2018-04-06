@@ -3,4 +3,7 @@
     <type name="Magento\Backend\Block\Widget\Context">
         <plugin name="custom_button_sales_order_view" type="Az2009\Cielo\Plugin\Widget\Context" sortOrder="1"/>
     </type>
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="get_status_label" type="Az2009\Cielo\Plugin\Sales\Model\Order" sortOrder="1"/>
+    </type>
 </config>

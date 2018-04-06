@@ -7,4 +7,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="get_status_label" type="Az2009\Cielo\Plugin\Sales\Model\Order" sortOrder="1"/>
+    </type>
 </config>

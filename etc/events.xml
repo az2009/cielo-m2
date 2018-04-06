@@ -3,4 +3,10 @@
     <event name="after_send_request_cielo">
         <observer name="az2009_cielo_cc_debug_after" instance="Az2009\Cielo\Observer\AfterSendRequestCielo" />
     </event>
+    <event name="controller_action_predispatch_checkout_onepage_success">
+        <observer name="load_order" instance="Az2009\Cielo\Observer\ActionPredispatchCheckoutOnepageSuccess" />
+    </event>
+    <event name="controller_action_predispatch_checkout_onepage_failure">
+        <observer name="load_order" instance="Az2009\Cielo\Observer\ActionPredispatchCheckoutOnepageSuccess" />
+    </event>
 </config>

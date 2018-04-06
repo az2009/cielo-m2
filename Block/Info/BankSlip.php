@@ -2,7 +2,7 @@
 
 namespace Az2009\Cielo\Block\Info;
 
-class BankSlip extends \Magento\Payment\Block\Info
+class BankSlip extends AbstractInfo
 {
     /**
      * Prepare data related payment info
@@ -16,7 +16,7 @@ class BankSlip extends \Magento\Payment\Block\Info
             return $this->_paymentSpecificInformation;
         }
 
-        $transport = parent::_prepareSpecificInformation($transport);
+        $transport = \Magento\Payment\Block\Info::_prepareSpecificInformation($transport);
         $data = [];
         $info = $this->getInfo();
 
@@ -50,19 +50,25 @@ class BankSlip extends \Magento\Payment\Block\Info
 
         if (isset($transaction['ExpirationDate'])) {
             $data[(string)__('Expiration Date')] = $transaction['ExpirationDate'];
+            if ($date = $this->helper->createDate($transaction['ExpirationDate'])) {
+                $data[(string)__('Expiration Date')] = $date->format('d/m/Y');
+            }
         }
 
         if (isset($transaction['Identification'])) {
             $data[(string)__('Identification')] = $transaction['Identification'];
         }
 
-        if (isset($transaction['PaymentId'])) {
-            $data[(string)__('Payment ID')] = $transaction['PaymentId'];
+        if ($this->onlyShowAdmin()) {
+            if (isset($transaction['PaymentId'])) {
+                $data[(string)__('Payment ID')] = $transaction['PaymentId'];
+            }
+
+            if (isset($transaction['Provider'])) {
+                $data[(string)__('Provider')] = $transaction['Provider'];
+            }
         }
 
-        if (isset($transaction['Provider'])) {
-            $data[(string)__('Provider')] = $transaction['Provider'];
-        }
 
         $this->_paymentSpecificInformation = $transport->setData(array_merge($data, $transport->getData()));
 

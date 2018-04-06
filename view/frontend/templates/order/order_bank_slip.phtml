@@ -1,0 +1,7 @@
+<?php /** @var $block \Az2009\Cielo\Block\Order\Info */ ?>
+<?php if ($block->isShowBankSlip()): ?>
+    <span class="order-status">
+        <a target="_blank" href="<?= /* @escapeNotVerified */ $block->getLinkBankSlip() ?>">
+            <strong><?= __('Print Bank Slip') ?></strong>
+        </a>
+<?php endif ?>

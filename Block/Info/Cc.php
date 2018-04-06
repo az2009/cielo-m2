@@ -2,27 +2,13 @@
 
 namespace Az2009\Cielo\Block\Info;
 
-class Cc extends \Magento\Payment\Block\Info\Cc
+class Cc extends AbstractInfo
 {
-
-    /**
-     * @var \Az2009\Cielo\Helper\Data
-     */
-    public $helper;
 
     /**
      * @var \Magento\Payment\Model\InfoInterface | null
      */
     protected $info = null;
-
-    public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Az2009\Cielo\Helper\Data $helper,
-        \Magento\Payment\Model\Config $paymentConfig, array $data = []
-    ) {
-        $this->helper = $helper;
-        parent::__construct($context, $paymentConfig, $data);
-    }
 
     /**
      * Retrieve credit card type name
@@ -117,9 +103,7 @@ class Cc extends \Magento\Payment\Block\Info\Cc
             $data[(string)__('Due Date')] = $this->_formatCardDate($year, $month);
         }
 
-        if ($this->_appState->getAreaCode()
-            == \Magento\Framework\App\Area::AREA_ADMINHTML
-        ) {
+        if ($this->onlyShowAdmin()) {
             $data[(string)__('Transaction Type')] = $this->getIsAuthorizeOrCapture() ?: __('N/A');
             $data[(string)__('Transaction ID')] = $this->helper->sanitizeUri($this->getInfo()->getLastTransId()) ?: __('N/A');
         }

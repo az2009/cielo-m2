@@ -24,7 +24,6 @@ class Payment extends \Az2009\Cielo\Controller\Postback\Index
 
             } catch(\Az2009\Cielo\Exception\Cc $e) {
                 $this->messageManager->addError($e->getMessage());
-
             } catch(\Exception $e) {
                 $this->logger->info($e->getMessage());
                 $this->messageManager->addError(__('Occurred an error during payment process. Contact the store'));
