@@ -17,6 +17,8 @@
                 <uri_query_stage>https://apiquerysandbox.cieloecommerce.cielo.com.br/1/sales/</uri_query_stage>
                 <uri_request_production>https://api.cieloecommerce.cielo.com.br/1/sales/</uri_request_production>
                 <uri_query_production>https://apiquery.cieloecommerce.cielo.com.br/1/sales/</uri_query_production>
+                <mode>stage</mode>
+                <debug>0</debug>
             </az2009_cielo_core>
             <az2009_cielo>
                 <active>0</active>
@@ -25,6 +27,11 @@
                 <title>Credit Card Cielo</title>
                 <allowspecific>0</allowspecific>
                 <sort_order>1</sort_order>
+                <billing_description>Billing Description</billing_description>
+                <can_save_cc>0</can_save_cc>
+                <payment_action>authorize_capture</payment_action>
+                <cctypes>AE,VI,MC,DI,JCB,DN,ELO,HIC</cctypes>
+                <allowspecific>0</allowspecific>
             </az2009_cielo>
             <az2009_cielo_bank_slip>
                 <active>0</active>
@@ -34,6 +41,14 @@
                 <allowspecific>0</allowspecific>
                 <sort_order>2</sort_order>
                 <payment_action>authorize</payment_action>
+                <provider>Bradesco2</provider>
+                <additional_days>3</additional_days>
+                <boleto_number>123</boleto_number>
+                <demonstrative>Demonstrative Info</demonstrative>
+                <assignor>Assignor Name</assignor>
+                <assignor_address>Assignor Address Info</assignor_address>
+                <instructions>Instructions Info</instructions>
+                <allowspecific>0</allowspecific>
             </az2009_cielo_bank_slip>
             <az2009_cielo_dc>
                 <active>0</active>
@@ -43,6 +58,8 @@
                 <allowspecific>0</allowspecific>
                 <sort_order>2</sort_order>
                 <payment_action>authorize</payment_action>
+                <cctypes>VI,MC</cctypes>
+                <allowspecific>0</allowspecific>
             </az2009_cielo_dc>
         </payment>
     </default>
