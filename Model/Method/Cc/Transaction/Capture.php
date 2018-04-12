@@ -75,12 +75,12 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         $payment->setIsTransactionClosed(true);
 
         if ($payment->getCapturePartial()) {
-            $this->messageManager->addNotice(
-                __('*Obs: To capture partial: 
-                    Cielo only supports one partial or full capture. 
-                    On the next capture for this request. 
-                    Capture offline at the store and online at Cielo\'s backoffice.')
-            );
+            $msg = '*Obs: To capture partial:';
+            $msg .= 'Cielo only supports one partial or full capture.';
+            $msg .= 'On the next capture for this request.';
+            $msg .= 'Capture offline at the store and online at Cielo\'s backoffice.';
+
+            $this->messageManager->addNotice(__($msg));
         }
 
         $this->saveCardToken();

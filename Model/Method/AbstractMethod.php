@@ -166,11 +166,11 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
 
             //check if transaction has value captured
             if ($payment->getOrder()->getTotalPaid() > 0) {
-                throw new \Az2009\Cielo\Exception\Cc(
-                    __('The request has already been captured. Cielo only supports one partial or full capture. 
-                        A catch is already created for this request. 
-                        Capture offline at the store and online at Cielo\'s backoffice.')
-                );
+                $msg = 'The request has already been captured. Cielo only supports one partial or full capture.';
+                $msg .= 'A catch is already created for this request.';
+                $msg .= 'Capture offline at the store and online at Cielo\'s backoffice.';
+
+                throw new \Az2009\Cielo\Exception\Cc(__($msg));
             }
 
             $payment->setAdditionalInformation('can_capture', true);

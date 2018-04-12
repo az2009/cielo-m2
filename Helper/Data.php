@@ -2,9 +2,6 @@
 
 namespace Az2009\Cielo\Helper;
 
-use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\Collection;
-use MEQP2\Tests\NamingConventions\true\object;
-
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
 
@@ -404,8 +401,4 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->_urlBuilder;
     }
 
-    public function getBodyClass()
-    {
-        $r = '';
-    }
 }

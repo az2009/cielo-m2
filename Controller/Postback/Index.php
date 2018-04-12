@@ -64,7 +64,6 @@ class Index extends \Magento\Framework\App\Action\Action
                 $response->setHttpResponseCode(200);
 
             } catch(\Exception $e) {
-                echo $e->getMessage();
                 $code = mt_rand(2, 9999);
                 $msg = __('CodeError: %1', $code);
                 $this->logger->error(__("\n \n \n PostbackError: \n Code: %1 \n Message: %2", $code, $e->getMessage()));
@@ -81,8 +80,8 @@ class Index extends \Magento\Framework\App\Action\Action
     {
         $request = $this->getRequest();
 
-         if(/*!$request->isPost()
-            ||*/ !($this->_paymentId = $request->getParam('PaymentId'))
+         if(!$request->isPost()
+            || !($this->_paymentId = $request->getParam('PaymentId'))
             || !($this->_changeType = $request->getParam('ChangeType'))
         ) {
             return false;

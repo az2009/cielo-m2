@@ -69,7 +69,7 @@ class DebitCard extends \Az2009\Cielo\Model\Method\Cc\Validate\CreditCard
 
         $params = $this->getRequest();
         if (!isset($params['Payment']['DebitCard'])) {
-            throw new \Az2009\Cielo\Exception\Cc(__('Invalid Debit Card Info '));
+            throw new \Az2009\Cielo\Exception\Cc(__('Invalid Debit Card Info'));
         }
 
         $creditCard = $params['Payment']['DebitCard'];
@@ -94,7 +94,7 @@ class DebitCard extends \Az2009\Cielo\Model\Method\Cc\Validate\CreditCard
                 $this->_ccTypeRegExpList[$creditCard['Brand']], $creditCard['CardNumber']
             )
         ) {
-            throw new \Az2009\Cielo\Exception\Cc(__('Invalid Credit Card'));
+            throw new \Az2009\Cielo\Exception\Cc(__('Invalid Debit Card'));
         }
     }
 }

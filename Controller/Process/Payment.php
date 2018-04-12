@@ -26,7 +26,7 @@ class Payment extends \Az2009\Cielo\Controller\Postback\Index
                 $this->messageManager->addError($e->getMessage());
             } catch(\Exception $e) {
                 $this->logger->info($e->getMessage());
-                $this->messageManager->addError(__('Occurred an error during payment process. Contact the store'));
+                $this->messageManager->addError(__('Occurred an error during payment process. Contact the store.'));
             }
 
             $url = 'checkout/onepage/failure';

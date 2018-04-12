@@ -10,10 +10,10 @@ class Provider
     public function toOptionArray()
     {
         return [
-            ['label' => __('Bradesco (Não Registrado)'), 'value' => 'Bradesco'],
-            ['label' => __('Banco do Brasil (Não Registrado)'), 'value' => 'BancoDoBrasil'],
-            ['label' => __('Bradesco (Registrado)'), 'value' => 'Bradesco2'],
-            ['label' => __('Banco do Brasil (Registrado)'), 'value' => 'BancoDoBrasil2']
+            ['label' => __('Bradesco (Not Registered)'), 'value' => 'Bradesco'],
+            ['label' => __('Banco do Brasil (Not Registered)'), 'value' => 'BancoDoBrasil'],
+            ['label' => __('Bradesco (Registered)'), 'value' => 'Bradesco2'],
+            ['label' => __('Banco do Brasil (Registered)'), 'value' => 'BancoDoBrasil2']
         ];
     }
 }
