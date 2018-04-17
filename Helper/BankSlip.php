@@ -76,6 +76,20 @@ class BankSlip extends Data
     }
 
     /**
+     * get Assignor Address
+     * @return mixed
+     */
+    public function getAssignorIdentification()
+    {
+        $config = $this->scopeConfig->getValue(
+            'payment/az2009_cielo_bank_slip/assignor_identification',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+
+        return $config;
+    }
+
+    /**
      * get provider Bradesco2 | BancoDoBrasil2
      * @return mixed
      */

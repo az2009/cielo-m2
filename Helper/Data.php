@@ -13,6 +13,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     const ID_ACCEPT = 'accept_payment';
 
+    const COUNTRY_CODE_BRL = 'BR';
+
     /**
      * @var \Magento\Framework\View\Asset\Repository
      */
@@ -43,7 +45,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $_objectManager;
 
+    /**
+     * @var null
+     */
     protected $_item = null;
+
+    protected $_countryIso;
 
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -52,7 +59,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory $transaction,
         \Magento\Customer\Model\Session $session,
         \Magento\Framework\View\Asset\Repository $asset,
-        \Magento\Framework\ObjectManagerInterface $objectManager
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Az2009\Cielo\Model\Source\CountryCodes $countryIso
     )
     {
         $this->_asset = $asset;
@@ -61,7 +69,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_session = $session;
         $this->_transaction = $transaction;
         $this->_objectManager = $objectManager;
-
+        $this->_countryIso = $countryIso;
         parent::__construct($context);
     }
 
@@ -392,6 +400,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return false;
     }
 
+    public function isActive()
+    {
+        $merchantId = $this->getMerchantId();
+        $merchantKey = $this->getMerchantKey();
+
+        if (empty($merchantId) || empty($merchantKey)) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * @return \Magento\Framework\UrlInterface
@@ -401,4 +420,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->_urlBuilder;
     }
 
+    public function getCountryCodeAlpha3($state)
+    {
+        return $this->_countryIso->getCountryCodeAlpha3($state);
+    }
 }

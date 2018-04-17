@@ -36,9 +36,7 @@
 "Billing Address: ","Endereço de Cobrança: "
 "The acquirer's response: %1","Response Adquirente: %1"
 "Payment not authorized","Pagamento não autorizado"
-
 "*Obs: To capture partial:Cielo only supports one partial or full capture.On the next capture for this request.Capture offline at the store and online at Cielo's backoffice.","*Obs: Para captura parcial:Cielo suporta uma captura parcial ou completa.Na próxima captura para esta transação, capture offline na loja e online no backoffice da Cielo."
-
 "Not exists values to capture in order %1","Não há valores para capturar no pedido: %1"
 "Not exists values to authorize in order %1","Não há valores para autorizar no pedido: %1"
 "Proper MerchantOrderId not found","Propriedade MerchantOrderId não encontrada no objeto"
@@ -119,3 +117,5 @@
 "Print Bank Slip","Imprimir Boleto Bancário"
 "Status Order","Status do Pedido"
 "CARDHOLDER NAME","NOME DO TITULAR DO CARTÃO"
+"Select Credit Card","Selecione um Cartão de Crédito"
+"Other Credit Card","Outro Cartão de Crédito"

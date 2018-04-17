@@ -18,6 +18,11 @@ class Payment extends \Magento\Framework\DataObject
     protected $_cctype;
 
     /**
+     * @var \Magento\Sales\Model\Order\Address
+     */
+    protected $billingAddress;
+
+    /**
      * @var \Az2009\Cielo\Helper\Data
      */
     protected $helper;
@@ -40,6 +45,7 @@ class Payment extends \Magento\Framework\DataObject
     public function getRequest()
     {
         $this->order = $this->getOrder();
+        $this->billingAddress = $this->order->getBillingAddress();
         $payment = $this->order
                         ->getPayment()
                         ->getMethodInstance();
@@ -57,6 +63,8 @@ class Payment extends \Magento\Framework\DataObject
                                'ServiceTaxAmount' => 0,
                                'Installments' => $this->getInstallments(),
                                'Interest' => Payment::INTEREST,
+                               'Currency' => $this->order->getStoreCurrencyCode(),
+                               'Country' => $this->helper->prepareString($this->helper->getCountryCodeAlpha3($this->billingAddress->getCountryId()), 35, 0),
                                'Capture' => $info->getAdditionalInformation('can_capture'),
                                'Authenticate' => false,
                                'SoftDescriptor' => $this->helper->prepareString($this->getSoftDescriptor(), 13, 0),

@@ -38,7 +38,8 @@
                 <model>Az2009\Cielo\Model\Method\BankSlip\BankSlip</model>
                 <order_status>pending</order_status>
                 <title>Bank Slip Cielo</title>
-                <allowspecific>0</allowspecific>
+                <allowspecific>1</allowspecific>
+                <specificcountry>BR</specificcountry>
                 <sort_order>2</sort_order>
                 <payment_action>authorize</payment_action>
                 <provider>Bradesco2</provider>
@@ -55,7 +56,8 @@
                 <model>Az2009\Cielo\Model\Method\Dc\Dc</model>
                 <order_status>pending</order_status>
                 <title>Debit Card Cielo</title>
-                <allowspecific>0</allowspecific>
+                <allowspecific>1</allowspecific>
+                <specificcountry>BR</specificcountry>
                 <sort_order>2</sort_order>
                 <payment_action>authorize</payment_action>
                 <cctypes>VI,MC</cctypes>

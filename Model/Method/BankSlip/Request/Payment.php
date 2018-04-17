@@ -50,7 +50,7 @@ class Payment extends \Magento\Framework\DataObject
                                'Address' => $this->helper->prepareString($this->helper->getAssignorAddress(),255, 0),
                                'BoletoNumber' => $this->helper->prepareString($this->helper->getBoletoNumber(), 9, 0),
                                'Demonstrative' => $this->helper->prepareString($this->helper->getDemonstrative(), 255, 0),
-                               'Identification' => $this->helper->prepareString($info->getAdditionalInformation('bs_identification'), 14, 0),
+                               'Identification' => $this->helper->prepareString($this->helper->getAssignorIdentification(), 14, 0),
                                'Instructions' => $this->helper->prepareString($this->getInstructions(), 450, 0)
                            ]
                         ]

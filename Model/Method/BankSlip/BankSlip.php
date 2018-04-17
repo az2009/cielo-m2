@@ -109,4 +109,22 @@ class BankSlip extends \Az2009\Cielo\Model\Method\AbstractMethod
         $payment->setPlaceOrderBankSlip(true);
         return parent::authorize($payment, $amount);
     }
+
+    public function canUseForCurrency($code)
+    {
+        if ($code != self::CODE_CURRENCY_REAL_BRL) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canUseForCountry($country)
+    {
+        if ($country != self::CODE_COUNTRY_BR) {
+            return false;
+        }
+
+        return true;
+    }
 }
