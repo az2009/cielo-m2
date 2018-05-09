@@ -25,9 +25,9 @@ define([
                 creditCardExpMonth: '',
                 creditCardExpYear: '',
                 creditCardCid: '',
-                creditCardSave:'',
+                creditCardSave:'new',
                 creditCardInstallments:'',
-                isShow:'',
+                isShow:true,
                 labelCardNumber:'',
                 labelCardDue:'',
                 labelCardHolder:'',
@@ -66,7 +66,7 @@ define([
 
                 this._super();
                 var self = this;
-                this.iShowForm();
+                this.iShowForm(true);
 
                 this.creditCardExpMonth.subscribe(function (value) {
                     self.labelCardDueMonth(value);
@@ -127,27 +127,21 @@ define([
                     $('#payment_form_' + self.getCode() + ' .flip-container').addClass('active');
                 });
 
-
-                this.creditCardSave.subscribe(function(value){
-                    if (value == '') {
-                        $('#payment_form_' + self.getCode() + ' #az2009_cielo_cc_type_cvv_div,' + '#payment_form_' + self.getCode() + ' .brandCard').hide();
-                        self.clearCardPlaceholder();
-                    } else {
-                        $('#payment_form_' + self.getCode() + ' #az2009_cielo_cc_type_cvv_div, ' + '#payment_form_' + self.getCode() + ' .brandCard').show();
-                        var type = $('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('data-type');
-                        if (type) {
-                            self.creditCardType(type);
-                            self.selectedCardType(type);
-                            $('#payment_form_' + self.getCode() + ' .box-cardbrand').empty();
-                            $('#payment_form_' + self.getCode() + ' .box-cardbrand').append('<img src="'+self.getIcons(type).url+'" />');
-                            self.labelCardNumber($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('label'));
-                            self.labelCardHolder($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('data-cardholder'));
-                            self.labelCardDueMonth($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('month_due'));
-                            self.labelCardDueYear($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('year_due'));
-                        }
+                this.creditCardSave.subscribe(function(value) {
+                    $('#payment_form_' + self.getCode() + ' #az2009_cielo_cc_type_cvv_div, ' + '#payment_form_' + self.getCode() + ' .brandCard').show();
+                    var type = $('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('data-type');
+                    if (type) {
+                        self.creditCardType(type);
+                        self.selectedCardType(type);
+                        $('#payment_form_' + self.getCode() + ' .box-cardbrand').empty();
+                        $('#payment_form_' + self.getCode() + ' .box-cardbrand').append('<img src="'+self.getIcons(type).url+'" />');
+                        self.labelCardNumber($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('label'));
+                        self.labelCardHolder($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('data-cardholder'));
+                        self.labelCardDueMonth($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('month_due'));
+                        self.labelCardDueYear($('#payment_form_' + self.getCode() + ' #cc_token option:selected').attr('year_due'));
                     }
 
-                    if (value == 'new') {
+                    if (value == 'new' || value == '') {
                         $('#payment_form_' + self.getCode() + ' .boxNewCard').show();
                         self.clearCardPlaceholder();
                     } else {
@@ -318,7 +312,11 @@ define([
             },
 
             iShowForm: function() {
-                if (!this.isLoggedIn() || !this.hasCardSave()) {
+                if (!this.isLoggedIn()
+                    || !this.hasCardSave()
+                    || this.creditCardSave() == 'new'
+                    || this.creditCardSave() == ''
+                ) {
                     this.isShow(true);
                     return;
                 }

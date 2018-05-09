@@ -265,7 +265,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
         $params = $this->getParams();
         $this->getClient()
             ->setRawData($params)
-            ->setMethod($this->httpClientFactory::PUT);
+            ->setMethod(\Magento\Framework\HTTP\ZendClient::PUT);
 
         return $this;
     }
@@ -278,7 +278,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     {
         $params = $this->getParams();
         $this->getClient()
-            ->setMethod($this->httpClientFactory::POST)
+            ->setMethod(\Magento\Framework\HTTP\ZendClient::POST)
             ->setRawData($params);
 
         return $this;
@@ -292,7 +292,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
     {
         $params = $this->getParams();
         $this->getClient()
-            ->setMethod($this->httpClientFactory::GET)
+            ->setMethod(\Magento\Framework\HTTP\ZendClient::GET)
             ->setRawData($params);
 
         return $this;
