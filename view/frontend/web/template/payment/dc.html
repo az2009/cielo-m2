@@ -40,20 +40,27 @@
                                     data-bind="attr: {autocomplete: off, 'data-validate': JSON.stringify({required:true})},
                                               value: creditCardExpMonth, valueUpdate: 'keyup'"
                             >
-                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Month')}"></option>
+                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Month')}">
+                                    <!-- ko i18n: 'Month' --><!-- /ko -->
+                                </option>
                                 <!-- ko foreach: {data: getExpMonth(), as: 'month'} -->
-                                <option class="item" data-bind="attr: {'value': month.key, 'label': month.value}"></option>
+                                <option class="item" data-bind="attr: {'value': month.key}">
+                                    <!-- ko i18n: month.value --><!-- /ko -->
+                                </option>
                                 <!-- /ko -->
 
                             </select>
                             <select class="select select-year"
                                     name="payment[cc_exp_year]"
                                     data-bind="attr: {'data-validate': JSON.stringify({required:true})}, value: creditCardExpYear, valueUpdate: 'keyup'">
-                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Year')}"></option>
+                                <option class="item" data-bind="attr: {'value': '', 'label': $t('Year')}">
+                                    <!-- ko i18n: 'Year' --><!-- /ko -->
+                                </option>
                                 <!-- ko foreach: {data: getExpYear(), as: 'year'} -->
-                                <option class="item" data-bind="attr: {'value': year.key, 'label': year.value}"></option>
+                                <option class="item" data-bind="attr: {'value': year.key, 'label': year.value}">
+                                    <!-- ko i18n: year.value --><!-- /ko -->
+                                </option>
                                 <!-- /ko -->
-
                             </select>
                         </div>
                     </div>
