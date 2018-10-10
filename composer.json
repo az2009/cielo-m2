@@ -1,7 +1,7 @@
 {
 	"name" : "az2009/cielo",
 	"description" : "Module to integrating with gateway of payment Cielo",
-	"version" : "1.0.0",
+	"version" : "1.0.1",
 	"type" : "magento2-module",
 	"license" : "OSL-3.0",
 	"authors" : [{
