@@ -54,7 +54,7 @@ class Payment extends \Magento\Framework\DataObject
                         [
                            'Payment' => [
                                'Type' => Payment::TYPE,
-                               'Amount' => $info->getAmount(),
+                               'Amount' => $this->helper->formatNumber($info->getAmount()),
                                'Provider' => $this->helper->prepareString($this->helper->getProvider(), 15, 0),
                                'ExpirationDate' => $this->getExpDate(),
                                'Assignor' => $this->helper->prepareString($this->helper->getAssignor(), 200, 0),

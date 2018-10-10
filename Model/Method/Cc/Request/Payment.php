@@ -67,7 +67,7 @@ class Payment extends \Magento\Framework\DataObject
                         [
                            'Payment' => [
                                'Type' => Payment::TYPE,
-                               'Amount' => $info->getAmount(),
+                               'Amount' => $this->helper->formatNumber($info->getAmount()),
                                'ServiceTaxAmount' => 0,
                                'Installments' => $this->getInstallments(),
                                'Interest' => Payment::INTEREST,

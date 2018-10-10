@@ -516,4 +516,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return $this->_countryIso->getCountryCodeAlpha3($state);
     }
+
+    /**
+     * Convert real to cents
+     *
+     * @param $amount
+     *
+     * @return string
+     */
+    public function formatNumber($amount)
+    {
+        return number_format($amount, 2, '', '');
+    }
 }

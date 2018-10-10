@@ -46,7 +46,7 @@ class Payment extends \Az2009\Cielo\Model\Method\Cc\Request\Payment
             [
                 'Payment' => [
                     'Type' => Payment::TYPE,
-                    'Amount' => $info->getAmount(),
+                    'Amount' => $this->helper->formatNumber($info->getAmount()),
                     'Authenticate' => true,
                     'ReturnUrl' => $this->getReturnUrl(),
                     'DebitCard' => $this->getDebitCard(),
