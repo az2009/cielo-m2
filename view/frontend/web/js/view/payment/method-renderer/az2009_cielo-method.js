@@ -75,6 +75,7 @@ define([
                 var self = this;
                 this.iShowForm(true);
 
+                self.loadInstallments();
                 this.creditCardExpMonth.subscribe(function (value) {
                     self.labelCardDueMonth(value);
                 });
@@ -354,7 +355,21 @@ define([
             outFocus:function () {
                 var self = this;
                 $('#payment_form_' + self.getCode() + ' .flip-container').removeClass('active');
-            }
+            },
+
+            loadInstallments: function () {
+                console.log(window);
+                $(document).on('change', '#'+ this.getCode(), function(){
+                    $.ajax({
+                        url: '/cielo/installments/index',
+                        type: 'POST',
+                        dataType: 'HTML',
+                        success: function (response) {
+                            $('#az2009_cielo_cc_installments').html(response)
+                        }
+                    });
+                });
+            },
 
         });
     });

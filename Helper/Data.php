@@ -528,4 +528,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return number_format($amount, 2, '', '');
     }
+
+    /**
+     * Formt
+     *
+     * @param $price
+     *
+     * @return string
+     */
+    public function formatPrice($price)
+    {
+        return $this->_order->getOrderCurrency()->formatPrecision($price, 2, [], false);
+    }
 }

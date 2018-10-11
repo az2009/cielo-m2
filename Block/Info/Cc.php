@@ -119,6 +119,9 @@ class Cc extends AbstractInfo
             $data[(string)__('Transaction ID')] = $this->helper->sanitizeUri($this->getInfo()->getLastTransId()) ?: __('N/A');
         }
 
+        $data[(string)__('Installments')] = $this->getInstallments();
+
+
         return $transport->setData(array_merge($data, $transport->getData()));
     }
 
@@ -176,5 +179,22 @@ class Cc extends AbstractInfo
         }
 
         return $info;
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getInstallments()
+    {
+        $info = $this->getData('info');
+        $installments = (int)$info->getAdditionalInformation('cc_installments');
+        if ($installments <= 0) {
+            $installments = 1;
+        }
+
+        $installmentsValue = ($info->getAmountOrdered() / $installments);
+        $installments = "{$installments} x {$this->helper->formatPrice($installmentsValue)}";
+
+        return $installments;
     }
 }

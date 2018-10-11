@@ -77,25 +77,15 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
             $quote = $this->sessionQuote->getQuote();
         }
 
-        $currency = $quote->getQuoteCurrencyCode();
-
-        if($quote->isVirtual()) {
-            $address = $quote->getBillingAddress();
-        } else {
-            $address = $quote->getShippingAddress();
-        }
-
+        $quote->setTotalsCollectedFlag(false)->collectTotals();
         $amount = (double) $quote->getGrandTotal();
-
         $maxInstallments = $this->getConfigValue($amount);
-
         for ($i=1; $i <= $maxInstallments; $i++) {
             $partialAmount = ((double)$amount)/$i;
             $result[(string)$i] = $i . "x " . $this->formatPrice($partialAmount, false);
         }
 
         return $result;
-
     }
 
     /**
