@@ -528,6 +528,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return number_format($amount, 2, '', '');
     }
+    
+    public function convertToPrice($amount)
+    {
+        return number_format($amount/100, 2, '.', '');
+    }
 
     /**
      * Formt

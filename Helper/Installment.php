@@ -112,8 +112,9 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
                 'payment/az2009_cielo/installments',
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE
             );
-
+        
         $value = $this->_unserializeValue($value);
+        
         return $value;
     }
 
@@ -127,7 +128,7 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
     protected function _unserializeValue($value)
     {
         if (is_string($value) && !empty($value)) {
-            return json_decode($value, true);
+            return unserialize($value);
         } else {
             return array();
         }

@@ -17,11 +17,12 @@ class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
 {
     public function __construct(
         \Magento\Customer\Model\Session $session,
+        \Az2009\Cielo\Helper\Data $helper,
         \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         \Magento\Framework\Registry $registry,
         array $data = []
     ) {
-        parent::__construct($session, $comment, $registry, $data);
+        parent::__construct($session, $helper, $comment, $registry, $data);
     }
 
     /**
@@ -96,7 +97,7 @@ class Cancel extends \Az2009\Cielo\Model\Method\Cc\Transaction\Cancel
     {
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         if (!isset($bodyArray['Payment']['Amount'])
-            || !($authorizeAmount = doubleval($bodyArray['Payment']['Amount']))
+            || !($authorizeAmount = $this->helper->convertToPrice($bodyArray['Payment']['Amount']))
         ) {
             $authorizeAmount = $this->getPayment()->getAmount();
             if ($this->getPayment()->getActionCancel() && (int)$this->getPayment()->getAmount() <= 0) {

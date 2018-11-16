@@ -40,6 +40,11 @@ class Order
                 $subject->getPayment()->getMethod(),
                 $this->helper->getCodesPayment()
         ) && $subject->isPaymentReview()) {
+            
+            if (!($subject->getConfig() instanceof \Magento\Sales\Model\Order)) {
+                return $label;
+            }
+            
             return $subject->getConfig()->getStateLabelByStateAndStatus(
                 $subject->getState(),
                 $subject->getStatus()

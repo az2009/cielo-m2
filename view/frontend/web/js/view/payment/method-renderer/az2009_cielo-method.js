@@ -69,8 +69,7 @@ define([
                 return this;
             },
 
-            initialize: function() {
-
+            initialize: function() {            	
                 this._super();
                 var self = this;
                 this.iShowForm(true);
@@ -357,9 +356,9 @@ define([
                 $('#payment_form_' + self.getCode() + ' .flip-container').removeClass('active');
             },
 
-            loadInstallments: function () {
-                console.log(window);
-                $(document).on('change', '#'+ this.getCode(), function(){
+            loadInstallments: function () {                
+            	
+            	$(document).on('focusout', '#az2009_cielo_cc_number_c', function(){            		
                     $.ajax({
                         url: '/cielo/installments/index',
                         type: 'POST',
@@ -368,7 +367,7 @@ define([
                             $('#az2009_cielo_cc_installments').html(response)
                         }
                     });
-                });
+                }); 
             },
 
         });

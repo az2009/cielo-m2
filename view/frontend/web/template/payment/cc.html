@@ -47,7 +47,7 @@
             <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
                 <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
             </label>
-            <input type="number" name="payment[cc_number]" class="input-text cc_number" value=""
+            <input type="number" name="payment[cc_number]" class="input-text cc_number" id="az2009_cielo_cc_number_c" value=""
                    data-bind="
                     autocomplete: off,
                     value: creditCardNumber,
@@ -142,11 +142,7 @@
             <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
         </label>
         <select data-bind="attr: {'id': getCode() + '_cc_installments'}, value: creditCardInstallments" name="payment[cc_installments]">
-            <!-- ko foreach: {data: getInstallments(), as: 'installment'} -->
-            <option class="item" data-bind="attr: {'value': installment.key, 'label':installment.value }">
-                <!-- ko i18n: installment.value --><!-- /ko -->
-            </option>
-            <!--/ko-->
+            <option class="item"><!-- ko i18n: 'Informe o número do cartão' --><!-- /ko --></option>            
         </select>
     </div>
 </div>

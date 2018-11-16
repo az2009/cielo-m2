@@ -15,18 +15,25 @@ namespace Az2009\Cielo\Model\Method\Cc\Transaction;
 
 class Cancel extends \Az2009\Cielo\Model\Method\Transaction
 {
+    /**
+     * @var \Az2009\Cielo\Helper\Data
+     */
+    protected $helper;
+    
     public function __construct(
         \Magento\Customer\Model\Session $session,
+        \Az2009\Cielo\Helper\Data $helper,
         \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $comment,
         \Magento\Framework\Registry $registry,
         array $data = []
     ) {
         $this->_registry = $registry;
+        $this->helper = $helper;
         parent::__construct($session, $comment, $data);
     }
 
     public function process()
-    {
+    {        
         $payment = $this->getPayment();
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         $paymentId = '';
@@ -63,14 +70,17 @@ class Cancel extends \Az2009\Cielo\Model\Method\Transaction
 
         if ($order->canCancel()) {
             $payment->registerRefundNotification($this->_getVoidedAmount());
-            $order->registerCancellation();
+            $order->registerCancellation();            
         }
-
+        
         if ($order->canCreditmemo()) {
-            $payment->registerRefundNotification($this->_getVoidedAmount());
+            $payment->registerRefundNotification($this->_getVoidedAmount());            
         }
-
-        $order->save();
+        
+        $order->setState($order::STATE_CANCELED)
+              ->setStatus($order::STATE_CANCELED)
+              ->save();
+        
         $this->addReturnMessageToTransaction($bodyArray);
 
         return $this;
@@ -80,14 +90,14 @@ class Cancel extends \Az2009\Cielo\Model\Method\Transaction
     {
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         if (!isset($bodyArray['Payment']['VoidedAmount'])
-            || !($authorizeAmount = doubleval($bodyArray['Payment']['VoidedAmount']))
+            || !($authorizeAmount = $this->helper->convertToPrice($bodyArray['Payment']['VoidedAmount']))
         ) {
             $authorizeAmount = $this->getPayment()->getAmount();
             if ($this->getPayment()->getActionCancel() && (int)$this->getPayment()->getAmount() <= 0) {
                 $authorizeAmount = $this->getPayment()->getAmountPaid() ?: $this->getPayment()->getAmountAuthorized();
             }
         }
-
-        return $authorizeAmount;
+        
+        return $authorizeAmount;        
     }
 }

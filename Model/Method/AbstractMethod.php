@@ -311,7 +311,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      */
     public function put()
     {
-        $params = $this->getParams();
+        $params = $this->getParams();        
         $this->getClient()
             ->setRawData($params)
             ->setMethod(\Magento\Framework\HTTP\ZendClient::PUT);
@@ -414,7 +414,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
             );
 
             $response = $this->getClient()->request();
-
+            
             $this->getResponse()
                  ->setResponse($response);
 
@@ -425,7 +425,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
 
             return $this->_processResponse();
 
-        } catch(\Az2009\Cielo\Exception\Cc $e) {
+        } catch(\Az2009\Cielo\Exception\Cc $e) {            
             throw $e;
         } catch(\Exception $e) {
             $message = 'Occurred an error during payment process. Try Again.';
@@ -433,7 +433,7 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
             $this->_logger->error($e->getMessage());
             throw new \Exception(__($message));
         }
-
+        
         return $this;
     }
 
@@ -445,8 +445,12 @@ abstract class AbstractMethod extends \Magento\Payment\Model\Method\AbstractMeth
      *
      * @throws \Az2009\Cielo\Exception\Cc
      */
-    public function isCatchException(\Zend_Http_Response $response, $message)
+    public function isCatchException($response, $message)
     {
+        if (!($response instanceof \Zend_Http_Response)) {
+            return;
+        }
+        
         if ($response->getStatus() == \Zend\Http\Response::STATUS_CODE_400
             && isset(\Zend\Json\Decoder::decode($response->getBody())[0])
             && property_exists(\Zend\Json\Decoder::decode($response->getBody())[0], 'Message')

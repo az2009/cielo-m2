@@ -86,7 +86,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Cc\Transaction\Capture
     {
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         if (!isset($bodyArray['Payment']['Amount'])
-            || !($capturedAmount = floatval($bodyArray['Payment']['Amount']))
+            || !($capturedAmount = $this->helper->convertToPrice($bodyArray['Payment']['Amount']))
         ) {
             throw new \Exception(
                 __(

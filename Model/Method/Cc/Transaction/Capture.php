@@ -99,7 +99,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
         $this->addReturnMessageToTransaction($bodyArray);
 
         if ($this->getPostback() && !$this->isCompleteCaptured()) {
-            $payment->registerCaptureNotification($this->_getCapturedAmount());
+            $payment->registerCaptureNotification($this->_getCapturedAmount(), true);
             $payment->getOrder()->save();
         }
 
@@ -122,7 +122,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
     {
         $bodyArray = $this->getBody(\Zend\Json\Json::TYPE_ARRAY);
         if (!isset($bodyArray['Payment']['CapturedAmount'])
-            || !($capturedAmount = floatval($bodyArray['Payment']['CapturedAmount']))
+            || !($capturedAmount = $bodyArray['Payment']['CapturedAmount'])
         ) {
             throw new \Exception(
                 __(
@@ -132,7 +132,7 @@ class Capture extends \Az2009\Cielo\Model\Method\Transaction
             );
         }
 
-        return $capturedAmount;
+        return $this->helper->convertToPrice($capturedAmount);
     }
 
 }
