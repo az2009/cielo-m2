@@ -77,8 +77,8 @@ class Cancel extends \Az2009\Cielo\Model\Method\Transaction
             $payment->registerRefundNotification($this->_getVoidedAmount());            
         }
         
-        $order->setState($order::STATE_CANCELED)
-              ->setStatus($order::STATE_CANCELED)
+        $order->setState($order::STATE_CLOSED)
+              ->setStatus($order::STATE_CLOSED)
               ->save();
         
         $this->addReturnMessageToTransaction($bodyArray);

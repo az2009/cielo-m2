@@ -128,7 +128,7 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
     protected function _unserializeValue($value)
     {
         if (is_string($value) && !empty($value)) {
-            return unserialize($value);
+            return json_decode($value, true);
         } else {
             return array();
         }
