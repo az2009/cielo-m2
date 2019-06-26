@@ -1,8 +1,6 @@
-<strong>Manual de Configuração  - Cielo_Magento 2</strong>
-![Manual de Configuração  - Cielo_Magento 2](docs/manual_configuracao_cielo_magento_2.pdf)
+<a href="docs/manual_configuracao_cielo_magento_2.pdf"><strong>Manual de Configuração  - Cielo_Magento 2</strong></a>
 
-<strong>Manual de Testes - Cielo_Magento 2 pt-BR</strong>
-![Manual de Testes - Cielo_Magento 2 pt-BR](manual_testes_cielo_magento_2.pdf)
+<a href="docs/manual_testes_cielo_magento_2.pdf"><strong>Manual de Testes - Cielo_Magento 2 pt-BR</strong></a>
 
 <strong>Imagens</strong>
 ![Pagamento Boleto via Front-End](docs/bank_slip.png)
