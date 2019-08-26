@@ -6,6 +6,12 @@ With this module, you will be able to offer Cielo solutions in your Magento stor
 
 <a href="docs/manual_testes_cielo_magento_2.pdf"><strong>Manual de Testes - Cielo_Magento 2 pt-BR</strong></a>
 
+<strong>Doc de configuração:</strong>
+https://docs.google.com/document/d/1Yxwz7Ay6Rv5a23oWq8Y8f_x7E19V6UONNOLKk6jMZBg/edit?usp=sharing
+
+<strong>Doc para testes</strong>
+https://docs.google.com/document/d/1vBz1XVbyXgp2Rc6nkwzcAxpIsromaOqIwJqSSlf4DKU/edit?usp=sharing
+
 <strong>Imagens</strong>
 ![Pagamento Boleto via Front-End](docs/bank_slip.png)
 ![Pagamento Boleto via Front-End](docs/bank_slip.png)
