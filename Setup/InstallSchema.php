@@ -26,7 +26,7 @@ class InstallSchema implements InstallSchemaInterface
 
         $installer->startSetup();
 
-        if (!$installer->getConnection()->tableColumnExists('sales_order_payment', 'card_token')) {
+        if (!$installer->getConnection()->tableColumnExists($installer->getTable('sales_order_payment'), 'card_token')) {
             $installer->run("
                 ALTER TABLE {$installer->getTable('sales_order_payment')} 
                   ADD COLUMN card_token VARCHAR(100) DEFAULT NULL"
