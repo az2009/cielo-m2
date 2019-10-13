@@ -13,6 +13,7 @@
  */
 namespace Az2009\Cielo\Helper;
 
+use Exception;
 use Magento\Framework\App\Helper\Context;
 
 class Installment extends \Magento\Framework\App\Helper\AbstractHelper
@@ -75,17 +76,44 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
 
         if ($this->state->getAreaCode() == \Magento\Framework\App\Area::AREA_ADMINHTML) {
             $quote = $this->sessionQuote->getQuote();
-        }
+        }              
 
         $quote->setTotalsCollectedFlag(false)->collectTotals();
-        $amount = (double) $quote->getGrandTotal();
-        $maxInstallments = $this->getConfigValue($amount);
-        for ($i=1; $i <= $maxInstallments; $i++) {
-            $partialAmount = ((double)$amount)/$i;
-            $result[(string)$i] = $i . "x " . $this->formatPrice($partialAmount, false);
+        $amount = (float) $quote->getGrandTotal();
+        
+        return $this->BuildAvailableInstallments($amount);
+    }
+
+    private function BuildAvailableInstallments(float $amount){
+        $installments = $this->getInstallmentsFromConfig();
+        $result = [];
+        foreach ($installments as $installment) {
+
+            if ($installment['installment_frequency'] != '' && $installment['installment_boundary'] != '') {              
+                $frequency = $installment['installment_frequency'];
+                $installmetnAmount = $amount / $installment['installment_frequency']; 
+
+                if ($installmetnAmount >= $installment['installment_boundary']) {
+
+                    $result[(string)$frequency] = $frequency . "x " . $this->formatPrice($installmetnAmount + 3, false);
+                }
+            } 
         }
 
         return $result;
+    }
+
+    private function getInstallmentsFromConfig(){
+        $value = $this->scopeConfig->getValue(
+            'payment/az2009_cielo/installments',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+        
+    
+    $value = json_decode($value, true);
+    
+    return $value;
+
     }
 
     /**
@@ -104,121 +132,4 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function getInstallments() {
-        $value = $this->scopeConfig->getValue(
-                'payment/az2009_cielo/installments',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-            );
-        
-        $value = $this->_unserializeValue($value);
-        
-        return $value;
-    }
-
-    /**
-     * Create a value from a storable representation
-     *
-     * @param mixed $value
-     *
-     * @return array
-     */
-    protected function _unserializeValue($value)
-    {
-        if (is_string($value) && !empty($value)) {
-            return json_decode($value, true);
-        } else {
-            return array();
-        }
-    }
-
-    /**
-     * Retrieve maximum number for installments for given amount with config
-     *
-     * @param int $customerGroupId
-     * @param mixed $store
-     *
-     * @return float|null
-     */
-    public function getConfigValue($amount)
-    {
-        $value = $this->getInstallments();
-        if ($this->_isEncodedArrayFieldValue($value)) {
-            $value = $this->_decodeArrayFieldValue($value);
-        }
-
-        $curMinimalBoundary = -1;
-        $resultingFreq = 1;
-        foreach ($value as $row) {
-            list($boundary, $frequency) = $row;
-            if ($amount <= $boundary && ($boundary <= $curMinimalBoundary || $curMinimalBoundary == -1)) {
-                $curMinimalBoundary = $boundary;
-                $resultingFreq = $frequency;
-            }
-
-            if ($boundary == "" && $curMinimalBoundary == -1) {
-                $resultingFreq = $frequency;
-            }
-        }
-
-        return $resultingFreq;
-    }
-
-    /**
-     * Check whether value is in form retrieved by _encodeArrayFieldValue()
-     *
-     * @param mixed
-     *
-     * @return bool
-     */
-    protected function _isEncodedArrayFieldValue($value)
-    {
-        if (!is_array($value)) {
-            return false;
-        }
-
-        unset($value['__empty']);
-        foreach ($value as $_id => $row) {
-            if (
-                !is_array($row)
-                || !array_key_exists('installment_boundary', $row)
-                || !array_key_exists('installment_frequency', $row )
-            ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Decode value from used in \Magento\Config\Model\Config\Backend\Serialized\ArraySerialized
-     * HTML form => deserialized DB entry
-     *
-     * @param array
-     *
-     * @return array
-     */
-    protected function _decodeArrayFieldValue(array $value)
-    {
-        $result = array();
-        unset($value['__empty']);
-        foreach ($value as $_id => $row) {
-
-            if (
-                !is_array($row)
-                || !array_key_exists('installment_boundary', $row)
-                || !array_key_exists('installment_frequency', $row)
-            ) {
-                continue;
-            }
-
-            $boundary = $row['installment_boundary'];
-            $frequency = $row['installment_frequency'];
-            $result[] = array($boundary, $frequency);
-        }
-
-        return $result;
-    }
 }
