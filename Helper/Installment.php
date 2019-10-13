@@ -13,7 +13,6 @@
  */
 namespace Az2009\Cielo\Helper;
 
-use Exception;
 use Magento\Framework\App\Helper\Context;
 
 class Installment extends \Magento\Framework\App\Helper\AbstractHelper
