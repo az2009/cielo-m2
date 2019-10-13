@@ -109,11 +109,9 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
         
-    
-    $value = json_decode($value, true);
-    
-    return $value;
-
+        $value = json_decode($value, true);
+        
+        return $value;
     }
 
     /**
