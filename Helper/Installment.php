@@ -83,7 +83,7 @@ class Installment extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->BuildAvailableInstallments($amount);
     }
 
-    private function BuildAvailableInstallments(float $amount){
+    private function BuildAvailableInstallments(float $amount): array{
         $installments = $this->getInstallmentsFromConfig();
         $result = [];
         foreach ($installments as $installment) {
