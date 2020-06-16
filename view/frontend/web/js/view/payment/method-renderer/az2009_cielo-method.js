@@ -74,8 +74,6 @@ define([
                 var self = this;
                 this.iShowForm(true);
 
-                self.loadInstallments();
-
                 $(document).on('focusout', '#az2009_cielo_cc_number_c', function(){
                     self.loadInstallments();
                 });
@@ -374,4 +372,5 @@ define([
             },
 
         });
-    });
+    }
+);
