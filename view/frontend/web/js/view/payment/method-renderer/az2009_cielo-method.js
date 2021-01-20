@@ -362,7 +362,7 @@ define([
 
             loadInstallments: function () {
                 $.ajax({
-                    url: '/cielo/installments/index',
+                    url: BASE_URL + 'cielo/installments/index', // BASE_URL é necessário quando utilizado em multistore
                     type: 'POST',
                     dataType: 'HTML',
                     success: function (response) {
